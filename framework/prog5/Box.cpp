@@ -38,6 +38,13 @@ float Box::volume() const {
     return x * y * z;
 }
 
+std::ostream &Box::print(std::ostream& os) const {
+    Shape::print(os);
+    os<<"Min: "<<min_[0]<<" , " <<min_[1]<<" , " <<min_[2]<<"\nMax: "<<max_[0]<<" , " <<max_[1]<<" , " <<max_[2]<<"\n";
+    os<<"Area: " << area() << "\nVolume: "<<volume()<<"\n\n";
+    return os;
+}
+
 
 
 

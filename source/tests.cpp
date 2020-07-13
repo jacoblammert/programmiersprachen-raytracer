@@ -96,9 +96,29 @@ TEST_CASE("name + color", "[name, color]") {
     Box box{{0, 0, 0},{1, 1, 1},"NAME",{0,0,0}};
     box = {{-10, -10, -10},{10,  10,  10},"",{8,7777,0.4}};
     box = {{10, 10, 10},{-10,  -10, -10},"wow, wie soll ich den Konstruktor testen??",{0,0,0}};
+}
+/**
+ * 5.4
+ * print
+ *
+ */
+
+TEST_CASE("print test", "[print test]") {
 
 
+    Sphere sphere{{0, 0, 0}, -7,"NAME",{0,0,0}};
+    sphere.print(std::cout);
+    sphere = {{999, 999, -999}, 0,"",{8,7777,0.4}};
+    sphere.print(std::cout);
+    sphere = {{999, 999, -999}, -0,"wow, wie soll ich den Konstruktor testen??",{0,0,0}};
+    sphere.print(std::cout);
 
+    Box box{{0, 0, 0},{1, 1, 1},"NAME",{0,0,0}};
+    box.print(std::cout);
+    box = {{-10, -10, -10},{10,  10,  10},"",{8,7777,0.4}};
+    box.print(std::cout);
+    box = {{10, 10, 10},{-10,  -10, -10},"wow, wie soll ich den Konstruktor testen??",{0,0,0}};
+    box.print(std::cout);
 
 }
 
