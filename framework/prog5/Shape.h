@@ -5,12 +5,21 @@
 
 
 #include <glm-0.9.5.3/glm/vec3.hpp>
+#include <string>
+#include "color.hpp"
 
 class Shape {
+
+public:
+    Shape(std::string name, Color color);
+
 protected:
     ///purely virtual protected functions for other shapes to implement
-    virtual const float area() = 0 ;
-    virtual const float volume() = 0;
+    virtual float area() const = 0 ;
+    virtual float volume() const = 0;
+
+    std::string name_;
+    Color color_;
 
 };
 
