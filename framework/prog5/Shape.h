@@ -15,6 +15,8 @@ public:
 
     virtual std::ostream &print(std::ostream &os) const;
 
+    /**/virtual/**/ ~Shape();
+
 protected:
     ///purely virtual protected functions for other shapes to implement
     virtual float area() const = 0;

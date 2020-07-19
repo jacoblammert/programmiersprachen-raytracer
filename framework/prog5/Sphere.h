@@ -10,7 +10,7 @@
 #include "HitPoint.h"
 #include "Ray.h"
 
-class Sphere: Shape {
+class Sphere: public Shape {
 public:
     Sphere(glm::vec3 center, float radius,std::string name, Color color);
     float area() const override;
@@ -19,6 +19,7 @@ public:
 
     HitPoint intersect(Ray ray) const;
 
+    virtual ~Sphere();
 private:
     glm::vec3 center_;
     float radius_;

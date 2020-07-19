@@ -12,8 +12,9 @@
  * @param color r g b
  */
 Box::Box(glm::vec3 min, glm::vec3 max, std::string name, Color color):
-max_(max),min_(min),Shape(name,color)
-{}
+        Shape(name,color),max_(max),min_(min){
+
+}
 
 
 /**
