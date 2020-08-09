@@ -17,7 +17,7 @@ install(TARGETS raytracer DESTINATION .)
 
 # Build tests
 add_executable(tests
-  tests.cpp ../framework/prog5/Shape.cpp ../framework/prog5/Sphere.cpp ../framework/prog5/Box.cpp ../framework/prog5/Shape.cpp ../framework/prog5/Ray.cpp ../framework/prog5/HitPoint.cpp)
+        ../framework/prog5/tests.cpp ../framework/prog5/Shape.cpp ../framework/prog5/Sphere.cpp ../framework/prog5/Box.cpp ../framework/prog5/Shape.cpp ../framework/prog5/Ray.cpp ../framework/prog5/HitPoint.cpp)
 target_link_libraries(tests
   ${GLFW_LIBRARIES}
   )

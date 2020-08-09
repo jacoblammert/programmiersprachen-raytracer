@@ -51,10 +51,10 @@ std::ostream &Sphere::print(std::ostream &os) const {
  * @return bool + info inside a HitPoint object, if a Sphere has been hit
  */
 HitPoint Sphere::intersect(Ray ray) const {
-
-    glm::normalize(ray.direction);
-    glm::vec3 raydirection = ray.direction;
-    glm::vec3 rayorigin = ray.origin;
+/**/
+    glm::normalize(ray.direction_);
+    glm::vec3 raydirection = ray.direction_;
+    glm::vec3 rayorigin = ray.origin_;
 
 
 
@@ -71,13 +71,13 @@ HitPoint Sphere::intersect(Ray ray) const {
     //std::cout<<"Y: "<<y<<std::endl;
 
 
-    if (y <= radius_) {
+    if (y < radius_) {
 
         float x = sqrt(radius_ * radius_ - y * y);
         float t1 = t - x; // close intersection point
         float t2 = t + x; // far intersection point
 
-        raydirection = ray.direction;
+        raydirection = ray.direction_;
 
         float dist = 0;
 
@@ -103,8 +103,9 @@ HitPoint Sphere::intersect(Ray ray) const {
         //    raydirection * t2;
         //    dist = t2;
         //}
-        return {true, dist, name_, color_, ray.origin + raydirection, ray.direction};
-    }
+        return {true, dist, name_, color_, ray.origin_ + raydirection, ray.direction_};
+    }/**/
+
     return {false};
 }
 
