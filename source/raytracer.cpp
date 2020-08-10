@@ -9,7 +9,7 @@
 
 //TODO add folders for shapes, loading, saving,...
 
-//now single threaded again
+
 int main(int argc, char *argv[]) {
 
     sdfLoader loader{"../../source/folders/sdfFiles/start.sdf"};

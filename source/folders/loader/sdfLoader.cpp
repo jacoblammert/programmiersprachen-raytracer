@@ -48,8 +48,15 @@ void sdfLoader::loadFile(std::string filepath) {
 
                 in_sstream >> material_name;
                 in_sstream >> ka_red, ka_green, ka_blue;// kd_red,kd_green,kd_blue
+            } else if ("material" == class_name){
+
+            } else if ("light" == class_name){
+
+            }else if ("camera" == class_name){
 
             }
+
+
         }
 
 
