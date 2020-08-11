@@ -13,8 +13,8 @@ public:
     sdfLoader(std::string filepath);
 
 private:
-    void loadFile(std::string filepath);
-
+    void loadFile()const;
+    std::string filepath;
 };
 
 

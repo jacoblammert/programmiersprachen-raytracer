@@ -6,8 +6,8 @@
 
 #define _USE_MATH_DEFINES
 
-#include <math.h>
 #include <glm-0.9.5.3/glm/glm.hpp>
+#include <cmath>
 
 
 /***
@@ -26,14 +26,14 @@ Sphere::Sphere(glm::vec3 center, float radius, std::string name, Color color) :
  * @return area as float uses M_PI constant from <math.h> to compute the total area
  */
 float Sphere::area() const {
-    return 4 * M_PI * radius_;
+    return 4 * 3.14f * radius_;
 }
 
 /**
  * @return volume of the sphere as float uses M_PI constant from <math.h>
  */
 float Sphere::volume() const {
-    return (float) (4 * M_PI * pow(radius_, 3)) / 3;
+    return (float) (4 * 3.14f * pow(radius_, 3)) / 3;
 }
 
 std::ostream &Sphere::print(std::ostream &os) const {

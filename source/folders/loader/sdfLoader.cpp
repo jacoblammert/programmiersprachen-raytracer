@@ -10,12 +10,15 @@
 
 sdfLoader::sdfLoader(std::string filepath) {
 
-    if (filepath.length() > 4){
-        loadFile(filepath);
-    }
+    this->filepath = filepath;
 }
 
-void sdfLoader::loadFile(std::string filepath) {
+void sdfLoader::loadFile()const { //const correctness valid?
+
+    if (filepath.empty()){
+        std::cout<<"Please set a valid filepeath"<<std::endl;
+        return;
+    }
 
     //open file in read-only && ASCII mode
     std::ifstream in_file(filepath,std::ios::in);

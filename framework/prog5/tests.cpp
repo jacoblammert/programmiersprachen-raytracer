@@ -23,13 +23,13 @@ TEST_CASE("area + volume", "[area, volume]") {
 /**/
     Sphere sphere{{0, 0, 0}, -7, "", {}};
 
-    REQUIRE(sphere.volume() == Approx((4 * M_PI * 7 * 7 * 7) / 3));
-    REQUIRE(sphere.area() == Approx(4 * M_PI * 7));
+    REQUIRE(sphere.volume() == Approx((4 * 3.14f * 7 * 7 * 7) / 3));
+    REQUIRE(sphere.area() == Approx(4 * 3.14f * 7));
 
     sphere = {{999, 999, -999}, -7, "", {}};
 
-    REQUIRE(sphere.volume() == Approx((4 * M_PI * 7 * 7 * 7) / 3));
-    REQUIRE(sphere.area() == Approx(4 * M_PI * 7));
+    REQUIRE(sphere.volume() == Approx((4 * 3.14f * 7 * 7 * 7) / 3));
+    REQUIRE(sphere.area() == Approx(4 * 3.14f * 7));
 
     sphere = {{999, 999, -999}, 0, "", {}};
 
