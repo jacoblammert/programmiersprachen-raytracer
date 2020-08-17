@@ -11,6 +11,7 @@
 class sdfLoader {
 public:
     sdfLoader(std::string filepath);
+
     void loadFile() const;
 
 private:

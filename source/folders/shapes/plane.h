@@ -7,13 +7,13 @@
 
 #include "shape.h"
 
-class plane: public shape {
+class plane : public shape {
 public:
     plane(glm::vec3 position, glm::vec3 normal);
 
     //plane(glm::vec3 position, glm::vec3 normal, Material* material);
 
-    bool getIntersectVec(ray ray, glm::vec3 &HitPoint,  glm::vec3 &HitNormal,float &distance) const override;
+    bool getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
 
     glm::vec3 getNormal(glm::vec3 pos) const override;
 
@@ -25,6 +25,7 @@ public:
 
 
     void translate(glm::vec3 position) override;
+
 /*/
     Material* getMaterial() override;
     void setMaterial(Material* material) override;

@@ -14,7 +14,7 @@
  * @param b glm::vec3 number 2
  * @param c glm::vec3 number 3
  */
-triangle::triangle(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c) :
+triangle::triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
         a{a},
         b{b},
         c{c} {
@@ -86,6 +86,7 @@ bool triangle::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNorma
 glm::vec3 triangle::getNormal(glm::vec3 pos) const {
     return this->normal;
 }
+
 /**
  * @return a vector with the minimal values of x, y and z for the triangle (for a box around the triangle)
  */
@@ -123,6 +124,7 @@ glm::vec3 triangle::getMax() const {
     }
     return max;
 }
+
 /**
  * @return all points added and divided by 3 to get a median point on the triangle
  */

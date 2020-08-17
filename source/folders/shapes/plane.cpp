@@ -11,8 +11,8 @@
  * @param position for the new plane
  * @param normal of the pane (will be normalized automatically)
  */
-plane::plane(glm::vec3 position, glm::vec3 normal):
-pos{position},normal{normal}{
+plane::plane(glm::vec3 position, glm::vec3 normal) :
+        pos{position}, normal{normal} {
     glm::normalize(normal);
 }
 /*///TODO add later (with materials)
@@ -35,10 +35,10 @@ bool plane::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, 
     glm::vec3 raydirection = ray.direction;
     glm::vec3 rayposition = ray.position;
 
-    float denom = glm::dot(normal,raydirection);
+    float denom = glm::dot(normal, raydirection);
     glm::vec3 p0l0 = pos - rayposition;
 
-    float t = glm::dot(p0l0,normal) / denom;
+    float t = glm::dot(p0l0, normal) / denom;
 
     if (t >= 0) {
 
@@ -66,15 +66,17 @@ glm::vec3 plane::getNormal(glm::vec3 pos) const {
  * @return minimum of the plane (useless, because we will leave planes in the first layer of our hierarchy anyways)
  */
 glm::vec3 plane::getMin() const {
-    return {-INFINITY,-INFINITY,-INFINITY}; // should give back a box of the desired size of the plane
+    return {-INFINITY, -INFINITY, -INFINITY}; // should give back a box of the desired size of the plane
 }
 
 /**
  * @return maximum of the plane (useless, because we will leave planes in the first layer of our hierarchy anyways)
  */
 glm::vec3 plane::getMax() const {
-    return {INFINITY,INFINITY,INFINITY}; // should give back a box of the desired size of the plane (cutting doesn't work)
+    return {INFINITY, INFINITY,
+            INFINITY}; // should give back a box of the desired size of the plane (cutting doesn't work)
 }
+
 /**
  * where is the median of an infinite plane? -> position is our best guess
  * @return position of the plane

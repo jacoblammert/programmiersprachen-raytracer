@@ -12,7 +12,7 @@
  * @param minXminYminZ minimum of the box (individual values must be smaller than their counterpart in max vector)
  * @param maxXmaxYmaxZ maximum of the box (individual values must be greater than their counterpart in min vector)
  */
-box::box(const glm::vec3& minXminYminZ, const glm::vec3& maxXmaxYmaxZ) {
+box::box(const glm::vec3 &minXminYminZ, const glm::vec3 &maxXmaxYmaxZ) {
 
     bounds.push_back(minXminYminZ);
     bounds.push_back(maxXmaxYmaxZ);
@@ -61,19 +61,19 @@ box::box(Vector Pos, float xScale, float yScale, float zScale, Color color) {
  * @param distance from the normalized ray to the intersection point as reference
  * @return true, of the box is in front of the ray and has been intersected
  */
-bool box::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const{
+bool box::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
 
     glm::vec3 rayposition = ray.position;
     glm::vec3 raydirection = ray.direction;
-    raydirection = {1/raydirection[0],1/raydirection[1],1/raydirection[2]};
+    raydirection = {1 / raydirection[0], 1 / raydirection[1], 1 / raydirection[2]};
 
     float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
-    tmin = (bounds[sign(raydirection,0)][0] - rayposition[0]) * raydirection[0];
-    tmax = (bounds[1 - sign(raydirection,0)][0] - rayposition[0]) * raydirection[0];
+    tmin = (bounds[sign(raydirection, 0)][0] - rayposition[0]) * raydirection[0];
+    tmax = (bounds[1 - sign(raydirection, 0)][0] - rayposition[0]) * raydirection[0];
 
-    tymin = (bounds[sign(raydirection,1)][1] - rayposition[1]) * raydirection[1];
-    tymax = (bounds[1 - sign(raydirection,1)][1] - rayposition[1]) * raydirection[1];
+    tymin = (bounds[sign(raydirection, 1)][1] - rayposition[1]) * raydirection[1];
+    tymax = (bounds[1 - sign(raydirection, 1)][1] - rayposition[1]) * raydirection[1];
 
     if ((tmin > tymax) || (tymin > tmax))
         return false;
@@ -82,8 +82,8 @@ bool box::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, fl
     if (tymax < tmax)
         tmax = tymax;
 
-    tzmin = (bounds[sign(raydirection,2)][2] - rayposition[2]) * raydirection[2];
-    tzmax = (bounds[1 - sign(raydirection,2)][2] - rayposition[2]) * raydirection[2];
+    tzmin = (bounds[sign(raydirection, 2)][2] - rayposition[2]) * raydirection[2];
+    tzmax = (bounds[1 - sign(raydirection, 2)][2] - rayposition[2]) * raydirection[2];
 
     if ((tmin > tzmax) || (tzmin > tmax))
         return false;
@@ -95,7 +95,7 @@ bool box::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, fl
 
     if (0 < tmin && tmin < distance) {
         raydirection = ray.direction;
-        raydirection*=tmin;
+        raydirection *= tmin;
 
         distance = tmin;
         HitPoint = rayposition + raydirection;
@@ -121,20 +121,20 @@ bool box::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, fl
  * @param ray that get tested against this box
  * @return true if the ray hits
  */
-bool box::getIntersect(const ray& ray) const{
+bool box::getIntersect(const ray &ray) const {
 
     glm::vec3 rayposition = ray.position;
     glm::vec3 raydirection = ray.direction;
-    raydirection = {1/raydirection[0],1/raydirection[1],1/raydirection[2]};
+    raydirection = {1 / raydirection[0], 1 / raydirection[1], 1 / raydirection[2]};
 
 
     float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
-    tmin = (bounds[sign(raydirection,0)][0] - rayposition[0]) * raydirection[0];
-    tmax = (bounds[1 - sign(raydirection,0)][0] - rayposition[0]) * raydirection[0];
+    tmin = (bounds[sign(raydirection, 0)][0] - rayposition[0]) * raydirection[0];
+    tmax = (bounds[1 - sign(raydirection, 0)][0] - rayposition[0]) * raydirection[0];
 
-    tymin = (bounds[sign(raydirection,1)][1] - rayposition[1]) * raydirection[1];
-    tymax = (bounds[1 - sign(raydirection,1)][1] - rayposition[1]) * raydirection[1];
+    tymin = (bounds[sign(raydirection, 1)][1] - rayposition[1]) * raydirection[1];
+    tymax = (bounds[1 - sign(raydirection, 1)][1] - rayposition[1]) * raydirection[1];
 
     if ((tmin > tymax) || (tymin > tmax))
         return false;
@@ -148,8 +148,8 @@ bool box::getIntersect(const ray& ray) const{
         tmax = tymax;
 
 
-    tzmin = (bounds[sign(raydirection,2)][2] - rayposition[2]) * raydirection[2];
-    tzmax = (bounds[1 - sign(raydirection,2)][2] - rayposition[2]) * raydirection[2];
+    tzmin = (bounds[sign(raydirection, 2)][2] - rayposition[2]) * raydirection[2];
+    tzmax = (bounds[1 - sign(raydirection, 2)][2] - rayposition[2]) * raydirection[2];
 
     return !((tmin > tzmax) || (tzmin > tmax));
 }
@@ -159,7 +159,7 @@ bool box::getIntersect(const ray& ray) const{
  * @param position position (Hitposition)
  * @return normal at the given position. Either {1,0,0},{0,1,0},{0,0,1} or {-1,0,0},{0,-1,0},{0,0,-1}
  */
-glm::vec3 box::getNormal(glm::vec3 pos) const{
+glm::vec3 box::getNormal(glm::vec3 pos) const {
 
     float epsilon = 0.000001f; // for edges/ corners -> uncertainty
 
@@ -185,7 +185,7 @@ glm::vec3 box::getNormal(glm::vec3 pos) const{
 /**
  * @return a vector with the minimal values of x, y and z of the box
  */
-glm::vec3 box::getMin() const{
+glm::vec3 box::getMin() const {
     return bounds[0];
 }
 
@@ -193,21 +193,21 @@ glm::vec3 box::getMin() const{
 /**
  * @return a vector with the maximal values of x, y and z of the box
  */
-glm::vec3 box::getMax() const{
+glm::vec3 box::getMax() const {
     return bounds[1];
 }
 
 /**
  * @return the position of the box
  */
-glm::vec3 box::getMedian() const{
+glm::vec3 box::getMedian() const {
     return position;
 }
 
 /**
  * outputs important information in the console
  */
-void box::print() const{
+void box::print() const {
     std::cout << "Box: " << std::endl;
     std::cout << "Min: ";
     //bounds[0].print();
@@ -244,6 +244,6 @@ void box::translate(glm::vec3 position) {
  * @param pos in the vector
  * @return 0 or 1
  */
-int box::sign(glm::vec3 vec3, int pos) const{
+int box::sign(glm::vec3 vec3, int pos) const {
     return ((pos == 0 && vec3[0] < 0) || (pos == 1 && vec3[1] < 0) || (pos == 2 && vec3[2] < 0));
 }
