@@ -20,7 +20,7 @@ triangle::triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
         c{c} {
     glm::vec3 ab = b - a;
     glm::vec3 ac = c - a;
-    this->normal = ab * ac;
+    this->normal = glm::cross(ab,ac);
     glm::normalize(this->normal);
 }
 
@@ -47,7 +47,7 @@ triangle::triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, Color color) :
 bool triangle::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
 
 
-    glm::vec3 pvec = ray.direction * (c - a);
+    glm::vec3 pvec = glm::cross(ray.direction , (c - a));
     float det = glm::dot(pvec, (b - a));
 
     // ray and triangle are parallel if det is close to 0 -> no division by zero
@@ -61,7 +61,7 @@ bool triangle::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNorma
     if (u < 0 || u > 1)
         return false;
 
-    pvec = (rayposition - a) * (b - a);
+    pvec = glm::cross((rayposition - a) , (b - a));
     float v = glm::dot(pvec, ray.direction) / det;
 
     if (v < 0 || (u + v) > 1)
