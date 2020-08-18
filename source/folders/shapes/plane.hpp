@@ -5,17 +5,19 @@
 #ifndef RAYTRACER_PLANE_H
 #define RAYTRACER_PLANE_H
 
-#include "shape.h"
+#include <iostream>
 
-class plane : public shape {
+#include "shape.hpp"
+
+class Plane : public Shape {
 public:
-    plane(glm::vec3 position, glm::vec3 normal);
+    Plane(glm::vec3 const& position, glm::vec3 const& normal);
 
     //plane(glm::vec3 position, glm::vec3 normal, Material* material);
 
-    bool getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
+    bool getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
 
-    glm::vec3 getNormal(glm::vec3 pos) const override;
+    glm::vec3 getNormal(glm::vec3 const& pos) const override;
 
     glm::vec3 getMin() const override;
 
@@ -24,7 +26,7 @@ public:
     glm::vec3 getMedian() const override;
 
 
-    void translate(glm::vec3 position) override;
+    void translate(glm::vec3 const& position) override;
 
 /*/
     Material* getMaterial() override;

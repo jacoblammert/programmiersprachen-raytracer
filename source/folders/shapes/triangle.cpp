@@ -2,10 +2,7 @@
 // Created by Jacob Lammert on 17.08.2020.
 //
 
-#include <cmath>
-#include <glm-0.9.5.3/glm/geometric.hpp>
-#include <iostream>
-#include "triangle.h"
+#include "triangle.hpp"
 
 /**
  * constructor for triangle with three vectors
@@ -14,7 +11,7 @@
  * @param b glm::vec3 number 2
  * @param c glm::vec3 number 3
  */
-triangle::triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
+Triangle::Triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
         a{a},
         b{b},
         c{c} {
@@ -25,7 +22,7 @@ triangle::triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
 }
 
 /*/
-triangle::triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, Color color) :
+Triangle::Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, Color const& color) :
         a{a},
         b{b},
         c{c} {
@@ -44,7 +41,7 @@ triangle::triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, Color color) :
  * @param distance from the normalized ray to the intersection point as reference
  * @return true, of the triangle is in front of the ray and has been intersected
  */
-bool triangle::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
+bool Triangle::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
 
 
     glm::vec3 pvec = glm::cross(ray.direction , (c - a));
@@ -83,14 +80,14 @@ bool triangle::getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &HitNorma
  * @param pos in this case not necessary, only for box, cone/ cylinder (both not yet implented) and sphere
  * @return normal of the triangle
  */
-glm::vec3 triangle::getNormal(glm::vec3 pos) const {
+glm::vec3 Triangle::getNormal(glm::vec3 const& pos) const {
     return this->normal;
 }
 
 /**
  * @return a vector with the minimal values of x, y and z for the triangle (for a box around the triangle)
  */
-glm::vec3 triangle::getMin() const {
+glm::vec3 Triangle::getMin() const {
     glm::vec3 min = a;
 
     for (int j = 0; j < 3; ++j) {
@@ -110,7 +107,7 @@ glm::vec3 triangle::getMin() const {
 /**
  * @return a vector with the maximal values of x, y and z for the triangle (for a box around the triangle)
  */
-glm::vec3 triangle::getMax() const {
+glm::vec3 Triangle::getMax() const {
     glm::vec3 max = a;
     for (int j = 0; j < 3; ++j) {
         if (max[j] < b[j]) {
@@ -128,7 +125,7 @@ glm::vec3 triangle::getMax() const {
 /**
  * @return all points added and divided by 3 to get a median point on the triangle
  */
-glm::vec3 triangle::getMedian() const {
+glm::vec3 Triangle::getMedian() const {
 
     glm::vec3 median = a + b + c;
     median *= (1.0f / 3.0f);
@@ -138,7 +135,7 @@ glm::vec3 triangle::getMedian() const {
 /**
  * outputs important information in the console
  */
-void triangle::print() const {
+void Triangle::print() const {
     std::cout << "Triangle" << std::endl;
     std::cout << "A: ";
     //a.print();
@@ -149,11 +146,11 @@ void triangle::print() const {
 }
 
 /*/
-Material *triangle::getMaterial() const{
+Material *Triangle::getMaterial() const{
     return this->material;
 }
 
-void triangle::setMaterial(Material *material) {
+void Triangle::setMaterial(Material *material) {
     this->material = material;
 }/**/
 
@@ -161,7 +158,7 @@ void triangle::setMaterial(Material *material) {
  * Changes the position of the triangle with a given glm::vec3
  * @param position
  */
-void triangle::translate(glm::vec3 position) {
+void Triangle::translate(glm::vec3 const& position) {
     a += position;
     b += position;
     c += position;

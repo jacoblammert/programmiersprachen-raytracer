@@ -2,14 +2,14 @@
 // Created by Jacob Lammert on 17.08.2020.
 //
 
-#include "shape.h"
+#include "shape.hpp"
 
 
-//Material* shape::getMaterial() {
+//Material* Shape::getMaterial() {
 //    return material;
 //}
 
-//void shape::setMaterial(Material* material) {
+//void Shape::setMaterial(Material* material) {
 //    this->material = material;
 //}
 

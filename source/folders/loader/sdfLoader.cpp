@@ -2,18 +2,18 @@
 // Created by Jacob on 10.08.2020.
 //
 
-#include "sdfLoader.h"
+#include "sdfLoader.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream> // string stream -> easy parsing mechanics
 #include <string>
 
-sdfLoader::sdfLoader(std::string filepath) {
+SdfLoader::SdfLoader(std::string filepath) {
 
     this->filepath = filepath;
 }
 
-void sdfLoader::loadFile() const { //const correctness valid?
+void SdfLoader::loadFile() const { //const correctness valid?
 
     if (filepath.empty()) {
         std::cout << "Please set a valid filepeath" << std::endl;

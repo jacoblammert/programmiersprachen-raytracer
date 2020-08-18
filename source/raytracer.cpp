@@ -5,14 +5,14 @@
 #include <thread>
 #include <utility>
 #include <cmath>
-#include "folders/loader/sdfLoader.h"
+#include "folders/loader/sdfLoader.hpp"
 
 //TODO add folders for shapes, loading, saving,...
 
 
 int main(int argc, char *argv[]) {
 
-    sdfLoader loader{"../../source/folders/sdfFiles/start.sdf"};
+    SdfLoader loader{"../../source/folders/sdfFiles/start.sdf"};
     loader.loadFile();
 
 

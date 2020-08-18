@@ -7,15 +7,16 @@
 
 
 #include <glm-0.9.5.3/glm/vec3.hpp>
-#include "../camera/ray.h"
+#include <glm-0.9.5.3/glm/geometric.hpp>
+#include "../camera/ray.hpp"
 
-class shape {
+class Shape {
 public:
 
-    virtual bool getIntersectVec(ray ray, glm::vec3 &HitPoint, glm::vec3 &Hitnormal,
+    virtual bool getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hitnormal,
                                  float &distance) const = 0; // returns true, if the Ray and the object intersect
 
-    virtual glm::vec3 getNormal(glm::vec3 pos) const = 0;
+    virtual glm::vec3 getNormal(glm::vec3 const& pos) const = 0;
 
     virtual glm::vec3 getMin() const = 0;
 
@@ -30,7 +31,8 @@ public:
     virtual void print() const = 0;
 
     virtual void translate(
-            glm::vec3 position) = 0; //TODO add rotateX(float angle (degrees)), rotateY(float angle (degrees)), rotateZ(float angle (degrees)) + scale(float size)
+            glm::vec3 const& position) = 0;
+    //TODO add rotateX(float angle (degrees)), rotateY(float angle (degrees)), rotateZ(float angle (degrees)) + scale(float size)
 
 protected:
     //Material* material;

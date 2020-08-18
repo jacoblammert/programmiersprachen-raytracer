@@ -8,9 +8,9 @@
 
 #include <string>
 
-class sdfLoader {
+class SdfLoader {
 public:
-    sdfLoader(std::string filepath);
+    SdfLoader(std::string filepath);
 
     void loadFile() const;
 
