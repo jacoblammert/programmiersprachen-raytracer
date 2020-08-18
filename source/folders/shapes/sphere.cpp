@@ -35,7 +35,7 @@ bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hit
 
     float y = (pos - rayposition - raydirection).length();
 
-    if (y < radius) { // (y < radius)
+    if (y < radius) {
 
         float x = std::sqrt(radius * radius - y * y);
         float t1 = t - x; // close intersection point

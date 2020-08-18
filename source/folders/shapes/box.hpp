@@ -15,7 +15,7 @@ class Box : public Shape {
 
     Box(const glm::vec3 &minXminYminZ, const glm::vec3 &maxXmaxYmaxZ);
 
-    Box(glm::vec3 const& Pos, float xScale, float yScale, float zScale);
+    Box(glm::vec3 const& pos, float xScale, float yScale, float zScale);
 
     //Box(glm::vec3 minXminYminZ, glm::vec3 maxXmaxYmaxZ, Color color);
 

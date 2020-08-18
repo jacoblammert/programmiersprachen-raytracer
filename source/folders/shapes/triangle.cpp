@@ -28,7 +28,7 @@ Triangle::Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, C
         c{c} {
     glm::vec3 ab = b - a;
     glm::vec3 ac = c - a;
-    this->normal = ab * ac;
+    this->normal = glm::cross(ab,ac);
     glm::normalize(this->normal);
 }/**/
 
