@@ -6,7 +6,7 @@
 #include <thread>
 #include <utility>
 #include <cmath>
-#include <omp.h>
+//#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
