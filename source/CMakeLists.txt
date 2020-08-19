@@ -1,3 +1,5 @@
+
+
 add_executable(example example.cpp  folders/camera/ray.cpp folders/camera/ray.hpp folders/shapes/shape.cpp folders/shapes/shape.hpp folders/shapes/sphere.cpp folders/shapes/sphere.hpp folders/camera/camera.cpp folders/camera/camera.hpp folders/shapes/plane.cpp folders/shapes/plane.hpp folders/shapes/box.cpp folders/shapes/box.hpp folders/shapes/triangle.cpp folders/shapes/triangle.hpp folders/camera/ray.cpp)
 
 target_link_libraries(example ${FRAMEWORK_NAME} ${LIBRARIES})
@@ -13,6 +15,10 @@ target_link_libraries(raytracer ${FRAMEWORK_NAME} ${LIBRARIES}
   )
 add_dependencies(raytracer glfw ${FRAMEWORK_NAME} ${COPY_BINARY})
 
+
+
+
+
 install(TARGETS raytracer DESTINATION .)
 
 # Build tests
@@ -21,4 +27,11 @@ add_executable(tests
 target_link_libraries(tests
   ${GLFW_LIBRARIES}
   )
+
+#project(Raytracer)
+set(CMAKE_CXX_STANDARD 14)
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(raytracer PUBLIC OpenMP::OpenMP_CXX)
+endif()
 
