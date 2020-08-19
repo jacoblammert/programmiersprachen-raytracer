@@ -10,8 +10,7 @@
  * @param normal of the pane (will be normalized automatically)
  */
 Plane::Plane(glm::vec3 const& position, glm::vec3 const& normal) :
-        pos{position}, normal{normal} {
-    glm::normalize(normal);
+        pos{position}, normal{glm::normalize(normal)} {
 }
 /*///TODO add later (with materials)
 plane::Plane(Vector const& position, Vector const& normal, Material *material) :

@@ -19,7 +19,7 @@
     height {height},
     distance {distance}
 {
-    glm::normalize(direction);
+    this->direction = glm::normalize(this->direction);
 }
  
  
@@ -35,15 +35,16 @@
   */
  Ray Camera::generateRay(int x, int y) const {
 
-     glm::vec3 right = glm::cross(direction,upVector);// from the left of the camera plane to the right
-     glm::vec3 top = glm::cross(direction,right); // from bottom of the camera plane to the top
-     glm::normalize(right);// the vectors must be normalized
-     glm::normalize(top);  // the vectors must be normalized
 
-     float wToH = ((float) (width - 1) / (float) (height - 1));  // width to height ratio
+     glm::vec3 right = glm::cross(this->direction,upVector);// from the left of the camera plane to the right
+     glm::vec3 top = glm::cross(this->direction,right); // from bottom of the camera plane to the top
+     right = glm::normalize(right);// the vectors must be normalized
+     top = glm::normalize(top);  // the vectors must be normalized
 
-     float xpercentage = (float) x / (float) (width - 1); // could be simplified to save two variables
-     float ypercentage = (float) y / (float) (height - 1);// could be simplified to save two variables
+     float wToH = ((float) this->width / (float) this->height);  // width to height ratio
+
+     float xpercentage = (float) x / (float) this->width; // could be simplified to save two variables
+     float ypercentage = (float) y / (float) this->height;// could be simplified to save two variables
 
      float scalex = (xpercentage - 0.5f) * 2 * wToH; // now a range from -1 to 1 depending on the x to width ratio
      float scaley = (ypercentage - 0.5f) * 2; // now a range from -1 to 1 depending on the y to Height ratio
@@ -52,7 +53,8 @@
      glm::vec3 vright = right * scalex; // horizontal Vector
      glm::vec3 vtop = top * scaley;     // vertical Vector
 
-     return {position, direction + vtop + vright}; // new custom camera ray for the given pixel
+
+     return {this->position, this->direction * this->distance + vtop + vright}; // new custom camera ray for the given pixel
  }
 
  /**
@@ -60,19 +62,26 @@
   * @param pos to look at
   */
  void Camera::lookAt(glm::vec3 const& pos) {
-     direction = pos - position;
-     glm::normalize(direction);
+     this->direction = pos - this->position;
+     this->direction = glm::normalize(this->direction);
  }
  
  
- void Camera::print() {
-     std::cout << "Camera position: ";
-     //position.print();
-     std::cout << "Camera direction: ";
+ void Camera::print() const{
+     std::cout << "Camera position: x: " << this->position[0] << " y: " << this->position[1] << " z: " << this->position[2]<< std::endl;
+     std::cout << "Camera direction: x: " << this->direction[0] << " y: " << this->direction[1] << " z: " << this->direction[2]<< std::endl;
      //direction.print();
  
-     std::cout << "Width: " << width << std::endl;
-     std::cout << "Height: " << height << std::endl;
+     //std::cout << "Width: " << width << std::endl;
+     //std::cout << "Height: " << height << std::endl;
  }
+
+ /**
+  * Sets the position of the camera to a new vector
+  * @param pos new position of the camera
+  */
+void Camera::setPosition(glm::vec3 pos) {
+    this->position = pos;
+}
 
 

@@ -9,10 +9,10 @@
 #include <glm-0.9.5.3/glm/geometric.hpp>
 
 struct Ray {
-    //TODO put in math folder direction  (remember) must always be normalized
+    //TODO put in math folder direction
     glm::vec3 position;
     glm::vec3 direction;
-    Ray(glm::vec3 position,glm::vec3 direction);
+    Ray(const glm::vec3& position,const glm::vec3& direction);
 };
 
 

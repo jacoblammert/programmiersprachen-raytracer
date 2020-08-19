@@ -28,10 +28,10 @@ target_link_libraries(tests
   ${GLFW_LIBRARIES}
   )
 
-#project(Raytracer)
-set(CMAKE_CXX_STANDARD 14)
-find_package(OpenMP REQUIRED)
-if(OpenMP_CXX_FOUND)
-    target_link_libraries(raytracer PUBLIC OpenMP::OpenMP_CXX)
-endif()
+
+#set(CMAKE_CXX_STANDARD 14)
+#find_package(OpenMP REQUIRED)
+#if(OpenMP_CXX_FOUND)
+#    target_link_libraries(raytracer PUBLIC OpenMP::OpenMP_CXX)
+#endif()
 
