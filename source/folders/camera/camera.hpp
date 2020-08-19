@@ -17,18 +17,18 @@
 class Camera {
 public:
     Camera(glm::vec3 const& position, glm::vec3 const& direction, int width, int height, float distance);
-    void generateRay(int x, int y, Ray const& ray) const;
+    Ray generateRay(int x, int y, Ray const& ray) const;
     void lookAt(glm::vec3 const& pos);
     void print();
     //void translate(glm::vec3 const& position);
 
 private:
-    glm::vec3 position;
-    glm::vec3 direction;
-    int width;
-    int height;
-    glm::vec3 distance;
-    glm::vec3 upVector;
+    glm::vec3 position;  /// could be put together with direction to generate a ray with pos/ direction
+    glm::vec3 direction; // normalized
+    int width;  // of image
+    int height; // of image
+    float distance; // distance from cameraposition to cameraplane
+    glm::vec3 upVector{0,0,1};
 };
 
 

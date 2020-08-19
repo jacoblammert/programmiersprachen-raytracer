@@ -6,12 +6,13 @@
 #define RAYTRACER_RAY_H
 
 
-#include <glm-0.9.5.3/glm/vec3.hpp>
+#include <glm-0.9.5.3/glm/geometric.hpp>
 
 struct Ray {
-    //TODO put in math folder direction  ust always be normalized
+    //TODO put in math folder direction  (remember) must always be normalized
     glm::vec3 position;
     glm::vec3 direction;
+    Ray(glm::vec3 position,glm::vec3 direction);
 };
 
 
