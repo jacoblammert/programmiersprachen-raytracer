@@ -25,18 +25,19 @@ Sphere::Sphere(const glm::vec3 &position, float radius) :
 bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
 
     glm::vec3 raydirection = ray.direction;
+    glm::vec3  rayposition = ray.position;
 
 
-    float t = glm::dot((pos - ray.position), raydirection); // TODO check if right function was imported for dot
+    float t = glm::dot(pos - rayposition,raydirection);
 
 
-    raydirection *= t;
+    raydirection = raydirection * t;
 
-    float y = ((pos - ray.position) - raydirection).length();
+    float y = glm::length(pos - rayposition - raydirection);
 
     if (y < radius) {
 
-        float x = std::sqrt(radius * radius - y * y);
+        float x = sqrt(radius * radius - y * y);
         float t1 = t - x; // close intersection point
         float t2 = t + x; // far intersection point
 
@@ -44,16 +45,16 @@ bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hit
 
 
         if (0 < t1 && t1 < distance) {
-            raydirection * t1;
+            raydirection *= t1;
             distance = t1;
-            HitPoint = ray.position + raydirection;
+            HitPoint = rayposition + raydirection;
             HitNormal = getNormal(HitPoint);
             return true;
         }
         if (t1 < 0 && 0 < t2 && t2 < distance) {
-            raydirection * t2;
+            raydirection *= t2;
             distance = t2;
-            HitPoint = ray.position + raydirection;
+            HitPoint = rayposition + raydirection;
             HitNormal = getNormal(HitPoint);
             return true;
         }

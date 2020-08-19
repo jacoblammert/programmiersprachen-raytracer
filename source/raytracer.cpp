@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
 
     Camera camera{{5,5,5},{-1,0,0},image_width,image_height,5};
 
-    //Sphere object{{0,0,0},2}; // kaputt
-    Box object{{0,0,0},2,2,2}; // geht
+    Sphere object{{0,0,0},2}; // geht
+    //Box object{{0,0,0},2,2,2}; // geht
     //Triangle object{{2,0,0},{0,2,0},{0,0,2}}; // geht
     //Plane object{{2,0,0},{0,0,1}}; // geht, vielleicht invertiert / falsch herum?
 
