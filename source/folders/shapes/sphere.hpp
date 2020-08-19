@@ -13,7 +13,7 @@
 class Sphere : public Shape {
 
     //TODO check if name should be Sphere or sphere -> groß
-
+public:
     Sphere(const glm::vec3& position, float radius);
 
     //sphere(glm::vec3 position, float radius, Material* material);

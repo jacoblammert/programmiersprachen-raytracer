@@ -17,7 +17,7 @@
 class Camera {
 public:
     Camera(glm::vec3 const& position, glm::vec3 const& direction, int width, int height, float distance);
-    Ray generateRay(int x, int y, Ray const& ray) const;
+    Ray generateRay(int x, int y) const;
     void lookAt(glm::vec3 const& pos);
     void print();
     //void translate(glm::vec3 const& position);

@@ -12,7 +12,7 @@
 #include "shape.hpp"
 
 class Box : public Shape {
-
+public:
     Box(const glm::vec3 &minXminYminZ, const glm::vec3 &maxXmaxYmaxZ);
 
     Box(glm::vec3 const& pos, float xScale, float yScale, float zScale);
@@ -52,6 +52,7 @@ class Box : public Shape {
 /**/
     void print() const override;
 
+private:
     int sign(glm::vec3 const& vec3, int position) const;
 
 private:

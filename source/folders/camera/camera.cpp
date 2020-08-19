@@ -33,7 +33,7 @@
   * @param y pos of the Pixel on the screen 0 to height
   * @return a new Ray with the pos of the Camera and the Direction onto the camera plane in worldspace
   */
- Ray Camera::generateRay(int x, int y, Ray const& ray) const {
+ Ray Camera::generateRay(int x, int y) const {
 
      glm::vec3 right = glm::cross(direction,upVector);// from the left of the camera plane to the right
      glm::vec3 top = glm::cross(direction,right); // from bottom of the camera plane to the top

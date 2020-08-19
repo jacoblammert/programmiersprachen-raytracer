@@ -16,6 +16,7 @@ int main(int argc, char* argv[])
     auto t = win.get_time();
     auto m = win.mouse_position();
 
+
     win.update();
   }
 

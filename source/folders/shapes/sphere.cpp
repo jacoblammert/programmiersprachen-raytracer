@@ -33,7 +33,7 @@ bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hit
 
     raydirection = raydirection * t;
 
-    float y = (pos - rayposition - raydirection).length();
+    float y = ((pos - rayposition) - raydirection).length();
 
     if (y < radius) {
 
@@ -42,7 +42,7 @@ bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hit
         float t2 = t + x; // far intersection point
 
         raydirection = ray.direction;
-        glm::normalize(raydirection);
+        //glm::normalize(raydirection);
 
 
         if (0 < t1 && t1 < distance) {
