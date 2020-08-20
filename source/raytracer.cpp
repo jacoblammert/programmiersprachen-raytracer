@@ -23,21 +23,28 @@ int main(int argc, char *argv[]) {
     loader.loadFile();
 
 
-    unsigned const image_width = 1920 / 3; //640
-    unsigned const image_height = 1080 / 3;//360
+    unsigned const image_width = 1920/3; //640
+    unsigned const image_height = 1080/3;//360
     std::string const filename = "./checkerboard.ppm";
 
 
     Window window{{image_width, image_height}};
 
+    std::vector<Shape*> object; // usefull later on
 
-    Sphere object{{0, 0, 0}, 2};
+    //Sphere object{{0, 0, 0}, 2};
     //Box object{{0,0,0},2,2,2};
     //Triangle object{{2, 0, 0},{0, 2, 0},{0, 0, 2}};
     //Plane object{{2,0,0},{0,0,1}};
 
-    float stepsize = 0.3f;
+    object.push_back(new Sphere{{0, 0, 0}, 2});
+    object.push_back(new Box{{0,0,0},2,2,2});
+    object.push_back(new Triangle{{2, 0, 0},{0, 2, 0},{0, 0, 2}});
+    object.push_back(new Plane{{2,0,0},{0,0,1}});
+
+    float stepsize = 0.1f;
     float step = 0;
+    Renderer renderer{image_width, image_height, filename};
 
     while (!window.should_close()) {
         if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -45,22 +52,20 @@ int main(int argc, char *argv[]) {
         }
 
 
-
-
         Camera camera{{5, 5, 5}, {-1, 0, 0}, image_width, image_height, 2};
 
         step += stepsize;
         //std::cout << step << std::endl;
-        camera.setPosition({std::sin(step) * 5.0f, std::cos(step) * 5.0f, 2});
+        camera.setPosition({std::sin(step) * 5.0f, std::cos(step) * 5.0f, 2*std::cos(0.75*step)});
 
         camera.lookAt({});
         //camera.print(); // for changing positions, but the view doesent update, therefore it is useless right now
 
 
 
-//        omp_set_num_threads(64); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren
+//        omp_set_num_threads(32); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren
 //#pragma omp parallel for
-        Renderer renderer{image_width, image_height, filename};
+
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
             for (int j = 0; j < image_height; ++j) {
@@ -69,9 +74,12 @@ int main(int argc, char *argv[]) {
                 Ray ray = camera.generateRay(i, j);
 
                 glm::vec3 normalvec;
+                glm::vec3 positionvec;
                 float dist = INFINITY - 1; // will later be set to closest distance where the ray intersected an object
 
-                if (object.getIntersectVec(ray, normalvec, normalvec, dist)) {
+                if (object[(int)(step/5) % 4]->getIntersectVec(ray, positionvec, normalvec, dist)) {
+
+                    normalvec = positionvec;
 
                     normalvec += glm::vec3{1,1,1};
                     normalvec *= 0.5f;
@@ -85,7 +93,6 @@ int main(int argc, char *argv[]) {
                 renderer.write(color);
             }
         }
-
         window.show(renderer.color_buffer()); // leider wird es nicht jedes mal geupdated, wenn es aufgerufen wird
     }
 
