@@ -212,7 +212,7 @@ void Window::show(std::vector<Color> const& color_buffer)
   glBindTexture(GL_TEXTURE_2D, texture_);
   glDrawArrays(GL_TRIANGLES, 0, 3);
   glBindVertexArray(0);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  glBindTexture(GL_TEXTURE_2D, texture_);
   glUseProgram(0);
   update();
 }

@@ -111,7 +111,7 @@ bool Box::getIntersectVec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNor
         return true;
     }
 
-
+    return false;
 }
 
 

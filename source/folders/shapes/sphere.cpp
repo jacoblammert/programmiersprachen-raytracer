@@ -25,15 +25,14 @@ Sphere::Sphere(const glm::vec3 &position, float radius) :
 bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
 
     glm::vec3 raydirection = ray.direction;
-    glm::vec3  rayposition = ray.position;
 
 
-    float t = glm::dot(pos - rayposition,raydirection);
+    float t = glm::dot(pos - ray.position,raydirection);
 
 
-    raydirection = raydirection * t;
+    raydirection *= t;
 
-    float y = glm::length(pos - rayposition - raydirection);
+    float y = glm::length(pos - ray.position - raydirection);
 
     if (y < radius) {
 
@@ -47,14 +46,14 @@ bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hit
         if (0 < t1 && t1 < distance) {
             raydirection *= t1;
             distance = t1;
-            HitPoint = rayposition + raydirection;
+            HitPoint = ray.position + raydirection;
             HitNormal = getNormal(HitPoint);
             return true;
         }
         if (t1 < 0 && 0 < t2 && t2 < distance) {
             raydirection *= t2;
             distance = t2;
-            HitPoint = rayposition + raydirection;
+            HitPoint = ray.position + raydirection;
             HitNormal = getNormal(HitPoint);
             return true;
         }
@@ -69,8 +68,7 @@ bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hit
  */
 glm::vec3 Sphere::getNormal(glm::vec3 const& position) const {
     glm::vec3 normal = position - this->pos;
-    glm::normalize(normal);
-    return normal;
+    return glm::normalize(normal);
 }
 
 /**

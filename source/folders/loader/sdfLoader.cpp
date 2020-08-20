@@ -7,9 +7,10 @@
 #include <fstream>
 #include <sstream> // string stream -> easy parsing mechanics
 #include <string>
+#include <utility>
 
 SdfLoader::SdfLoader(std::string filepath) :
-    filepath {filepath}
+    filepath {std::move(filepath)}
 {}
 
 void SdfLoader::loadFile() const { //const correctness valid?
