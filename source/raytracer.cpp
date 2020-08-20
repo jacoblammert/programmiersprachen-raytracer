@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
     loader.loadFile();
 
 
-    unsigned const image_width = 1920/3; //640
-    unsigned const image_height = 1080/3;//360
+    unsigned const image_width = 1920/ 2; //640
+    unsigned const image_height = 1080/ 2;//360
     std::string const filename = "./checkerboard.ppm";
 
 
@@ -47,12 +47,16 @@ int main(int argc, char *argv[]) {
 
     std::vector<Shape*> shapes;
     for (int i = 0; i < 100; ++i) {
-        float x = ((float)(rand()%1000)/500)-1; // number between -1 and 1
-        float y = ((float)(rand()%1000)/500)-1; // number between -1 and 1
-        float z = ((float)(rand()%1000)/500)-1; // number between -1 and 1
-        glm::vec3 position{x,y,z};
+        float x = ((float) (rand() % 1000) / 500) - 1; // number between -1 and 1
+        float y = ((float) (rand() % 1000) / 500) - 1; // number between -1 and 1
+        float z = ((float) (rand() % 1000) / 500) - 1; // number between -1 and 1
+        glm::vec3 position{x, y, z};
         position *= 5;
-        shapes.push_back(new Sphere{position, 0.5});
+        //if (i % 2 == 0) {
+            shapes.push_back(new Sphere{position, 0.136125});
+        //} else {
+        //    shapes.push_back(new Box{position, 0.125f, 0.125f, 0.125f});
+        //}
     }
     Composite composite{shapes};
 
@@ -81,7 +85,7 @@ int main(int argc, char *argv[]) {
 
 
 
-//        omp_set_num_threads(4); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren
+//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren
 //#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
@@ -103,7 +107,7 @@ int main(int argc, char *argv[]) {
 
                 /*** With composite: (test)  should be faster ***/
 
-                composite.getIntersectedShape(ray,*shape,positionvec,normalvec,dist,hit);
+                composite.getIntersectedShape(ray,*shape,positionvec,normalvec,dist,hit); //TODO simplify function to take a new pointer as parameter and reduce the amount of data send for each ray, even if it will not hit anything
 
 
                 /******/
@@ -111,11 +115,12 @@ int main(int argc, char *argv[]) {
 
                 /*** Without composite (test)  should be slower ***/
 
-                //for (int k = 0; k < shapes.size(); ++k) {
-                //    if(shapes[k]->getIntersectVec(ray, positionvec, normalvec, dist)){
-                //        hit = true;
-                //    }
-                //}
+                /*/
+                for (int k = 0; k < shapes.size(); ++k) {
+                    if(shapes[k]->getIntersectVec(ray, positionvec, normalvec, dist)){
+                        hit = true;
+                    }
+                }/**/
 
 
                 /******/
@@ -131,7 +136,7 @@ int main(int argc, char *argv[]) {
                     color.color = {normalvec[0], normalvec[1],
                                    normalvec[2]};//{1, 0, 0}; // shape is red
                 } else {
-                    color.color = {1, 1, 1}; // shape has not been hit
+                    color.color = {0, 0, 0}; // shape has not been hit
                 }
 
                 renderer.write(color);
