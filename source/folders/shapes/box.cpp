@@ -6,6 +6,13 @@
 
 
 /**
+ * default initializer
+ */
+Box::Box() {
+
+}
+
+/**
  * box constructor for axis alligned box with a min and max vector for example: {-1,-1,-1} {1,1,1}
  * @param minXminYminZ minimum of the box (individual values must be smaller than their counterpart in max vector)
  * @param maxXmaxYmaxZ maximum of the box (individual values must be greater than their counterpart in min vector)
@@ -250,3 +257,5 @@ void Box::translate(glm::vec3 const &position) {
 int Box::sign(glm::vec3 const &vec3, int pos) const {
     return ((pos == 0 && vec3[0] < 0) || (pos == 1 && vec3[1] < 0) || (pos == 2 && vec3[2] < 0));
 }
+
+
