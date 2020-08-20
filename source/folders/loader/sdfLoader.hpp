@@ -7,6 +7,7 @@
 
 
 #include <string>
+#include <glm-0.9.5.3/glm/vec3.hpp>
 
 class SdfLoader {
 public:
