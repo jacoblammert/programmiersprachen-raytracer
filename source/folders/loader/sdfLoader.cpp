@@ -35,7 +35,7 @@ void SdfLoader::loadFile() const { //const correctness valid?
 
         in_sstream >> identifier;
 
-        std::cout << "Identifier content: " << identifier << std::endl;
+        //std::cout << "Identifier content: " << identifier << std::endl;
 
         //check for definition or transformation
         if ("define" == identifier) {
@@ -82,7 +82,20 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     center[1] = center_y;
                     center[2] = center_z;
                 } else if (shape_type == "composite") {
-                    //composite attributes
+                    //parse composite attributes
+                    int count = 0;
+                    std::string composite_name, param;
+                    std::vector <std::string> composites;
+                    
+                    in_sstream >> composite_name;
+                    
+                    std::cout << "Composite: " << std::endl;
+                    
+                    while (!in_sstream.eof()) {
+                        in_sstream >> param;
+                        composites.push_back(param);
+                        count++;
+                    }
                 }
             } else if ("material" == class_name) {
                 //parse material attributes
@@ -129,17 +142,6 @@ void SdfLoader::loadFile() const { //const correctness valid?
                 in_sstream >> name_camera;
                 in_sstream >> angle;
 
-            } else if ("ambient" == class_name) {
-                //parse ambient attributes
-                glm::vec3 ambient;
-                float ambient_x, ambient_y, ambient_z;
-                
-                in_sstream >> ambient_x >> ambient_y >> ambient_z;
-                
-                ambient[0] = ambient_x;
-                ambient[1] = ambient_y;
-                ambient[2] = ambient_z;
-                
             } else {
                 std::cout << "Line was not valid!" << std::endl;
             }
@@ -175,7 +177,26 @@ void SdfLoader::loadFile() const { //const correctness valid?
                 
                 in_sstream >> value;
                 
+            } else {
+                std::cout << "Line was not valid!" << std::endl;
             }
+        } else if ("render" == identifier) {
+            //TODO
+        } else if ("ambient" == identifier) {
+            //parse ambient attributes
+            glm::vec3 ambient;
+            float ambient_x, ambient_y, ambient_z;
+                       
+            in_sstream >> ambient_x >> ambient_y >> ambient_z;
+                       
+            ambient[0] = ambient_x;
+            ambient[1] = ambient_y;
+            ambient[2] = ambient_z;
+                       
+        } else if ("#" == identifier) {
+            //commentary - do nothing
+        } else {
+            std::cout << "Line was not valid!" << std::endl;
         }
     }
 
