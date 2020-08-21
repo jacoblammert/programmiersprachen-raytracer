@@ -6,6 +6,7 @@
 #include <thread>
 #include <utility>
 #include <cmath>
+#include <memory>
 //#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
@@ -31,34 +32,32 @@ int main(int argc, char *argv[]) {
 
     Window window{{image_width, image_height}};
 
-
-    //TODO clean up this mess later
     std::vector<std::shared_ptr<Shape>> object; // usefull later on
 
-    object.push_back(std::shared_ptr<Shape> (new Sphere{{0, 0, 0}, 2}));
-    object.push_back(std::shared_ptr<Shape> (new Box{{0, 0, 0}, 2, 2, 2}));
-    object.push_back(std::shared_ptr<Shape> (new Triangle{{2, 0, 0},
+    object.push_back(std::make_shared<Sphere>(Sphere{{0, 0, 0}, 2}));
+    object.push_back(std::make_shared<Box>(Box{{0, 0, 0}, 2, 2, 2}));
+    object.push_back(std::make_shared<Triangle>(Triangle{{2, 0, 0},
                                   {0, 2, 0},
                                   {0, 0, 2}}));
-    object.push_back(std::shared_ptr<Shape> (new Plane{{2, 0, 0},
+    object.push_back(std::make_shared<Plane>(Plane{{2, 0, 0},
                                {0, 0, 1}}));
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 80; ++i) {
+    for (int i = 0; i < 50; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         glm::vec3 position{x, y, z};
         position *= 5;
         //if (i % 2 == 1) {
-        shapes.push_back(std::shared_ptr<Shape> (new Sphere{position, 0.2636125}));
+        shapes.push_back(std::make_shared<Sphere>(Sphere{position, 0.2636125}));
         //} else {
-        //    shapes.push_back(new Box{position, 01.125f, 01.125f, 01.125f});
+        //    shapes.push_back(std::make_shared<Box>( Box{position, 01.125f, 01.125f, 01.125f}));
         //}
     }
 
-    shapes.push_back(std::shared_ptr<Shape> (new Plane{{0, 0, 0},{0, 0, 1}}));
+    shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, 0},{0, 0, 1}}));
 
     Composite composite{shapes};
 
@@ -85,6 +84,7 @@ int main(int argc, char *argv[]) {
         camera.lookAt({});
 
 
+
 //       omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
 //#pragma omp parallel for
 
@@ -99,15 +99,16 @@ int main(int argc, char *argv[]) {
                 glm::vec3 positionvec;
                 float dist = INFINITY - 1; // will later be set to closest distance where the ray intersected an object
 
-                std::shared_ptr<Shape> shape; // will later be used in a different class to get the refractive index/ material properties
+                std::shared_ptr<Sphere> shape; // will later be used in a different class to get the refractive index/ material properties
                 bool hit = false;
 
 
 
 
-                composite.getIntersectedShape(ray, shape, positionvec, normalvec, dist,hit); //TODO simplify function to take a new pointer as parameter and reduce the amount of data send for each ray, even if it will not hit anything
+                composite.get_intersected_shape(ray, shape, positionvec, normalvec, dist,
+                                                hit); //TODO simplify function to take a new pointer as parameter and reduce the amount of data send for each ray, even if it will not hit anything
 
-                /// hit gets changed in the function above
+
 
                 if (hit) {
 
@@ -116,16 +117,14 @@ int main(int argc, char *argv[]) {
                     normalvec += glm::vec3{1, 1, 1};
                     normalvec *= 0.5f;
 
-                    color.color = {normalvec[0], normalvec[1], normalvec[2]};
+                    color.color = {normalvec[0], normalvec[1], normalvec[2]};//{1, 0, 0}; // shape is red
 
 
                     /*////checkerboard pattern:
                     int x = positionvec[0] < 0 ? positionvec[0] - 1 : positionvec[0];
                     int y = positionvec[1] < 0 ? positionvec[1] - 1 : positionvec[1];
-
                     x /=5;
                     y /=5;
-
                     if ((x + y) % 2) {
                         color.color = {1, 1, 1};
                     } else {

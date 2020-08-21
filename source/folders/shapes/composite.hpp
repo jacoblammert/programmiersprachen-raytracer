@@ -1,3 +1,4 @@
+
 //
 // Created by Jacob Lammert on 20.08.2020.
 //
@@ -26,18 +27,18 @@ public:
 
     Composite(std::vector<std::shared_ptr<Shape>> shapes);
 
-    bool getIntersectVec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
+    bool get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
 
-    void getIntersectedShape(const Ray &ray, std::shared_ptr<Shape> shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance,
-                             bool &hit);
+    void get_intersected_shape(const Ray &ray,std::shared_ptr<Shape> shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance,
+                               bool &hit);
 
-    glm::vec3 getNormal(glm::vec3 const &pos) const override;
+    glm::vec3 get_normal(glm::vec3 const &pos) const override;
 
-    glm::vec3 getMin() const override;
+    glm::vec3 get_min() const override;
 
-    glm::vec3 getMax() const override;
+    glm::vec3 get_max() const override;
 
-    glm::vec3 getMedian() const override;
+    glm::vec3 get_median() const override;
 
 
     void translate(glm::vec3 const &position) override;
@@ -50,19 +51,19 @@ public:
 
     void build();
 
-    void addShape(std::shared_ptr<Shape> shape);
+    void add_shape(std::shared_ptr<Shape> shape);
 
-    void addShapes(std::vector<std::shared_ptr<Shape>> shapes);
+    void add_shapes(std::vector<std::shared_ptr<Shape>> shapes);
 
 private:
 
     void split();
 
-    void setMinMaxMid();
+    void set_min_max_mid();
 
-    void getMin(glm::vec3 shapemin);
+    void get_min(glm::vec3 shapemin);
 
-    void getMax(glm::vec3 shapemax);
+    void get_max(glm::vec3 shapemax);
 
     glm::vec3 minXminYminZ;
     glm::vec3 maxXmaxYmaxZ;
