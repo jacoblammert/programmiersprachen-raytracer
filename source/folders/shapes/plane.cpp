@@ -27,7 +27,7 @@ plane::Plane(Vector const& position, Vector const& normal, Material *material) :
  * @param distance as float (scalar for the normalized direction of the ray)
  * @return true, if intersected in front of the ray, false otherwise
  */
-bool Plane::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
+bool Plane::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
 
     glm::vec3 raydirection = ray.direction;
     glm::vec3 rayposition = ray.position;
@@ -55,21 +55,21 @@ bool Plane::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitN
  * - only here because of the sphere and maybe triangle
  * @return normal of the plane
  */
-glm::vec3 Plane::getNormal(glm::vec3 const& pos) const {
+glm::vec3 Plane::get_normal(glm::vec3 const& pos) const {
     return normal;
 }
 
 /**
  * @return minimum of the plane (useless, because we will leave planes in the first layer of our hierarchy anyways)
  */
-glm::vec3 Plane::getMin() const {
+glm::vec3 Plane::get_min() const {
     return {-INFINITY, -INFINITY, -INFINITY}; // should give back a box of the desired size of the plane
 }
 
 /**
  * @return maximum of the plane (useless, because we will leave planes in the first layer of our hierarchy anyways)
  */
-glm::vec3 Plane::getMax() const {
+glm::vec3 Plane::get_max() const {
     return {INFINITY, INFINITY,
             INFINITY}; // should give back a box of the desired size of the plane (cutting doesn't work)
 }
@@ -78,7 +78,7 @@ glm::vec3 Plane::getMax() const {
  * where is the median of an infinite plane? -> position is our best guess
  * @return position of the plane
  */
-glm::vec3 Plane::getMedian() const {
+glm::vec3 Plane::get_median() const {
     return pos;
 }
 

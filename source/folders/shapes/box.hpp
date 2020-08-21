@@ -23,19 +23,19 @@ public:
 
 
     //TODO check, if so many functions are even necessary for skybox, if we want to implement one later or the Kd-Tree / hierarchy
-    bool getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
+    bool get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
 
     //void getIntersectVec(glm::vec3 &direction,  glm::vec3 &HitNormal) const; /// für Skybox
 
-    bool getIntersect(const Ray &ray) const;
+    bool get_intersect(const Ray &ray) const;
 
-    glm::vec3 getNormal(glm::vec3 const& pos) const override;
+    glm::vec3 get_normal(glm::vec3 const& pos) const override;
 
-    glm::vec3 getMin() const override;
+    glm::vec3 get_min() const override;
 
-    glm::vec3 getMax() const override;
+    glm::vec3 get_max() const override;
 
-    glm::vec3 getMedian() const override;
+    glm::vec3 get_median() const override;
 
 /*/
     Material* getMaterial() override;

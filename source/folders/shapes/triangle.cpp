@@ -39,7 +39,7 @@ Triangle::Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, C
  * @param distance from the normalized ray to the intersection point as reference
  * @return true, of the triangle is in front of the ray and has been intersected
  */
-bool Triangle::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
+bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
 
 
     glm::vec3 pvec = glm::cross(ray.direction , (c - a));
@@ -78,14 +78,14 @@ bool Triangle::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &H
  * @param pos in this case not necessary, only for box, cone/ cylinder (both not yet implented) and sphere
  * @return normal of the triangle
  */
-glm::vec3 Triangle::getNormal(glm::vec3 const& pos) const {
+glm::vec3 Triangle::get_normal(glm::vec3 const& pos) const {
     return this->normal;
 }
 
 /**
  * @return a vector with the minimal values of x, y and z for the triangle (for a box around the triangle)
  */
-glm::vec3 Triangle::getMin() const {
+glm::vec3 Triangle::get_min() const {
     glm::vec3 min = a;
 
     for (int j = 0; j < 3; ++j) {
@@ -105,7 +105,7 @@ glm::vec3 Triangle::getMin() const {
 /**
  * @return a vector with the maximal values of x, y and z for the triangle (for a box around the triangle)
  */
-glm::vec3 Triangle::getMax() const {
+glm::vec3 Triangle::get_max() const {
     glm::vec3 max = a;
     for (int j = 0; j < 3; ++j) {
         if (max[j] < b[j]) {
@@ -123,7 +123,7 @@ glm::vec3 Triangle::getMax() const {
 /**
  * @return all points added and divided by 3 to get a median point on the triangle
  */
-glm::vec3 Triangle::getMedian() const {
+glm::vec3 Triangle::get_median() const {
 
     glm::vec3 median = a + b + c;
     median *= (1.0f / 3.0f);

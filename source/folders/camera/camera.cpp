@@ -21,6 +21,8 @@
 {
     this->direction = glm::normalize(this->direction);
 }
+
+  //Camera::Camera(glm::vec3 const& position, int width, int height, float angle, std::string const& name); - TODO
  
  
  /**
