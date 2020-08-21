@@ -66,20 +66,25 @@ bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 
 
     if (0 < det && det < distance) {
         distance = det;
-        HitNormal = this->normal;
         pvec = ray.direction;
         pvec *= det;
         HitPoint = rayposition + pvec;
+        HitNormal = get_normal(ray.position);
     }
     return true;
 }
 
 /**
- * @param pos in this case not necessary, only for box, cone/ cylinder (both not yet implented) and sphere
+ * @param pos necessary to get the normal which is pointing "towards" the ray position
+ * same reason for the plane
  * @return normal of the triangle
  */
 glm::vec3 Triangle::get_normal(glm::vec3 const& pos) const {
-    return this->normal;
+    if (glm::dot(glm::normalize(pos-this->a),normal) < 0) {
+        return -normal;
+    } else{
+        return normal;
+    }
 }
 
 /**

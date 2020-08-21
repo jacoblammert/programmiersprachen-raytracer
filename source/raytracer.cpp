@@ -15,6 +15,7 @@
 #include "folders/shapes/triangle.hpp"
 #include "folders/shapes/plane.hpp"
 #include "folders/shapes/composite.hpp"
+#include "folders/renderer/render.hpp"
 
 //TODO add folders for saving,...
 
@@ -25,8 +26,8 @@ int main(int argc, char *argv[]) {
     loader.loadFile();
 
 
-    unsigned const image_width = 1920 / 2; //640
-    unsigned const image_height = 1080 / 2;//360
+    unsigned const image_width = 1920 / 3; //640
+    unsigned const image_height = 1080 / 3;//360
     std::string const filename = "./checkerboard.ppm";
 
 
@@ -37,30 +38,38 @@ int main(int argc, char *argv[]) {
     object.push_back(std::make_shared<Sphere>(Sphere{{0, 0, 0}, 2}));
     object.push_back(std::make_shared<Box>(Box{{0, 0, 0}, 2, 2, 2}));
     object.push_back(std::make_shared<Triangle>(Triangle{{2, 0, 0},
-                                  {0, 2, 0},
-                                  {0, 0, 2}}));
+                                                         {0, 2, 0},
+                                                         {0, 0, 2}}));
     object.push_back(std::make_shared<Plane>(Plane{{2, 0, 0},
-                               {0, 0, 1}}));
+                                                   {0, 0, 1}}));
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 50; ++i) {
+    for (int i = 0; i < 20; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         glm::vec3 position{x, y, z};
         position *= 5;
         //if (i % 2 == 1) {
-        shapes.push_back(std::make_shared<Sphere>(Sphere{position, 0.2636125}));
+        shapes.push_back(std::make_shared<Sphere>(Sphere{position, 0.3512636125}));
         //} else {
         //    shapes.push_back(std::make_shared<Box>( Box{position, 01.125f, 01.125f, 01.125f}));
         //}
     }
 
-    shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, 0},{0, 0, 1}}));
+    //shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, 0},{0, 0, 1}}));
 
-    Composite composite{shapes};
 
+    std::vector<std::shared_ptr<Light>> lights;
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 5}));
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 8}));
+
+    std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
+
+
+    //std::vector<std::shared_ptr<Composite>> compositevector;
+    //compositevector.push_back(composite);
 
     float stepsize = 0.1f;
     float step = 0;
@@ -83,17 +92,35 @@ int main(int argc, char *argv[]) {
 
         camera.lookAt({});
 
+        lights[0]->position = {3 * std::cos(3 * step), 3 * std::sin(2 * step), 7 * std::cos( 0.75 * step)};
+        lights[1]->position = {3 * std::sin(1.7 * step), 3 * std::cos(3.4 * step), 5 * std::cos( 1.5*0.75 * step)};
+        lights[0]->color = {1 + std::cos(3 * step), 1 + std::sin(2 * step), 1 + std::cos(0.75 * step)};
+        lights[0]->color = lights[0]->color * 0.5f;
+        lights[1]->color = {lights[0]->color[2],1-lights[0]->color[0],1-lights[0]->color[1]};
+        /// The color of the light ranges from 0 to 1
 
 
-//       omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+//        omp_set_num_threads(32); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
 //#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
+
+            Render render;
+            render.setComposite(composite);
+            render.setLights(lights);
+
             for (int j = 0; j < image_height; ++j) {
 
                 Pixel color{(unsigned int) i, (unsigned int) j};
-                Ray ray = camera.generateRay(i, j);
+
+                glm::vec3 colorveec = render.getColor(camera.generateRay(i, j), 0);
+
+                color.color = {colorveec[0], colorveec[1], colorveec[2]};
+
+                renderer.write(color);
+
+                /*/
                 //TODO everything in here can be put in a render class / function
                 glm::vec3 normalvec;
                 glm::vec3 positionvec;
@@ -120,7 +147,24 @@ int main(int argc, char *argv[]) {
                     color.color = {normalvec[0], normalvec[1], normalvec[2]};//{1, 0, 0}; // shape is red
 
 
-                    /*////checkerboard pattern:
+
+                } else {
+                    color.color = {0, 0, 0}; // shape has not been hit
+                }/**/
+
+
+
+                //renderer.write(color);
+            }
+            //window.show(renderer.color_buffer()); /// malt jede Zeile einzeln
+        }
+        //renderer = {image_width, image_height, filename}; /// malt jede Zeile einzeln + schwarzer Hintergrund für neues Bild
+        window.show(renderer.color_buffer()); // leider wird es nicht jedes mal geupdated, wenn es aufgerufen wird
+    }
+
+    return 0;
+}
+/*////checkerboard pattern:
                     int x = positionvec[0] < 0 ? positionvec[0] - 1 : positionvec[0];
                     int y = positionvec[1] < 0 ? positionvec[1] - 1 : positionvec[1];
                     x /=5;
@@ -131,17 +175,3 @@ int main(int argc, char *argv[]) {
                         color.color = {};
                     }
                     /**/
-                } else {
-                    color.color = {0, 0, 0}; // shape has not been hit
-                }
-
-                renderer.write(color);
-            }
-            //window.show(renderer.color_buffer()); /// malt jede Zeile einzeln
-        }
-        //renderer = {image_width, image_height, filename}; /// malt jede Zeile einzeln + schwarzer Hintergrund für neues Bild
-        window.show(renderer.color_buffer()); // leider wird es nicht jedes mal geupdated, wenn es aufgerufen wird
-    }
-
-    return 0;
-}

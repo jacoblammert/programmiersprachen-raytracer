@@ -9,7 +9,7 @@
  * @param position for the new plane
  * @param normal of the pane (will be normalized automatically)
  */
-Plane::Plane(glm::vec3 const& position, glm::vec3 const& normal) :
+Plane::Plane(glm::vec3 const &position, glm::vec3 const &normal) :
         pos{position}, normal{glm::normalize(normal)} {
 }
 /*///TODO add later (with materials)
@@ -27,36 +27,34 @@ plane::Plane(Vector const& position, Vector const& normal, Material *material) :
  * @param distance as float (scalar for the normalized direction of the ray)
  * @return true, if intersected in front of the ray, false otherwise
  */
-bool Plane::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
+bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
 
     glm::vec3 raydirection = ray.direction;
-    glm::vec3 rayposition = ray.position;
 
     float denom = glm::dot(normal, raydirection);
-    glm::vec3 p0l0 = pos - rayposition;
+    glm::vec3 p0l0 = pos - ray.position;
 
     float t = glm::dot(p0l0, normal) / denom;
 
-    if (t >= 0) {
-
-        raydirection *= t;
-        if (0 < t && t < distance) {
-            distance = t;
-            HitPoint = rayposition + raydirection;
-            HitNormal = normal;
-        }
+    if (0 <= t && t < distance) {
+        distance = t;
+        HitPoint = ray.position + raydirection * t;
+        HitNormal = get_normal(ray.position);
         return true;
     }
     return false;
 }
 
 /**
- * @param pos - in this case useless parameter, better implementation was in script I believe (optional parameters)
- * - only here because of the sphere and maybe triangle
- * @return normal of the plane
+ * @param pos of the camera very important in order to get correct shadows from both sides of the plane
+ * @return normal of the plane always "pointing" towards the camera
  */
-glm::vec3 Plane::get_normal(glm::vec3 const& pos) const {
-    return normal;
+glm::vec3 Plane::get_normal(glm::vec3 const &pos) const {
+    if (glm::dot(glm::normalize(pos-this->pos),normal) < 0) {
+        return -normal;
+    } else{
+        return normal;
+    }
 }
 
 /**
@@ -103,6 +101,6 @@ void Plane::setMaterial(Material *material) {
  * Changes the position of the Sphere with a given glm::vec3
  * @param position
  */
-void Plane::translate(glm::vec3 const& position) {
+void Plane::translate(glm::vec3 const &position) {
     pos += position;
 }
