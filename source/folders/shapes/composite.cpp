@@ -283,7 +283,7 @@ void Composite::addShape(Shape *shape) {
  * @param shapes  = vector with Shape pointers
  */
 void Composite::addShapes(std::vector<Shape *> shapes) {
-
+    //TODO addShape function
 }
 
 

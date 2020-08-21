@@ -167,7 +167,7 @@ bool Box::getIntersect(const Ray &ray) const {
  */
 glm::vec3 Box::getNormal(glm::vec3 const &pos) const {
 
-    float epsilon = 0.000001f; // for edges/ corners -> uncertainty
+    float epsilon = 0.0001f; // for edges/ corners -> uncertainty
 
     if (pos[0] <= bounds[0][0] + epsilon) {
         return {-1, 0, 0}; // back

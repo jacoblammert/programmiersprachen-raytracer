@@ -13,8 +13,6 @@ class Plane : public Shape {
 public:
     Plane(glm::vec3 const& position, glm::vec3 const& normal);
 
-    //plane(glm::vec3 position, glm::vec3 normal, Material* material);
-
     bool getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
 
     glm::vec3 getNormal(glm::vec3 const& pos) const override;
