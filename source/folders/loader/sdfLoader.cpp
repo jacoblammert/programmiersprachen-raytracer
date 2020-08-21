@@ -3,7 +3,6 @@
 //
 
 #include "sdfLoader.hpp"
-#include "../shapes/composite.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream> // string stream -> easy parsing mechanics
@@ -11,6 +10,8 @@
 #include <utility>
 #include <map>
 #include "../shapes/sphere.hpp"
+#include "../shapes/box.hpp"
+#include "../shapes/composite.hpp"
 
 SdfLoader::SdfLoader(std::string filepath) :
     filepath {std::move(filepath)}
@@ -31,8 +32,8 @@ void SdfLoader::loadFile() const { //const correctness valid?
     std::string identifier;
 
 
-    std::vector<Composite*> compositevec; /// all possiblt compositepointer  TODO turn to smartpointer
-    std::map<std::string,Shape*> shapemap; /// map with all the shapes accessible with their names
+    std::vector<std::shared_ptr<Composite>> compositevec; /// all possiblt compositepointer  TODO turn to smartpointer
+    std::map<std::string,std::shared_ptr<Shape>> shapemap; /// map with all the shapes accessible with their names
 
     while (std::getline(in_file, line_buffer)) {
         std::cout << ++line_count << line_buffer << std::endl;
@@ -44,17 +45,17 @@ void SdfLoader::loadFile() const { //const correctness valid?
 
         //std::cout << "Identifier content: " << identifier << std::endl;
 
-        //check for definition or transformation
+        /// check for definition or transformation
         if ("define" == identifier) {
             std::string class_name;
             in_sstream >> class_name;
-            //check for shapes/ materials/ lights
+            /// check for shapes/ materials/ lights
             if ("shape" == class_name) {
                 std::string shape_type;
                 in_sstream >> shape_type;
-                //check for shape type, then parse attributes (including material lookup) - or composite
+                /// check for shape type, then parse attributes (including material lookup) - or composite
                 if (shape_type == "box") {
-                    //parse box attributes
+                    /// parse box attributes
                     std::string name_box, mat_name_box;
                     glm::vec3 p1, p2;
                     float p1_x, p1_y, p1_z;
@@ -73,10 +74,10 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     p2[1] = p2_y;
                     p2[2] = p2_z;
 
-                    shapemap[name_box] = new Box{p1,p2}; /// add a box and access it later with its name from the map
+                    shapemap[name_box] = std::make_shared<Box>(Box{p1,p2}); /// add a box and access it later with its name from the map
                     
                 } else if (shape_type == "sphere") {
-                    //parse sphere attributes
+                    /// parse sphere attributes
                     std::string name_sphere, mat_name_sphere;
                     float radius;
                     float center_x, center_y, center_z;
@@ -91,10 +92,10 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     center[1] = center_y;
                     center[2] = center_z;
 
-                    shapemap[name_sphere] = new Sphere{center,radius};/// add a sphere and access it later with its name from the map
+                    shapemap[name_sphere] = std::make_shared<Sphere>(Sphere{center,radius});/// add a sphere and access it later with its name from the map
 
                 } else if (shape_type == "composite") {
-                    //parse composite attributes
+                    /// parse composite attributes
                     int count = 0;
                     std::string composite_name, param;
                     std::vector <std::string> composites;
@@ -103,12 +104,13 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     
                     std::cout << "Composite: " << std::endl;
 
-                    Composite* composite = new Composite{}; // new composite to be added
+                    std::shared_ptr<Composite> composite = std::make_shared<Composite>();
 
                     while (!in_sstream.eof()) {
                         in_sstream >> param;
                         composites.push_back(param);
                         count++;
+
 
                         composite->addShape(shapemap[param]);
                     }
@@ -118,7 +120,7 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     // even shapes which are not inside a composite object might later be added to a new composite object to make the intersectiontests faster
                 }
             } else if ("material" == class_name) {
-                //parse material attributes
+                /// parse material attributes
                 std::string material_name;
                 float ka_red, ka_green, ka_blue;
                 float kd_red, kd_green, kd_blue;
@@ -132,7 +134,7 @@ void SdfLoader::loadFile() const { //const correctness valid?
                 in_sstream >> m;
                 
             } else if ("light" == class_name) {
-                //parse light attributes
+                /// parse light attributes
                 std::string name_light;
                 glm::vec3 pos, color, brightness;
                 float pos_x, pos_y, pos_z, color_x, color_y, color_z, brightness_x, brightness_y, brightness_z;
@@ -169,7 +171,7 @@ void SdfLoader::loadFile() const { //const correctness valid?
             std::string object, transfomation_type;
             in_sstream >> object;
             in_sstream >> transfomation_type;
-            //check for transformation type and parse arguments
+            /// check for transformation type and parse arguments
             if ("translate" == transfomation_type) {
                 glm::vec3 offset;
                 float offset_x, offset_y, offset_z;

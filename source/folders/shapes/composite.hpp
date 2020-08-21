@@ -7,6 +7,7 @@
 
 
 #include <vector>
+#include <memory>
 #include "shape.hpp"
 #include "box.hpp"
 
@@ -23,11 +24,11 @@ public:
 
     Composite(int depth);
 
-    Composite(std::vector<Shape *> shapes);
+    Composite(std::vector<std::shared_ptr<Shape>> shapes);
 
     bool getIntersectVec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
 
-    void getIntersectedShape(const Ray &ray, Shape &shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance,
+    void getIntersectedShape(const Ray &ray, std::shared_ptr<Shape> shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance,
                              bool &hit);
 
     glm::vec3 getNormal(glm::vec3 const &pos) const override;
@@ -49,9 +50,9 @@ public:
 
     void build();
 
-    void addShape(Shape *shape);
+    void addShape(std::shared_ptr<Shape> shape);
 
-    void addShapes(std::vector<Shape *> shapes);
+    void addShapes(std::vector<std::shared_ptr<Shape>> shapes);
 
 private:
 
@@ -74,7 +75,7 @@ private:
 
     std::vector<Composite> boxes; // TODO change from vector to two seperate objects
 
-    std::vector<Shape *> shapes;
+    std::vector<std::shared_ptr<Shape>> shapes;
 };
 
 

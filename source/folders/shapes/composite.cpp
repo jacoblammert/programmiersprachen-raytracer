@@ -28,7 +28,7 @@ Composite::Composite(int depth) : depth{++depth} {
  * @param shapes
  * @param depth
  */
-Composite::Composite(std::vector<Shape *> shapes) :
+Composite::Composite(std::vector<std::shared_ptr<Shape>> shapes) :
         shapes{std::move(shapes)} {
 
 
@@ -67,7 +67,7 @@ bool Composite::getIntersectVec(const Ray &ray, glm::vec3 &HitPoint, glm::vec3 &
  * @param hit boolean, false, if no shape has been intersected
  */
 void
-Composite::getIntersectedShape(const Ray &ray, Shape &shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance,
+Composite::getIntersectedShape(const Ray &ray, std::shared_ptr<Shape> shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance,
                                bool &hit) {
 
     for (auto &boxe : boxes) {
@@ -81,7 +81,7 @@ Composite::getIntersectedShape(const Ray &ray, Shape &shape, glm::vec3 &Hitpoint
         for (auto &shapehit : shapes) {
             shapehit->getIntersectVec(ray, Hitpoint, Hitnormal, distance);
             if (distance < oldDist) { // Test, if new already hit shape is closer and set shape to shape and hit to true
-                shape = *shapehit;
+                shape = shapehit;
                 hit = true;
             }
         }
@@ -168,12 +168,11 @@ void Composite::setMinMaxMid() {
     median = glm::vec3();
 
     glm::vec3 medianShape;
+    for (int i = 0; i < shapes.size(); ++i) {
+        getMin(shapes[i]->getMin());
+        getMax(shapes[i]->getMax());
 
-    for (auto &shape : shapes) {
-        getMin(shape->getMin());
-        getMax(shape->getMax());
-
-        medianShape = shape->getMedian();
+        medianShape = shapes[i]->getMedian();
         median = median + medianShape;
     }
     median *= (1.0f / (float) shapes.size());
@@ -214,7 +213,8 @@ void Composite::split() {
 
 
     for (int i = (int) shapes.size() - 1; 0 < i; --i) {
-        if (!dynamic_cast<Plane *>(shapes[i])) { // Planes stay in the first Box, because they are really big
+        //TODO test if the hash_code() stays the same on different devices and maybe use a different way to check, if the shape is a plane
+        if (typeid(*shapes[i]).hash_code() != 3060751613){//!dynamic_cast<Plane>(shapes[i])) { // Planes stay in the first Box, because they are really big
 
             if (shapes[i]->getMedian()[axis] > median[axis]) { // right
                 boxes[0].addShape(shapes[i]); // right
@@ -275,15 +275,15 @@ void Composite::getMax(glm::vec3 shapemax) {
  * Adds a Shape pointer to the Compositeobject usefull, if the object has not been build yet
  * @param shape pointer
  */
-void Composite::addShape(Shape *shape) {
+void Composite::addShape(std::shared_ptr<Shape> shape) {
     shapes.push_back(shape);
 }
 /**
  * Adds a vector with Shape pointers to the Compositeobject usefull, if the object has not been build yet
  * @param shapes  = vector with Shape pointers
  */
-void Composite::addShapes(std::vector<Shape *> shapes) {
-    //TODO addShape function
+void Composite::addShapes(std::vector<std::shared_ptr<Shape>> shapes) {
+    shapes.insert(this->shapes.end(),shapes.begin(),shapes.end());
 }
 
 
