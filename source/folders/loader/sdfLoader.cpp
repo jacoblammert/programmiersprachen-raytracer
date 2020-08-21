@@ -4,13 +4,13 @@
 
 #include "sdfLoader.hpp"
 #include "../shapes/composite.hpp"
+#include "../shapes/sphere.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream> // string stream -> easy parsing mechanics
 #include <string>
 #include <utility>
 #include <map>
-#include "../shapes/sphere.hpp"
 
 SdfLoader::SdfLoader(std::string filepath) :
     filepath {std::move(filepath)}
@@ -31,8 +31,8 @@ void SdfLoader::loadFile() const { //const correctness valid?
     std::string identifier;
 
 
-    std::vector<Composite*> compositevec; /// all possiblt compositepointer  TODO turn to smartpointer
-    std::map<std::string,Shape*> shapemap; /// map with all the shapes accessible with their names
+    std::vector<Composite*> composite_vec; /// all possiblt compositepointer  TODO turn to smartpointer
+    std::map<std::string,Shape*> shape_map; /// map with all the shapes accessible with their names
 
     while (std::getline(in_file, line_buffer)) {
         std::cout << ++line_count << line_buffer << std::endl;
@@ -73,7 +73,8 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     p2[1] = p2_y;
                     p2[2] = p2_z;
 
-                    shapemap[name_box] = new Box{p1,p2}; /// add a box and access it later with its name from the map
+                    // add a box and access it later with its name from the map
+                    shape_map[name_box] = new Box{p1,p2};
                     
                 } else if (shape_type == "sphere") {
                     //parse sphere attributes
@@ -91,7 +92,8 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     center[1] = center_y;
                     center[2] = center_z;
 
-                    shapemap[name_sphere] = new Sphere{center,radius};/// add a sphere and access it later with its name from the map
+                    // add a sphere and access it later with its name from the map
+                    shape_map[name_sphere] = new Sphere{center,radius};
 
                 } else if (shape_type == "composite") {
                     //parse composite attributes
@@ -103,19 +105,24 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     
                     std::cout << "Composite: " << std::endl;
 
-                    Composite* composite = new Composite{}; // new composite to be added
+                    // new composite to be added
+                    Composite* composite = new Composite{};
 
                     while (!in_sstream.eof()) {
                         in_sstream >> param;
                         composites.push_back(param);
                         count++;
 
-                        composite->addShape(shapemap[param]);
+                        composite->add_shape(shape_map[param]);
                     }
-                    composite->build(); /// all the shapes have now been added to this single composite object, therfore we can build it now
+                    
+                    // all the shapes have now been added to this single composite object, therefore we can build it now
+                    composite->build();
 
-                    compositevec.push_back(composite); /// we will later test every ray against every compositeobject inside of this single vector
-                    // even shapes which are not inside a composite object might later be added to a new composite object to make the intersectiontests faster
+                    // we will later test every ray against every composite object inside of this single vector
+                    composite_vec.push_back(composite);
+                    
+                    // even shapes which are not inside a composite object might later be added to a new composite object to make the intersection tests faster
                 }
             } else if ("material" == class_name) {
                 //parse material attributes

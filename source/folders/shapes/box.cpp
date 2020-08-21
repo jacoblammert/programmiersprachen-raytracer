@@ -64,7 +64,7 @@ Box::Box(Vector const& Pos, float xScale, float yScale, float zScale, Color cons
  * @param distance from the normalized ray to the intersection point as reference
  * @return true, of the box is in front of the ray and has been intersected
  */
-bool Box::getIntersectVec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal,
+bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal,
                           float &distance) const { //sinnvoll HitBox returnen? Überschreibt Shape funktion, Hitpoint,... Werden trotzderm "zurückgegeben" da sie als Referenzen übergeben wurden
 
     glm::vec3 rayposition = ray.position;
@@ -105,7 +105,7 @@ bool Box::getIntersectVec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNor
 
         distance = tmin;
         HitPoint = rayposition + raydirection;
-        HitNormal = getNormal(HitPoint);
+        HitNormal = get_normal(HitPoint);
         return true;
     }
     if (tmin < 0 && 0 < tmax && tmax < distance) {
@@ -114,7 +114,7 @@ bool Box::getIntersectVec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNor
 
         distance = tmax;
         HitPoint = rayposition + raydirection;
-        HitNormal = getNormal(HitPoint);
+        HitNormal = get_normal(HitPoint);
         return true;
     }
 
@@ -127,7 +127,7 @@ bool Box::getIntersectVec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNor
  * @param ray that gets tested against this box
  * @return true if the ray hits
  */
-bool Box::getIntersect(const Ray &ray) const {
+bool Box::get_intersect(const Ray &ray) const {
 
     glm::vec3 rayposition = ray.position;
     glm::vec3 raydirection = ray.direction;
@@ -165,7 +165,7 @@ bool Box::getIntersect(const Ray &ray) const {
  * @param position position (Hitposition)
  * @return normal at the given position. Either {1,0,0},{0,1,0},{0,0,1} or {-1,0,0},{0,-1,0},{0,0,-1}
  */
-glm::vec3 Box::getNormal(glm::vec3 const &pos) const {
+glm::vec3 Box::get_normal(glm::vec3 const &pos) const {
 
     float epsilon = 0.0001f; // for edges/ corners -> uncertainty
 
@@ -194,7 +194,7 @@ glm::vec3 Box::getNormal(glm::vec3 const &pos) const {
 /**
  * @return a vector with the minimal values of x, y and z of the box
  */
-glm::vec3 Box::getMin() const {
+glm::vec3 Box::get_min() const {
     return bounds[0];
 }
 
@@ -202,14 +202,14 @@ glm::vec3 Box::getMin() const {
 /**
  * @return a vector with the maximal values of x, y and z of the box
  */
-glm::vec3 Box::getMax() const {
+glm::vec3 Box::get_max() const {
     return bounds[1];
 }
 
 /**
  * @return the position of the box
  */
-glm::vec3 Box::getMedian() const { //besser getPosition? Ja, aber diese Funktion wird von verschiedenen Shapes genutzt z.B. Dreieck -> welche Position ist dann gemeint?
+glm::vec3 Box::get_median() const { //besser getPosition? Ja, aber diese Funktion wird von verschiedenen Shapes genutzt z.B. Dreieck -> welche Position ist dann gemeint?
     // Und es gibt ja eine min/max Funktion -> mid/Median/M... Funktion macht nur Sinn
     return position;
 }

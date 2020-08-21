@@ -25,18 +25,18 @@ public:
 
     Composite(std::vector<Shape *> shapes);
 
-    bool getIntersectVec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
+    bool get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
 
-    void getIntersectedShape(const Ray &ray, Shape &shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance,
+    void get_intersected_shape(const Ray &ray, Shape &shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance,
                              bool &hit);
 
-    glm::vec3 getNormal(glm::vec3 const &pos) const override;
+    glm::vec3 get_normal(glm::vec3 const &pos) const override;
 
-    glm::vec3 getMin() const override;
+    glm::vec3 get_min() const override;
 
-    glm::vec3 getMax() const override;
+    glm::vec3 get_max() const override;
 
-    glm::vec3 getMedian() const override;
+    glm::vec3 get_median() const override;
 
 
     void translate(glm::vec3 const &position) override;
@@ -49,19 +49,19 @@ public:
 
     void build();
 
-    void addShape(Shape *shape);
+    void add_shape(Shape *shape);
 
-    void addShapes(std::vector<Shape *> shapes);
+    void add_shapes(std::vector<Shape *> shapes);
 
 private:
 
     void split();
 
-    void setMinMaxMid();
+    void set_min_max_mid();
 
-    void getMin(glm::vec3 shapemin);
+    void get_min(glm::vec3 shapemin);
 
-    void getMax(glm::vec3 shapemax);
+    void get_max(glm::vec3 shapemax);
 
     glm::vec3 minXminYminZ;
     glm::vec3 maxXmaxYmaxZ;

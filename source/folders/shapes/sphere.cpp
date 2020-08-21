@@ -22,7 +22,7 @@ Sphere::Sphere(const glm::vec3 &position, float radius) :
  * @param distance from the normalized ray to the intersection point as reference
  * @return true, of the sphere is in front of the ray and has been intersected
  */
-bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
+bool Sphere::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
 
     glm::vec3 raydirection = ray.direction;
 
@@ -47,14 +47,14 @@ bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hit
             raydirection *= t1;
             distance = t1;
             HitPoint = ray.position + raydirection;
-            HitNormal = getNormal(HitPoint);
+            HitNormal = get_normal(HitPoint);
             return true;
         }
         if (t1 < 0 && 0 < t2 && t2 < distance) {
             raydirection *= t2;
             distance = t2;
             HitPoint = ray.position + raydirection;
-            HitNormal = getNormal(HitPoint);
+            HitNormal = get_normal(HitPoint);
             return true;
         }
     }
@@ -66,7 +66,7 @@ bool Sphere::getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hit
  * @param position position (Hitposition)
  * @return normal (Vector from the Center to the input vector)
  */
-glm::vec3 Sphere::getNormal(glm::vec3 const& position) const {
+glm::vec3 Sphere::get_normal(glm::vec3 const& position) const {
     glm::vec3 normal = position - this->pos;
     return glm::normalize(normal);
 }
@@ -74,7 +74,7 @@ glm::vec3 Sphere::getNormal(glm::vec3 const& position) const {
 /**
  * @return a vector with the minimal values of x, y and z for the sphere (for a box around the sphere)
  */
-glm::vec3 Sphere::getMin() const {
+glm::vec3 Sphere::get_min() const {
     glm::vec3 rad = glm::vec3(radius, radius, radius);
     return pos - rad;
 }
@@ -83,7 +83,7 @@ glm::vec3 Sphere::getMin() const {
 /**
  * @return a vector with the maximal values of x, y and z for the sphere (for a box around the sphere)
  */
-glm::vec3 Sphere::getMax() const {
+glm::vec3 Sphere::get_max() const {
     glm::vec3 rad = glm::vec3(radius, radius, radius);
     return pos + rad;
 }
@@ -91,7 +91,7 @@ glm::vec3 Sphere::getMax() const {
 /**
  * @return position of the sphere
  */
-glm::vec3 Sphere::getMedian() const {
+glm::vec3 Sphere::get_median() const {
     return pos;
 }
 
@@ -105,11 +105,11 @@ void Sphere::print() const {
 }
 
 /*/ //TODO add material later
-Material* Sphere::getMaterial() {
+Material* Sphere::get_material() {
     return material;
 }
 
-void Sphere::setMaterial(Material* material) {
+void Sphere::set_material(Material* material) {
     this->material = material;
 }/**/
 

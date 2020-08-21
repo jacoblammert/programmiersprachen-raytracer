@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 
                 /*** With composite: (test)  should be faster ***/
 
-                composite.getIntersectedShape(ray, *shape, positionvec, normalvec, dist,
+                composite.get_intersected_shape(ray, *shape, positionvec, normalvec, dist,
                                               hit); //TODO simplify function to take a new pointer as parameter and reduce the amount of data send for each ray, even if it will not hit anything
 
 

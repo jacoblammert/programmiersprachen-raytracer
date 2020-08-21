@@ -17,20 +17,20 @@ public:
     //Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, Color const& color);
 
 
-    bool getIntersectVec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
+    bool get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
 
-    glm::vec3 getNormal(glm::vec3 const& pos) const override;
+    glm::vec3 get_normal(glm::vec3 const& pos) const override;
 
-    glm::vec3 getMin() const override;
+    glm::vec3 get_min() const override;
 
-    glm::vec3 getMax() const override;
+    glm::vec3 get_max() const override;
 
-    glm::vec3 getMedian() const override;
+    glm::vec3 get_median() const override;
 
 /*/
-    Material* getMaterial() override;
+    Material* get_material() override;
 
-    void setMaterial(Material* material) override;
+    void set_material(Material* material) override;
 /**/
 
     void translate(glm::vec3 const& position) override;

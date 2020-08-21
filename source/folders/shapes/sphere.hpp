@@ -18,17 +18,17 @@ public:
 
     //sphere(glm::vec3 position, float radius, Material* material);
 
-    bool getIntersectVec(Ray const& ray, glm::vec3 &HitPoint,  glm::vec3 &HitNormal,float &distance)const override;
+    bool get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint,  glm::vec3 &HitNormal,float &distance)const override;
 
-    glm::vec3 getNormal(glm::vec3 const& pos) const override;
+    glm::vec3 get_normal(glm::vec3 const& pos) const override;
 
-    glm::vec3 getMin() const override;
+    glm::vec3 get_min() const override;
 
-    glm::vec3 getMax() const override;
+    glm::vec3 get_max() const override;
 
     void translate(glm::vec3 const& position) override;
 
-    glm::vec3 getMedian() const override;
+    glm::vec3 get_median() const override;
 
     //Material* getMaterial() override;
 
