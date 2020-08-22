@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-//#include <omp.h>
+#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
 
             float x = 5 * sin(3.14f * 2 * (mouseX));
             float y = 5 * cos(3.14f * 2 * (mouseX));
-            float z = sin(3.14f * 2 * (mouseY));
+            float z = cos(3.14f *  (mouseY));
 
             x *= (1 - abs(z));
             y *= (1 - abs(z));
@@ -125,8 +125,8 @@ int main(int argc, char *argv[]) {
         /// The color of the light ranges from 0 to 1
 
 
-//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-//#pragma omp parallel for
+        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
