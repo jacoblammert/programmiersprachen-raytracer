@@ -26,8 +26,8 @@ int main(int argc, char *argv[]) {
     loader.loadFile();
 
 
-    unsigned const image_width = 1920 / 3; //640
-    unsigned const image_height = 1080 / 3;//360
+    unsigned const image_width = 1920 /  2; //640
+    unsigned const image_height = 1080 / 2;//360
     std::string const filename = "./checkerboard.ppm";
 
 
@@ -45,17 +45,17 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 50; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         glm::vec3 position{x, y, z};
         position *= 5;
-        //if (i % 2 == 1) {
+        if (i % 2 == 1) {
         shapes.push_back(std::make_shared<Sphere>(Sphere{position, 0.3512636125}));
-        //} else {
-        //    shapes.push_back(std::make_shared<Box>( Box{position, 01.125f, 01.125f, 01.125f}));
-        //}
+        } else {
+            shapes.push_back(std::make_shared<Box>( Box{position, 0.125f, 0.125f, 0.125f}));
+        }
     }
 
     //shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, 0},{0, 0, 1}}));
@@ -75,22 +75,47 @@ int main(int argc, char *argv[]) {
     float step = 0;
     Renderer renderer{image_width, image_height, filename};
 
+
+    Camera camera{{5, 5, 5}, {-1, 0, 0}, image_width, image_height, 1};
+
     while (!window.should_close()) {
         if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             window.close();
         }
 
 
-        Camera camera{{5, 5, 5}, {-1, 0, 0}, image_width, image_height, 1};
 
-        float cameradistance = 20; //5.0f
+        float cameradistance = 15; //5.0f
 
         step += stepsize;
-        camera.setPosition(
-                {std::sin(step) * cameradistance, std::cos(step) * cameradistance,
-                 2 * std::cos(0.75 * step)});
+        //camera.setPosition(
+        //        {std::sin(step) * cameradistance, std::cos(step) * cameradistance,
+        //         2 * std::cos(0.75 * step)});
 
-        camera.lookAt({});
+
+        glm::vec2 mouse = window.mouse_position();
+
+
+        if ( 0 < mouse[0] && mouse[0] < image_width && 0 < mouse[1] && mouse[1] < image_height) {
+
+
+            float mouseX = mouse[0] / image_width;
+            float mouseY = mouse[1] / image_height;
+
+            float x = 5 * sin(3.14f * 2 * (mouseX));
+            float y = 5 * cos(3.14f * 2 * (mouseX));
+            float z = sin(3.14f * 2 * (mouseY));
+
+            x *= (1 - abs(z));
+            y *= (1 - abs(z));
+            z *= -5;
+
+            camera.setPosition({});
+
+            camera.lookAt({x, y, z});
+        }
+
+
 
         lights[0]->position = {3 * std::cos(3 * step), 3 * std::sin(2 * step), 7 * std::cos( 0.75 * step)};
         lights[1]->position = {3 * std::sin(1.7 * step), 3 * std::cos(3.4 * step), 5 * std::cos( 1.5*0.75 * step)};
@@ -100,7 +125,7 @@ int main(int argc, char *argv[]) {
         /// The color of the light ranges from 0 to 1
 
 
-//        omp_set_num_threads(32); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
 //#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
@@ -120,45 +145,9 @@ int main(int argc, char *argv[]) {
 
                 renderer.write(color);
 
-                /*/
-                //TODO everything in here can be put in a render class / function
-                glm::vec3 normalvec;
-                glm::vec3 positionvec;
-                float dist = INFINITY - 1; // will later be set to closest distance where the ray intersected an object
 
-                std::shared_ptr<Sphere> shape; // will later be used in a different class to get the refractive index/ material properties
-                bool hit = false;
-
-
-
-
-                composite.get_intersected_shape(ray, shape, positionvec, normalvec, dist,
-                                                hit); //TODO simplify function to take a new pointer as parameter and reduce the amount of data send for each ray, even if it will not hit anything
-
-
-
-                if (hit) {
-
-                    normalvec *= positionvec;
-
-                    normalvec += glm::vec3{1, 1, 1};
-                    normalvec *= 0.5f;
-
-                    color.color = {normalvec[0], normalvec[1], normalvec[2]};//{1, 0, 0}; // shape is red
-
-
-
-                } else {
-                    color.color = {0, 0, 0}; // shape has not been hit
-                }/**/
-
-
-
-                //renderer.write(color);
             }
-            //window.show(renderer.color_buffer()); /// malt jede Zeile einzeln
         }
-        //renderer = {image_width, image_height, filename}; /// malt jede Zeile einzeln + schwarzer Hintergrund für neues Bild
         window.show(renderer.color_buffer()); // leider wird es nicht jedes mal geupdated, wenn es aufgerufen wird
     }
 
