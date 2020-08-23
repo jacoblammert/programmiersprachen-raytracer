@@ -44,11 +44,11 @@ bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &Hi
  * @return normal of the plane always "pointing" towards the camera
  */
 glm::vec3 Plane::get_normal(glm::vec3 const &pos) const {
-    if (glm::dot(glm::normalize(pos-this->pos),normal) < 0) {
-        return -normal;
-    } else{
+    //if (glm::dot(glm::normalize(pos-this->pos),normal) < 0) {
+    //    return -normal;
+    //} else{
         return normal;
-    }
+    //}
 }
 
 /**

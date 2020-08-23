@@ -45,20 +45,23 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 50; ++i) {
+    for (int i = 0; i < 40; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         glm::vec3 position{x, y, z};
         position *= 5;
         if (i % 2 == 1) {
-        shapes.push_back(std::make_shared<Sphere>(Sphere{position, 0.13512636125}));
+        shapes.push_back(std::make_shared<Sphere>(Sphere{position, 0.3512636125}));
         } else {
             shapes.push_back(std::make_shared<Box>( Box{position, 0.125f, 0.125f, 0.125f}));
         }
     }
 
-    shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, 8},{0, 0, 1}}));
+
+    shapes.push_back(std::make_shared<Sphere>(Sphere{{0,0,-2}, 0.3512636125}));
+
+    //shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, 8},{0, 0, -1}}));
 
 
     //shapes.push_back(std::make_shared<Triangle>(Triangle{{-10, 10, 10},{10, -10, 10},{10, 10, 10}}));
@@ -68,7 +71,8 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Light>> lights;
-    lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 5}));
+
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 5}));
     //lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 8}));
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
@@ -95,7 +99,7 @@ int main(int argc, char *argv[]) {
 
         float cameradistance = 15; //5.0f
 
-        step += stepsize;
+        //step += stepsize;
         step = starttime;
         //camera.setPosition(
         //        {std::sin(step) * cameradistance, std::cos(step) * cameradistance,
@@ -119,22 +123,26 @@ int main(int argc, char *argv[]) {
             y *= (1 - abs(z));
             z *= -5;
 
-            camera.setPosition({0,0,0});
+            camera.setPosition({0,1,0});
 
-            camera.lookAt({ x, 0+y, z});
+            camera.lookAt({ x, 1+y, z});
         }
 
 
-
+        lights[0]->position = {0.5*std::cos(step/3), 0.25*std::sin(step/3), -3.5 + std::sin(step/3)};
         lights[0]->position = {3 * std::cos(3 * step), 3 * std::sin(2 * step), 7 * std::cos( 0.75 * step)};
         //lights[1]->position = {3 * std::sin(1.7 * step), 3 * std::cos(3.4 * step), 5 * std::cos( 1.5*0.75 * step)};
         lights[0]->color = {1 + std::cos(3 * step), 1 + std::sin(2 * step), 1 + std::cos(0.75 * step)};
         lights[0]->color = lights[0]->color * 0.5f;
+
+        lights[0]->color = {1,1,1};
+
+
         //lights[1]->color = {lights[0]->color[2],1-lights[0]->color[0],1-lights[0]->color[1]};
         /// The color of the light ranges from 0 to 1
 
 
-//        omp_set_num_threads(64); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
 //#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {

@@ -57,7 +57,11 @@ bool Sphere::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &H
  */
 glm::vec3 Sphere::get_normal(glm::vec3 const& position) const {
     glm::vec3 normal = position - this->pos;
-    return glm::normalize(normal);
+    //if (glm::length(normal) > this->radius){
+    //    return glm::normalize(normal);
+    //} else{
+        return glm::normalize(normal);
+    //}
 }
 
 /**

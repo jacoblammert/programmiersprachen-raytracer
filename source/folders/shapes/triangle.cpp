@@ -81,11 +81,11 @@ bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 
  * @return normal of the triangle
  */
 glm::vec3 Triangle::get_normal(glm::vec3 const& pos) const {
-    if (glm::dot(glm::normalize(pos-this->a),normal) < 0) {
-        return -normal;
-    } else{
+    //if (glm::dot(glm::normalize(pos-this->a),normal) < 0) {
+    //    return -normal;
+    //} else{
         return normal;
-    }
+    //}
 }
 
 /**

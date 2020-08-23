@@ -44,7 +44,7 @@ glm::vec3 Render::get_color(Ray const& ray, int depth) const{
 
 
     float glossy = 0.0f;//shape->getMaterial()->getGlossy();
-    float transparency = 0.00f;//shape->getMaterial()->getTransparency();
+    float transparency = 0.0f;//shape->getMaterial()->getTransparency();
     float roughness = 0.0;//shape->getMaterial()->getRoughness();
 
 
@@ -74,12 +74,39 @@ glm::vec3 Render::get_color(Ray const& ray, int depth) const{
                 float angle = glm::dot(normal,hit_to_light);
 
                 if (0 < angle) { // normal facing in direction of light
-                    normal *= 0.1f;
+                    normal *= 0.01f;
                     if (!cast_shadow_ray({hit_point + normal, hit_to_light}, light_strength)) {
 
-                        glm::vec3 light_color = (lights_[i]->color * (angle * lights_[i]->brightness)) / (light_strength * light_strength); // brightness
+                        glm::vec3 light_color = (lights_[i]->color * (angle * lights_[i]->brightness)) /
+                                                (light_strength * light_strength); // brightness
 
                         color_final += light_color;//(shape->getMaterial()->getColor() * Lightcolor); //TODO change in one line or with material
+                    }
+                    if (depth < 1 && transparency != 0){ // we are in shadow now -> calculate how much Light came here from lensing
+
+
+                        ///Note: The calculations below are really wrong
+                        glm::vec3 color;
+                        glm::vec3 random;
+                        glm::vec3 newpos = hit_point - normal;
+
+                        if (depth % 2 == 0){
+                            newpos = hit_point + normal;
+                        }
+
+                        float range = 0.01;
+
+                        int samples = 4;
+
+                        for (int j = 0; j < samples; ++j) {
+                            random = glm::vec3{random_float(range),random_float(range),random_float(range)};
+                            color += get_color({newpos, hit_to_light + random}, 1+depth);
+                        }
+
+                        color/= samples;
+
+                        color_final += transparency * (color / (light_strength * light_strength));
+                        //color_final *= 0.5f;
                     }
                 }
             }
@@ -226,16 +253,15 @@ glm::vec3 Render::get_refracted_color(Ray const& ray, glm::vec3 const& hit_point
         position = hit_point - hit_normal * 0.001f; // small offset to not intersect the last shape
         old_refraction_index = 1;
         new_refraction_index = 1.36f;//shape->getMaterial()->getRefractiveIndex();//TODO change see, if the right normal has been used
-
     } else {
         
-        glm::vec3 hit_normal_inverted = hit_normal;
+        //glm::vec3 hit_normal_inverted = hit_normal;
         /*
         glm::vec3 hit_normal_inverted = hit_normal * -1; // Normal needs to be inverted because the ray enters air again
         //TODO fix binary expression -> const problem!
         */
         
-        position = hit_point - hit_normal_inverted * 0.001f; // small offset to not intersect the last shape
+        position = hit_point + hit_normal * 0.001f; // small offset to not intersect the last shape
         old_refraction_index = 1.36;//shape->getMaterial()->getRefractiveIndex(); // hitting the same shape from the inside//TODO change
         new_refraction_index = 1;
 
@@ -287,9 +313,7 @@ glm::vec3 Render::get_refracted(const glm::vec3& vector, glm::vec3 const& normal
     float cos_i = -glm::dot(vector, normal);
     float sin_t2 = (float)(n * n * (1.0 - cos_i * cos_i));
     if (sin_t2 > 1.0) return get_reflected(vector, normal); // TIR
-    float cos_t = (float) sqrt(1.0 - sin_t2);
-
-    return vector * n + normal * (n * cos_i - cos_t);
+    return vector * n + normal * (n * cos_i - (float) sqrt(1.0 - sin_t2));
 }
 
 /**
@@ -300,12 +324,11 @@ glm::vec3 Render::get_refracted(const glm::vec3& vector, glm::vec3 const& normal
  */
 glm::vec3 Render::get_reflected(const glm::vec3& vector, glm::vec3 const& normal) const{
 
-    float nv = fmax(glm::dot(normal,-vector), 0);//angle
-    glm::vec3 normal_non_const = normal;
+    float nv = 2 * fmax(glm::dot(normal,-vector), 0);//angle
+    //glm::vec3 normal_non_const = normal;
        /*
-       normal *= nv * 2;
        //TODO fix binary expression -> const problem!
        */
-    return normal_non_const + vector;
+    return normal * nv + vector;
 }
 

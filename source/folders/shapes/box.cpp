@@ -32,7 +32,7 @@ Box::Box(const glm::vec3 &minXminYminZ, const glm::vec3 &maxXmaxYmaxZ) :
  * @param zScale float for size in z direction
  */
 Box::Box(glm::vec3 const &pos, float xScale, float yScale, float zScale):
-position{pos}{ //Warum Pos statt pos?
+position{pos}{
     glm::vec3 minXminYminZ = {pos[0] - (xScale / 2), pos[1] - (yScale / 2), pos[2] - (zScale / 2)};
     glm::vec3 maxXmaxYmaxZ = {pos[0] + (xScale / 2), pos[1] + (yScale / 2), pos[2] + (zScale / 2)};
     bounds.push_back(minXminYminZ);
@@ -126,6 +126,14 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitN
  * @return true if the ray hits
  */
 bool Box::get_intersect(const Ray &ray) const {
+
+
+    if (bounds[0][0] < ray.position[0] && ray.position[0] < bounds[1][0] &&
+            bounds[0][1] < ray.position[1] && ray.position[1] < bounds[1][1] &&
+            bounds[0][2] < ray.position[2] && ray.position[2] < bounds[1][2]){
+        /// The position of the ray is inside of the box, therefore it intersects the box
+        return true;
+    }
 
     glm::vec3 raydirection = {1 / ray.direction[0], 1 / ray.direction[1], 1 / ray.direction[2]};
 

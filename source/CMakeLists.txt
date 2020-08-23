@@ -23,9 +23,6 @@ target_link_libraries(raytracer ${FRAMEWORK_NAME} ${LIBRARIES}
 add_dependencies(raytracer glfw ${FRAMEWORK_NAME} ${COPY_BINARY})
 
 
-#set(SOURCE_FILES raytracer.cpp)
-#add_executable(untitled ${SOURCE_FILES})
-
 
 
 
