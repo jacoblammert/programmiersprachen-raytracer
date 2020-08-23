@@ -97,6 +97,8 @@ int main(int argc, char *argv[]) {
 
         //step += stepsize;
         step = window.get_time();
+        
+        float starttime = window.get_time();
 
         lights[0]->position = {0.5*std::cos(step/3), 0.25*std::sin(step/3), -3.5 + std::sin(step/3)};
         lights[0]->position = {3 * std::cos(3 * step), 3 * std::sin(2 * step), 7 * std::cos( 0.75 * step)};
