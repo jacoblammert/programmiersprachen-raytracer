@@ -46,8 +46,8 @@
      float xpercentage = (float) x / (float) this->width; // could be simplified to save two variables
      float ypercentage = (float) y / (float) this->height;// could be simplified to save two variables
 
-     float scalex = (xpercentage - 0.5f) * 2 * ((float) this->width / (float) this->height); // now a range from -1 to 1 depending on the x to width ratio
-     float scaley = (ypercentage - 0.5f) * 2; // now a range from -1 to 1 depending on the y to Height ratio
+     float scalex = -(xpercentage - 0.5f) * 2 * ((float) this->width / (float) this->height); // now a range from -1 to 1 depending on the x to width ratio
+     float scaley = -(ypercentage - 0.5f) * 2; // now a range from -1 to 1 depending on the y to Height ratio
 
      return {this->position, this->direction * this->distance + (top * scaley) + (right * scalex)}; // new custom camera ray for the given pixel
  }
@@ -77,6 +77,64 @@
   */
 void Camera::setPosition(glm::vec3 pos) {
     this->position = pos;
+}
+
+void Camera::translate(glm::vec3 pos) {
+    this->position += pos;
+}
+
+void Camera::move(Window const & window) {
+
+    //std::cout<< "W: " <<window.get_key(87)<< std::endl; // W
+    //std::cout<< "S: " <<window.get_key(83)<< std::endl; // S
+    //std::cout<< "A: " <<window.get_key(65)<< std::endl; // A
+    //std::cout<< "D: " <<window.get_key(68)<< std::endl; // D
+    //std::cout<< "Space: " <<window.get_key(32)<< std::endl; // Space
+    //std::cout<< "Shift: " <<window.get_key(340)<< std::endl; // Shift
+
+    int w = window.get_key(87);
+    int s = window.get_key(83);
+    int a = window.get_key(65);
+    int d = window.get_key(68);
+    int sp = window.get_key(32);
+    int sh = window.get_key(340);
+
+
+    float x = w - s;
+    float y = a - d;
+    float z = sp - sh;
+
+
+
+    glm::vec3 dir = glm::normalize(glm::vec3{direction[0],direction[1],0});
+    glm::vec3 dir_orthogonal = glm::normalize(glm::cross(dir,this->upVector));
+
+    dir *= x;
+    dir_orthogonal *= y;
+
+    position += glm::vec3{0,0,z} + dir + dir_orthogonal;
+
+
+}
+
+void Camera::set_direction(Window const & window) {
+
+    glm::vec2 mouse = window.mouse_position();
+    if ( 0 < mouse[0] && mouse[0] < window.window_size()[0] && 0 < mouse[1] && mouse[1] < window.window_size()[1]) {
+
+
+        float mouseX = -mouse[0] / window.window_size()[0];
+        float mouseY = mouse[1] / window.window_size()[1];
+
+        float x = sin(3.14f * 2 * (mouseX));
+        float y = cos(3.14f * 2 * (mouseX));
+        float z = cos(3.14f * (mouseY));
+
+        x *= (1 - abs(z));
+        y *= (1 - abs(z));
+
+        this->direction = { x, y, z};
+    }
 }
 
 

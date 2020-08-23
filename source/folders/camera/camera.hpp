@@ -10,6 +10,7 @@
 #include <glm-0.9.5.3/glm/geometric.hpp>
 #include <cmath>
 #include <iostream>
+#include <window.hpp>
 #include "../camera/ray.hpp"
 //#include "../math/Vector.h"
 
@@ -22,8 +23,13 @@ public:
 
     Ray generate_ray(int x, int y) const;
     void setPosition(glm::vec3 pos);
+    void translate(glm::vec3 pos);
     void lookAt(glm::vec3 const& pos);
     void print()const;
+
+    void move(Window const & window);
+    void set_direction(Window const & window);
+
     //void translate(glm::vec3 const& position);
 
 private:

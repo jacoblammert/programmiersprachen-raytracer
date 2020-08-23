@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 40; ++i) {
+    for (int i = 0; i < 100; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
@@ -61,19 +61,17 @@ int main(int argc, char *argv[]) {
 
     shapes.push_back(std::make_shared<Sphere>(Sphere{{0,0,-2}, 0.3512636125}));
 
-    //shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, 8},{0, 0, -1}}));
+    //shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, -8},{0, 0, 1}}));
 
 
-    //shapes.push_back(std::make_shared<Triangle>(Triangle{{-10, 10, 10},{10, -10, 10},{10, 10, 10}}));
-    //shapes.push_back(std::make_shared<Triangle>(Triangle{{0, 0, -8},{0, 0, 1},{0, 0, 1}}));
-    //shapes.push_back(std::make_shared<Triangle>(Triangle{{0, 0, -8},{0, 0, 1},{0, 0, 1}}));
-    //shapes.push_back(std::make_shared<Triangle>(Triangle{{0, 0, -8},{0, 0, 1},{0, 0, 1}}));
+    shapes.push_back(std::make_shared<Triangle>(Triangle{{-10, 10, -8},{10, -10, -8},{10, 10, -8}}));
+    shapes.push_back(std::make_shared<Triangle>(Triangle{{10, -10, -8},{-10, 10, -8},{-10, -10, -8}}));
 
 
     std::vector<std::shared_ptr<Light>> lights;
 
     lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 5}));
-    //lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 8}));
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 8}));
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
 
@@ -93,52 +91,24 @@ int main(int argc, char *argv[]) {
             window.close();
         }
 
-        float starttime = window.get_time();
+        camera.set_direction(window);
+        camera.move(window);
 
-
-
-        float cameradistance = 15; //5.0f
 
         //step += stepsize;
-        step = starttime;
-        //camera.setPosition(
-        //        {std::sin(step) * cameradistance, std::cos(step) * cameradistance,
-        //         2 * std::cos(0.75 * step)});
-
-
-        glm::vec2 mouse = window.mouse_position();
-
-
-        if ( 0 < mouse[0] && mouse[0] < image_width && 0 < mouse[1] && mouse[1] < image_height) {
-
-
-            float mouseX = mouse[0] / image_width;
-            float mouseY = mouse[1] / image_height;
-
-            float x = 5 * sin(3.14f * 2 * (mouseX));
-            float y = 5 * cos(3.14f * 2 * (mouseX));
-            float z = cos(3.14f *  (mouseY));
-
-            x *= (1 - abs(z));
-            y *= (1 - abs(z));
-            z *= -5;
-
-            camera.setPosition({0,1,0});
-
-            camera.lookAt({ x, 1+y, z});
-        }
-
+        step = window.get_time();
 
         lights[0]->position = {0.5*std::cos(step/3), 0.25*std::sin(step/3), -3.5 + std::sin(step/3)};
         lights[0]->position = {3 * std::cos(3 * step), 3 * std::sin(2 * step), 7 * std::cos( 0.75 * step)};
-        //lights[1]->position = {3 * std::sin(1.7 * step), 3 * std::cos(3.4 * step), 5 * std::cos( 1.5*0.75 * step)};
         lights[0]->color = {1 + std::cos(3 * step), 1 + std::sin(2 * step), 1 + std::cos(0.75 * step)};
         lights[0]->color = lights[0]->color * 0.5f;
 
-        lights[0]->color = {1,1,1};
+        //lights[0]->color = {1,1,1};
 
 
-        //lights[1]->color = {lights[0]->color[2],1-lights[0]->color[0],1-lights[0]->color[1]};
+        lights[1]->position = {3 * std::sin(1.7 * step), 3 * std::cos(3.4 * step), 5 * std::cos( 1.5*0.75 * step)};
+        lights[1]->color = {lights[0]->color[2],1-lights[0]->color[0],1-lights[0]->color[1]};
+
         /// The color of the light ranges from 0 to 1
 
 
@@ -161,11 +131,9 @@ int main(int argc, char *argv[]) {
                 color.color = {colorveec[0], colorveec[1], colorveec[2]};
 
                 renderer.write(color);
-
-
             }
         }
-        window.show(renderer.color_buffer()); // leider wird es nicht jedes mal geupdated, wenn es aufgerufen wird
+        window.show(renderer.color_buffer());
 
         std::cout<<"Time: " << window.get_time() - starttime << std::endl;
     }
