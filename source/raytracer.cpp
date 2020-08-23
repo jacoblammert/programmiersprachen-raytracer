@@ -23,7 +23,7 @@
 int main(int argc, char *argv[]) {
 
     SdfLoader loader{"../../source/folders/sdfFiles/start.sdf"};
-    loader.loadFile();
+    loader.load_file();
 
 
     unsigned const image_width = 1920  /*/ * 2/**/ /  2; //640

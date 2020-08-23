@@ -3,28 +3,20 @@
 //
 
 #include "sdfLoader.hpp"
-#include "../shapes/composite.hpp"
-#include "../shapes/sphere.hpp"
-#include <iostream>
-#include <fstream>
-#include <sstream> // string stream -> easy parsing mechanics
-#include <string>
-#include <utility>
-#include <map>
 
 SdfLoader::SdfLoader(std::string filepath) :
-        filepath {std::move(filepath)}
+        filepath_ {std::move(filepath)}
 {}
 
-void SdfLoader::loadFile() const { //const correctness valid?
+void SdfLoader::load_file() const { //const correctness valid?
 
-    if (filepath.empty()) {
+    if (filepath_.empty()) {
         std::cout << "Please set a valid filepath" << std::endl;
         return;
     }
 
     //open file in read-only && ASCII mode
-    std::ifstream in_file(filepath, std::ios::in);
+    std::ifstream in_file(filepath_, std::ios::in);
     std::string line_buffer;
     int32_t line_count = 0;
 
@@ -74,7 +66,7 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     p2[2] = p2_z;
 
                     // add a box and access it later with its name from the map
-                    shape_map[name_box] = std::make_shared<Box>(Box{p1,p2});
+                    shape_map[name_box] = std::make_shared<Box>(Box{p1, p2});
 
                 } else if (shape_type == "sphere") {
                     //parse sphere attributes
@@ -93,7 +85,7 @@ void SdfLoader::loadFile() const { //const correctness valid?
                     center[2] = center_z;
 
                     // add a sphere and access it later with its name from the map
-                    shape_map[name_sphere] = std::make_shared<Sphere>(Sphere{center,radius});
+                    shape_map[name_sphere] = std::make_shared<Sphere>(Sphere{center, radius});
 
                 } else if (shape_type == "composite") {
                     //parse composite attributes
