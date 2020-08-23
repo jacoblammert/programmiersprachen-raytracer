@@ -17,11 +17,12 @@ Box::Box() {
  * @param minXminYminZ minimum of the box (individual values must be smaller than their counterpart in max vector)
  * @param maxXmaxYmaxZ maximum of the box (individual values must be greater than their counterpart in min vector)
  */
-Box::Box(const glm::vec3 &minXminYminZ, const glm::vec3 &maxXmaxYmaxZ) :
-        position{(minXminYminZ + maxXmaxYmaxZ) * 0.5f} {
+Box::Box(const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z) :
 
-    bounds.push_back(minXminYminZ);
-    bounds.push_back(maxXmaxYmaxZ);
+    position_ {(min_x_y_z + max_x_y_z) * 0.5f}
+{
+    bounds_.push_back(min_x_y_z);
+    bounds_.push_back(max_x_y_z);
 }
 
 /**
@@ -32,11 +33,13 @@ Box::Box(const glm::vec3 &minXminYminZ, const glm::vec3 &maxXmaxYmaxZ) :
  * @param zScale float for size in z direction
  */
 Box::Box(glm::vec3 const &pos, float xScale, float yScale, float zScale):
-position{pos}{
-    glm::vec3 minXminYminZ = {pos[0] - (xScale / 2), pos[1] - (yScale / 2), pos[2] - (zScale / 2)};
-    glm::vec3 maxXmaxYmaxZ = {pos[0] + (xScale / 2), pos[1] + (yScale / 2), pos[2] + (zScale / 2)};
-    bounds.push_back(minXminYminZ);
-    bounds.push_back(maxXmaxYmaxZ);
+
+    position_ {pos}
+{
+    glm::vec3 min_x_y_z = {pos[0] - (xScale / 2), pos[1] - (yScale / 2), pos[2] - (zScale / 2)};
+    glm::vec3 max_x_y_z = {pos[0] + (xScale / 2), pos[1] + (yScale / 2), pos[2] + (zScale / 2)};
+    bounds_.push_back(min_x_y_z);
+    bounds_.push_back(max_x_y_z);
 }
 /*///TODO additional constructors with materials
 Box::Box(Vector const& minXminYminZ, Vector const& maxXmaxYmaxZ, Color const& color) {
@@ -59,60 +62,60 @@ Box::Box(Vector const& Pos, float xScale, float yScale, float zScale, Color cons
 /**
  * returns true, if the box was in front of the ray and the ray intersected the box
  * @param ray to be tested
- * @param HitPoint position where the ray intersects the box first (for two intersections the closest point will be returned) as reference
- * @param HitNormal The normal of the box at the intersected position as reference
+ * @param hit_point position where the ray intersects the box first (for two intersections the closest point will be returned) as reference
+ * @param hit_normal The normal of the box at the intersected position as reference
  * @param distance from the normalized ray to the intersection point as reference
  * @return true, of the box is in front of the ray and has been intersected
  */
-bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal,
+bool Box::get_intersect_vec(Ray const &ray, glm::vec3 & hit_point, glm::vec3 & hit_normal,
                           float &distance) const {
 
-    glm::vec3 raydirection = {1.0f / ray.direction[0], 1.0f / ray.direction[1], 1.0f / ray.direction[2]};
+    glm::vec3 ray_direction = {1.0f / ray.direction[0], 1.0f / ray.direction[1], 1.0f / ray.direction[2]};
 
-    float tmin, tmax, tymin, tymax;
+    float t_min, t_max, t_y_min, t_y_max;
 
     /// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
 
-    tmin = (bounds[sign(raydirection, 0)][0] - ray.position[0]) * raydirection[0]; //txmin?
-    tmax = (bounds[1 - sign(raydirection, 0)][0] - ray.position[0]) * raydirection[0]; //tymin?
+    t_min = (bounds_[sign(ray_direction, 0)][0] - ray.position[0]) * ray_direction[0]; //txmin?
+    t_max = (bounds_[1 - sign(ray_direction, 0)][0] - ray.position[0]) * ray_direction[0]; //tymin?
 
-    tymin = (bounds[sign(raydirection, 1)][1] - ray.position[1]) * raydirection[1];
-    tymax = (bounds[1 - sign(raydirection, 1)][1] - ray.position[1]) * raydirection[1];
+    t_y_min = (bounds_[sign(ray_direction, 1)][1] - ray.position[1]) * ray_direction[1];
+    t_y_max = (bounds_[1 - sign(ray_direction, 1)][1] - ray.position[1]) * ray_direction[1];
 
-    if ((tmin > tymax) || (tymin > tmax))
+    if ((t_min > t_y_max) || (t_y_min > t_max))
         return false;
-    if (tymin > tmin)
-        tmin = tymin;
-    if (tymax < tmax)
-        tmax = tymax;
+    if (t_y_min > t_min)
+        t_min = t_y_min;
+    if (t_y_max < t_max)
+        t_max = t_y_max;
 
-    float tzmin = (bounds[sign(raydirection, 2)][2] - ray.position[2]) * raydirection[2];
-    float tzmax = (bounds[1 - sign(raydirection, 2)][2] - ray.position[2]) * raydirection[2];
+    float t_z_min = (bounds_[sign(ray_direction, 2)][2] - ray.position[2]) * ray_direction[2];
+    float t_z_max = (bounds_[1 - sign(ray_direction, 2)][2] - ray.position[2]) * ray_direction[2];
 
-    if ((tmin > tzmax) || (tzmin > tmax))
+    if ((t_min > t_z_max) || (t_z_min > t_max))
         return false;
-    if (tzmin > tmin)
-        tmin = tzmin;
-    if (tzmax < tmax)
-        tmax = tzmax;
+    if (t_z_min > t_min)
+        t_min = t_z_min;
+    if (t_z_max < t_max)
+        t_max = t_z_max;
 
 
-    if (0 < tmin && tmin < distance) {
-        raydirection = ray.direction;
-        raydirection *= tmin;
+    if (0 < t_min && t_min < distance) {
+        ray_direction = ray.direction;
+        ray_direction *= t_min;
 
-        distance = tmin;
-        HitPoint = ray.position + raydirection;
-        HitNormal = get_normal(HitPoint);
+        distance = t_min;
+        hit_point = ray.position + ray_direction;
+        hit_normal = get_normal(hit_point);
         return true;
     }
-    if (tmin < 0 && 0 < tmax && tmax < distance) {
-        raydirection = ray.direction;
-        raydirection *= tmax;
+    if (t_min < 0 && 0 < t_max && t_max < distance) {
+        ray_direction = ray.direction;
+        ray_direction *= t_max;
 
-        distance = tmax;
-        HitPoint = ray.position + raydirection;
-        HitNormal = get_normal(HitPoint);
+        distance = t_max;
+        hit_point = ray.position + ray_direction;
+        hit_normal = get_normal(hit_point);
         return true;
     }
 
@@ -128,40 +131,40 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitN
 bool Box::get_intersect(const Ray &ray) const {
 
 
-    if (bounds[0][0] < ray.position[0] && ray.position[0] < bounds[1][0] &&
-            bounds[0][1] < ray.position[1] && ray.position[1] < bounds[1][1] &&
-            bounds[0][2] < ray.position[2] && ray.position[2] < bounds[1][2]){
+    if (bounds_[0][0] < ray.position[0] && ray.position[0] < bounds_[1][0] &&
+            bounds_[0][1] < ray.position[1] && ray.position[1] < bounds_[1][1] &&
+            bounds_[0][2] < ray.position[2] && ray.position[2] < bounds_[1][2]){
         /// The position of the ray is inside of the box, therefore it intersects the box
         return true;
     }
 
-    glm::vec3 raydirection = {1 / ray.direction[0], 1 / ray.direction[1], 1 / ray.direction[2]};
+    glm::vec3 ray_direction = {1 / ray.direction[0], 1 / ray.direction[1], 1 / ray.direction[2]};
 
 
-    float tmin, tmax, tymin, tymax, tzmin, tzmax;
+    float t_min, t_max, t_y_min, t_y_max, t_z_min, t_z_max;
 
-    tmin = (bounds[sign(raydirection, 0)][0] - ray.position[0]) * raydirection[0];
-    tmax = (bounds[1 - sign(raydirection, 0)][0] - ray.position[0]) * raydirection[0];
+    t_min = (bounds_[sign(ray_direction, 0)][0] - ray.position[0]) * ray_direction[0];
+    t_max = (bounds_[1 - sign(ray_direction, 0)][0] - ray.position[0]) * ray_direction[0];
 
-    tymin = (bounds[sign(raydirection, 1)][1] - ray.position[1]) * raydirection[1];
-    tymax = (bounds[1 - sign(raydirection, 1)][1] - ray.position[1]) * raydirection[1];
+    t_y_min = (bounds_[sign(ray_direction, 1)][1] - ray.position[1]) * ray_direction[1];
+    t_y_max = (bounds_[1 - sign(ray_direction, 1)][1] - ray.position[1]) * ray_direction[1];
 
-    if ((tmin > tymax) || (tymin > tmax))
+    if ((t_min > t_y_max) || (t_y_min > t_max))
         return false;
 
 
-    if (tymin > tmin)
-        tmin = tymin;
+    if (t_y_min > t_min)
+        t_min = t_y_min;
 
 
-    if (tymax < tmax)
-        tmax = tymax;
+    if (t_y_max < t_max)
+        t_max = t_y_max;
 
 
-    tzmin = (bounds[sign(raydirection, 2)][2] - ray.position[2]) * raydirection[2];
-    tzmax = (bounds[1 - sign(raydirection, 2)][2] - ray.position[2]) * raydirection[2];
+    t_z_min = (bounds_[sign(ray_direction, 2)][2] - ray.position[2]) * ray_direction[2];
+    t_z_max = (bounds_[1 - sign(ray_direction, 2)][2] - ray.position[2]) * ray_direction[2];
 
-    return !((tmin > tzmax) || (tzmin > tmax));
+    return !((t_min > t_z_max) || (t_z_min > t_max));
 }
 
 /**
@@ -170,25 +173,25 @@ bool Box::get_intersect(const Ray &ray) const {
  * @param position position (Hitposition)
  * @return normal at the given position. Either {1,0,0},{0,1,0},{0,0,1} or {-1,0,0},{0,-1,0},{0,0,-1}
  */
-glm::vec3 Box::get_normal(glm::vec3 const &pos) const {
+glm::vec3 Box::get_normal(glm::vec3 const& pos) const {
 
     float epsilon = 0.0001f; // for edges/ corners -> uncertainty
 
-    if (pos[0] <= bounds[0][0] + epsilon) {
+    if (pos[0] <= bounds_[0][0] + epsilon) {
         return {-1, 0, 0}; // back
-    } else if (pos[0] >= bounds[1][0] - epsilon) {
+    } else if (pos[0] >= bounds_[1][0] - epsilon) {
         return {1, 0, 0}; // front
     }
 
-    if (pos[1] <= bounds[0][1] + epsilon) {
+    if (pos[1] <= bounds_[0][1] + epsilon) {
         return {0, -1, 0}; // left
-    } else if (pos[1] >= bounds[1][1] - epsilon) {
+    } else if (pos[1] >= bounds_[1][1] - epsilon) {
         return {0, 1, 0}; // right
     }
 
-    if (pos[2] <= bounds[0][2] + epsilon) {
+    if (pos[2] <= bounds_[0][2] + epsilon) {
         return {0, 0, -1}; // bottom
-    } else if (pos[2] >= bounds[1][2] - epsilon) {
+    } else if (pos[2] >= bounds_[1][2] - epsilon) {
         return {0, 0, 1}; // top
     }
 
@@ -200,7 +203,7 @@ glm::vec3 Box::get_normal(glm::vec3 const &pos) const {
  * @return a vector with the minimal values of x, y and z of the box
  */
 glm::vec3 Box::get_min() const {
-    return bounds[0];
+    return bounds_[0];
 }
 
 
@@ -208,7 +211,7 @@ glm::vec3 Box::get_min() const {
  * @return a vector with the maximal values of x, y and z of the box
  */
 glm::vec3 Box::get_max() const {
-    return bounds[1];
+    return bounds_[1];
 }
 
 /**
@@ -216,7 +219,7 @@ glm::vec3 Box::get_max() const {
  */
 glm::vec3 Box::get_median() const { //besser getPosition? Ja, aber diese Funktion wird von verschiedenen Shapes genutzt z.B. Dreieck -> welche Position ist dann gemeint?
     // Und es gibt ja eine min/max Funktion -> mid/Median/M... Funktion macht nur Sinn
-    return position;
+    return position_;
 }
 
 /**
@@ -245,11 +248,11 @@ void Box::setMaterial(Material *material) {
  * Changes the position of the Sphere with a given glm::vec3
  * @param position
  */
-void Box::translate(glm::vec3 const &position) {
-    for (int i = 0; i < bounds.size(); ++i) {
-        bounds[i] += position;
+void Box::translate(glm::vec3 const& position) {
+    for (int i = 0; i < bounds_.size(); ++i) {
+        bounds_[i] += position_;
     }
-    this->position += position;
+    this->position_ += position_;
 }
 
 /**
@@ -259,7 +262,7 @@ void Box::translate(glm::vec3 const &position) {
  * @param pos in the vector
  * @return 0 or 1
  */
-int Box::sign(glm::vec3 const &vec3, int pos) const {
+int Box::sign(glm::vec3 const& vec3, int pos) const {
     return ((pos == 0 && vec3[0] < 0) || (pos == 1 && vec3[1] < 0) || (pos == 2 && vec3[2] < 0));
 }
 

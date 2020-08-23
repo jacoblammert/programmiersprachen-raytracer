@@ -45,12 +45,11 @@ public:
     void print() const override;
 
 private:
-    int sign(glm::vec3 const& vec3, int position) const;
+    int sign (glm::vec3 const& vec3, int position) const;
 
-private:
-    std::vector<glm::vec3> bounds;
+    std::vector<glm::vec3> bounds_;
 
-    glm::vec3 position;
+    glm::vec3 position_;
 };
 
 
