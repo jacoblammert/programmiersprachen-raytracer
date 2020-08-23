@@ -67,22 +67,18 @@ bool Composite::get_intersect_vec(const Ray &ray, glm::vec3 &HitPoint, glm::vec3
  * @param hit boolean, false, if no shape has been intersected
  */
 void
-Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance,
-                                 bool &hit) {
+Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance) {
 
-    for (auto &boxe : boxes) { // besser box als boxe?
-        if (boxe.box.get_intersect(ray)) {
-            boxe.get_intersected_shape(ray, shape, Hitpoint, Hitnormal, distance, hit);
+    for (auto &box : boxes) {
+        if (box.box.get_intersect(ray)) {
+            box.get_intersected_shape(ray, shape, Hitpoint, Hitnormal, distance);
         }
     }
 
     if (!shapes.empty()) {
-        float oldDist = distance;
         for (auto &shapehit : shapes) {
-            shapehit->get_intersect_vec(ray, Hitpoint, Hitnormal, distance);
-            if (distance < oldDist) { // Test, if new already hit shape is closer and set shape to shape and hit to true
-                shape = shapehit;
-                hit = true;
+            if (shapehit->get_intersect_vec(ray, Hitpoint, Hitnormal, distance)) {
+                shape = shapehit; // shapehit is the closest intersected shape of all
             }
         }
     }
@@ -95,7 +91,7 @@ Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> shape, g
  * @return
  */
 glm::vec3 Composite::get_normal(const glm::vec3 &pos) const {
-    return glm::vec3();
+    return box.get_normal(pos);
 }
 
 
@@ -201,18 +197,14 @@ void Composite::split() {
         axis = 2; // z split
     }
 
-    // 1 0   0
-    // 0 1   1
-    // 0 0   2
-
 
     Composite left = Composite(depth);
     Composite right = Composite(depth);
 
-    boxes.push_back(right);
-    boxes.push_back(left);
+    boxes = std::vector<Composite>(2);
 
-    //int count = 0;
+    boxes[0] = (right);
+    boxes[1] = (left);
 
     for (int i = (int) shapes.size() - 1; 0 <= i; --i) {
         //std::cout<<i << " " << count++ <<" Type: " << typeid(*shapes[i].get()).hash_code()<<std::endl;
@@ -225,7 +217,6 @@ void Composite::split() {
             } else {
                 boxes[1].add_shape(shapes[i]);
             }
-
             shapes.erase(shapes.begin() + i);
         }
     }
@@ -243,7 +234,7 @@ void Composite::split() {
 void Composite::build() {
     set_min_max_mid();
 
-    if (depth < 20 && shapes.size() > 8) { // TODO make better system to change these values
+    if (depth < 20 && shapes.size() >= 4) { // TODO make better system to change these values
         split();
     }
 }
@@ -279,15 +270,15 @@ void Composite::get_max(glm::vec3 shapemax) {
  * Adds a Shape pointer to the Compositeobject usefull, if the object has not been build yet
  * @param shape pointer
  */
-void Composite::add_shape(std::shared_ptr<Shape> shape) {
+void Composite::add_shape(const std::shared_ptr<Shape>& shape) {
     shapes.push_back(shape);
 }
 /**
  * Adds a vector with Shape pointers to the Compositeobject usefull, if the object has not been build yet
  * @param shapes  = vector with Shape pointers
  */
-void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> shapes) {
-    this->shapes.insert(this->shapes.end(),shapes.begin(),shapes.end());
+void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> newshapes) {
+    this->shapes.insert(this->shapes.end(),newshapes.begin(),newshapes.end());
 }
 
 

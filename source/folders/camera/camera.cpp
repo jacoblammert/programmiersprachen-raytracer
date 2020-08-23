@@ -38,25 +38,18 @@
  Ray Camera::generateRay(int x, int y) const {
 
 
-     glm::vec3 right = glm::cross(this->direction,upVector);// from the left of the camera plane to the right
-     glm::vec3 top = glm::cross(this->direction,right); // from bottom of the camera plane to the top
-     right = glm::normalize(right);// the vectors must be normalized
-     top = glm::normalize(top);  // the vectors must be normalized
+     glm::vec3 right = glm::normalize(glm::cross(this->direction,upVector));// from the left of the camera plane to the right (normalized)
+     glm::vec3 top = glm::normalize(glm::cross(this->direction,right)); // from bottom of the camera plane to the top (normalized)
 
-     float wToH = ((float) this->width / (float) this->height);  // width to height ratio
+     //float wToH = ((float) this->width / (float) this->height);  // width to height ratio
 
      float xpercentage = (float) x / (float) this->width; // could be simplified to save two variables
      float ypercentage = (float) y / (float) this->height;// could be simplified to save two variables
 
-     float scalex = (xpercentage - 0.5f) * 2 * wToH; // now a range from -1 to 1 depending on the x to width ratio
+     float scalex = (xpercentage - 0.5f) * 2 * ((float) this->width / (float) this->height); // now a range from -1 to 1 depending on the x to width ratio
      float scaley = (ypercentage - 0.5f) * 2; // now a range from -1 to 1 depending on the y to Height ratio
 
-
-     glm::vec3 vright = right * scalex; // horizontal Vector
-     glm::vec3 vtop = top * scaley;     // vertical Vector
-
-
-     return {this->position, this->direction * this->distance + vtop + vright}; // new custom camera ray for the given pixel
+     return {this->position, this->direction * this->distance + (top * scaley) + (right * scalex)}; // new custom camera ray for the given pixel
  }
 
  /**

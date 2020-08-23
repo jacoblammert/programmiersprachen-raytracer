@@ -30,23 +30,22 @@ glm::vec3 Render::getColor(Ray ray, int depth) const{
 
     glm::vec3 HitPoint;
     glm::vec3 HitNormal;
-    bool hitbool = false;
     float dist = INFINITY;
     std::shared_ptr<Shape> shape;
 
-    composite->get_intersected_shape(ray,shape,HitPoint,HitNormal,dist,hitbool); // TODO pass pointer instead of all the parameters
+    composite->get_intersected_shape(ray,shape,HitPoint,HitNormal,dist); // TODO pass pointer instead of all the parameters
 
 
 
-    if (!hitbool) { // shape gets hit
+    if (dist == INFINITY) { // shape has not been hit
         //TODO implement skybox or background
         return {}; // returns black, if no shape has been hit
     }
 
 
     float glossy = 0.0f;//shape->getMaterial()->getGlossy();
-    float transparency = 0.0f;//shape->getMaterial()->getTransparency();
-    float roughness = 0;//shape->getMaterial()->getRoughness();
+    float transparency = 0.00f;//shape->getMaterial()->getTransparency();
+    float roughness = 0.0;//shape->getMaterial()->getRoughness();
 
 
     glm::vec3 colorfinal{1,1,1};//shape->getMaterial()->getColor()};
@@ -54,7 +53,8 @@ glm::vec3 Render::getColor(Ray ray, int depth) const{
     colorfinal = colorfinal  * (0.05f * (1 - transparency));
 
 
-    if (!(transparency == 1.0f || glossy == 1.0f)) {///*/true/*/(shapes[hit]->getMaterial()->getTransparency() != 1.0f /*/||/*/&&/**/ /*/shapes[hit]->getMaterial()->getGlossy() != 1.0f/*/ true/**/)/**/) { // ||?
+    /*** Colorcalculations: //TODO clean up in different function ***/
+    if (!(transparency == 1.0f || glossy == 1.0f)) {
         float lightStrength = 0;
 
 
@@ -95,6 +95,7 @@ glm::vec3 Render::getColor(Ray ray, int depth) const{
         //glm::vec3 Normal{HitNormal};//HitNormal.scale(0.001);
 
 
+        /*** Colorcalculations reflection: //TODO clean up in different function ***/
         if (glossy > 0) {
             int reflectionsamples = roughness == 0.0f ? 1 : 3 * (depth == 0) + 1;
             // max number of rays is 4, if the depth (iteration) is greater than 1, we do only have one new ray
@@ -106,6 +107,8 @@ glm::vec3 Render::getColor(Ray ray, int depth) const{
             reflectionColor *= glossy / (float) reflectionsamples;
         }
 
+
+        /*** Colorcalculations refractions: //TODO clean up in different function ***/
         if (transparency > 0) {
             int refractionsamples = roughness == 0.0f ? 1 : 3 * (depth == 0) + 1;
             // max number of rays is 4, if the depth (iteration) is greater than 1, we do only have one new ray
@@ -119,6 +122,8 @@ glm::vec3 Render::getColor(Ray ray, int depth) const{
         }
     }
 
+
+    /*** Color mixing: //TODO clean up in different function (Optional) ***/
     colorfinal *= (1.0f - transparency);
 
     colorfinal += (reflectionColor + refractionColor);
@@ -143,14 +148,12 @@ bool Render::castShadowRay(const Ray& ray, float distance) const{
 
     glm::vec3 Hitpoint;
     glm::vec3 HitNormal;
-    bool hitbool = false;
     float dist = INFINITY;
     std::shared_ptr<Shape> shape;
 
-
-    composite->get_intersected_shape(ray, shape, Hitpoint,HitNormal,dist,hitbool);
+    composite->get_intersected_shape(ray, shape, Hitpoint,HitNormal,dist);
     //TODO clean up
-    return hitbool && dist < distance && dist >= 0;
+    return (dist != INFINITY) && dist < distance && dist >= 0;
 }
 
 
@@ -160,10 +163,7 @@ bool Render::castShadowRay(const Ray& ray, float distance) const{
  * @return random float value
  */
 float Render::randomFloat(float range) const{
-    float r = ((float) rand()) / (float) (RAND_MAX / 2.0f);
-    r -= 1.0f; // range from -1 to 1
-    r *= range;// range from -range to range
-    return r;
+    return ((((float) rand()) / (float) (RAND_MAX / 2.0f))-1.0f) * range;// range from -range to range
 }
 
 

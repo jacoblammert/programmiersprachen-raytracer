@@ -49,14 +49,14 @@ bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 
     if (std::fabs(det) == 0.0f)
         return false;
 
-    glm::vec3 rayposition = ray.position;
+    //glm::vec3 rayposition = ray.position;
 
-    float u = glm::dot(pvec, rayposition - a) / det;
+    float u = glm::dot(pvec, ray.position - a) / det;
 
     if (u < 0 || u > 1)
         return false;
 
-    pvec = glm::cross((rayposition - a) , (b - a));
+    pvec = glm::cross((ray.position - a) , (b - a));
     float v = glm::dot(pvec, ray.direction) / det;
 
     if (v < 0 || (u + v) > 1)
@@ -68,10 +68,11 @@ bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 
         distance = det;
         pvec = ray.direction;
         pvec *= det;
-        HitPoint = rayposition + pvec;
+        HitPoint = ray.position + pvec;
         HitNormal = get_normal(ray.position);
+        return true;
     }
-    return true;
+    return false;
 }
 
 /**

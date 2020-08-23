@@ -67,19 +67,17 @@ Box::Box(Vector const& Pos, float xScale, float yScale, float zScale, Color cons
 bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal,
                           float &distance) const { //sinnvoll HitBox returnen? Überschreibt Shape funktion, Hitpoint,... Werden trotzderm "zurückgegeben" da sie als Referenzen übergeben wurden
 
-    glm::vec3 rayposition = ray.position;
-    glm::vec3 raydirection = ray.direction;
-    raydirection = {1 / raydirection[0], 1 / raydirection[1], 1 / raydirection[2]};
+    glm::vec3 raydirection = {1.0f / ray.direction[0], 1.0f / ray.direction[1], 1.0f / ray.direction[2]};
 
-    float tmin, tmax, tymin, tymax, tzmin, tzmax;
+    float tmin, tmax, tymin, tymax;
 
     /// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
 
-    tmin = (bounds[sign(raydirection, 0)][0] - rayposition[0]) * raydirection[0]; //txmin?
-    tmax = (bounds[1 - sign(raydirection, 0)][0] - rayposition[0]) * raydirection[0]; //tymin?
+    tmin = (bounds[sign(raydirection, 0)][0] - ray.position[0]) * raydirection[0]; //txmin?
+    tmax = (bounds[1 - sign(raydirection, 0)][0] - ray.position[0]) * raydirection[0]; //tymin?
 
-    tymin = (bounds[sign(raydirection, 1)][1] - rayposition[1]) * raydirection[1];
-    tymax = (bounds[1 - sign(raydirection, 1)][1] - rayposition[1]) * raydirection[1];
+    tymin = (bounds[sign(raydirection, 1)][1] - ray.position[1]) * raydirection[1];
+    tymax = (bounds[1 - sign(raydirection, 1)][1] - ray.position[1]) * raydirection[1];
 
     if ((tmin > tymax) || (tymin > tmax))
         return false;
@@ -88,8 +86,8 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitN
     if (tymax < tmax)
         tmax = tymax;
 
-    tzmin = (bounds[sign(raydirection, 2)][2] - rayposition[2]) * raydirection[2];
-    tzmax = (bounds[1 - sign(raydirection, 2)][2] - rayposition[2]) * raydirection[2];
+    float tzmin = (bounds[sign(raydirection, 2)][2] - ray.position[2]) * raydirection[2];
+    float tzmax = (bounds[1 - sign(raydirection, 2)][2] - ray.position[2]) * raydirection[2];
 
     if ((tmin > tzmax) || (tzmin > tmax))
         return false;
@@ -104,7 +102,7 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitN
         raydirection *= tmin;
 
         distance = tmin;
-        HitPoint = rayposition + raydirection;
+        HitPoint = ray.position + raydirection;
         HitNormal = get_normal(HitPoint);
         return true;
     }
@@ -113,7 +111,7 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitN
         raydirection *= tmax;
 
         distance = tmax;
-        HitPoint = rayposition + raydirection;
+        HitPoint = ray.position + raydirection;
         HitNormal = get_normal(HitPoint);
         return true;
     }
@@ -129,18 +127,16 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitN
  */
 bool Box::get_intersect(const Ray &ray) const {
 
-    glm::vec3 rayposition = ray.position;
-    glm::vec3 raydirection = ray.direction;
-    raydirection = {1 / raydirection[0], 1 / raydirection[1], 1 / raydirection[2]};
+    glm::vec3 raydirection = {1 / ray.direction[0], 1 / ray.direction[1], 1 / ray.direction[2]};
 
 
     float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
-    tmin = (bounds[sign(raydirection, 0)][0] - rayposition[0]) * raydirection[0];
-    tmax = (bounds[1 - sign(raydirection, 0)][0] - rayposition[0]) * raydirection[0];
+    tmin = (bounds[sign(raydirection, 0)][0] - ray.position[0]) * raydirection[0];
+    tmax = (bounds[1 - sign(raydirection, 0)][0] - ray.position[0]) * raydirection[0];
 
-    tymin = (bounds[sign(raydirection, 1)][1] - rayposition[1]) * raydirection[1];
-    tymax = (bounds[1 - sign(raydirection, 1)][1] - rayposition[1]) * raydirection[1];
+    tymin = (bounds[sign(raydirection, 1)][1] - ray.position[1]) * raydirection[1];
+    tymax = (bounds[1 - sign(raydirection, 1)][1] - ray.position[1]) * raydirection[1];
 
     if ((tmin > tymax) || (tymin > tmax))
         return false;
@@ -154,14 +150,15 @@ bool Box::get_intersect(const Ray &ray) const {
         tmax = tymax;
 
 
-    tzmin = (bounds[sign(raydirection, 2)][2] - rayposition[2]) * raydirection[2];
-    tzmax = (bounds[1 - sign(raydirection, 2)][2] - rayposition[2]) * raydirection[2];
+    tzmin = (bounds[sign(raydirection, 2)][2] - ray.position[2]) * raydirection[2];
+    tzmax = (bounds[1 - sign(raydirection, 2)][2] - ray.position[2]) * raydirection[2];
 
     return !((tmin > tzmax) || (tzmin > tmax));
 }
 
 /**
  * returns the normal for a given position
+ * //TODO all the normals are pointing away from the cube. make a function to return the ones pointing "towards" a position (image hypercube)
  * @param position position (Hitposition)
  * @return normal at the given position. Either {1,0,0},{0,1,0},{0,0,1} or {-1,0,0},{0,-1,0},{0,0,-1}
  */

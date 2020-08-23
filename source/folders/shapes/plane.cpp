@@ -28,17 +28,11 @@ plane::Plane(Vector const& position, Vector const& normal, Material *material) :
  * @return true, if intersected in front of the ray, false otherwise
  */
 bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
-
-    glm::vec3 raydirection = ray.direction;
-
-    float denom = glm::dot(normal, raydirection);
-    glm::vec3 p0l0 = pos - ray.position;
-
-    float t = glm::dot(p0l0, normal) / denom;
+    float t = glm::dot(pos - ray.position, normal) / glm::dot(ray.direction,normal);
 
     if (0 <= t && t < distance) {
         distance = t;
-        HitPoint = ray.position + raydirection * t;
+        HitPoint = ray.position + ray.direction * t;
         HitNormal = get_normal(ray.position);
         return true;
     }
