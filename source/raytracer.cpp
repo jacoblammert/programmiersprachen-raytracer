@@ -141,14 +141,14 @@ int main(int argc, char *argv[]) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
 
             Render render;
-            render.setComposite(composite);
-            render.setLights(lights);
+            render.set_composite(composite);
+            render.set_lights(lights);
 
         for (int j = 0; j < image_height; ++j) {
 
                 Pixel color{(unsigned int) i, (unsigned int) j};
 
-                glm::vec3 colorveec = render.getColor(camera.generateRay(i, j), 0);
+                glm::vec3 colorveec = render.get_color(camera.generate_ray(i, j), 0);
 
                 color.color = {colorveec[0], colorveec[1], colorveec[2]};
 

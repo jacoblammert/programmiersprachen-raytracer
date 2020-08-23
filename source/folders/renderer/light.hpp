@@ -11,12 +11,11 @@
 struct Light {
 
     //Light(glm::vec3 position,glm::vec3 color, float brightness);
-    Light(glm::vec3 position, glm::vec3 color, float brightness):
-            position{position},color{color},brightness{brightness}{
-
-    }
+    Light(glm::vec3 const& position, glm::vec3 const& color, float brightness):
+            position{position},color{color},brightness{brightness}
+    {}
     glm::vec3 position;
-    glm::vec3 color;
+    glm::vec3 color; //könnten Typ Color benutzen
     float brightness;
 
 };

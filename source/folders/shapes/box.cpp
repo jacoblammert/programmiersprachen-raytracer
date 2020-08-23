@@ -65,7 +65,7 @@ Box::Box(Vector const& Pos, float xScale, float yScale, float zScale, Color cons
  * @return true, of the box is in front of the ray and has been intersected
  */
 bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal,
-                          float &distance) const { //sinnvoll HitBox returnen? Überschreibt Shape funktion, Hitpoint,... Werden trotzderm "zurückgegeben" da sie als Referenzen übergeben wurden
+                          float &distance) const {
 
     glm::vec3 raydirection = {1.0f / ray.direction[0], 1.0f / ray.direction[1], 1.0f / ray.direction[2]};
 

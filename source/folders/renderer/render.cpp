@@ -17,7 +17,7 @@ Render::Render() = default;
  * @param boundingBox to get intersections with other shapes from the ray to go to all the lightsources
  * @return color consisting of brightness for that point and each light and color of the shape blended together
  */
-glm::vec3 Render::getColor(Ray ray, int depth) const{
+glm::vec3 Render::get_color(Ray const& ray, int depth) const{
 
 
 
@@ -28,12 +28,12 @@ glm::vec3 Render::getColor(Ray ray, int depth) const{
 
     /**Get Intersected Object here**/
 
-    glm::vec3 HitPoint;
-    glm::vec3 HitNormal;
+    glm::vec3 hit_point;
+    glm::vec3 hit_normal;
     float dist = INFINITY;
     std::shared_ptr<Shape> shape;
 
-    composite->get_intersected_shape(ray,shape,HitPoint,HitNormal,dist); // TODO pass pointer instead of all the parameters
+    composite_->get_intersected_shape(ray, shape, hit_point, hit_normal, dist); // TODO pass pointer instead of all the parameters
 
 
 
@@ -48,38 +48,38 @@ glm::vec3 Render::getColor(Ray ray, int depth) const{
     float roughness = 0.0;//shape->getMaterial()->getRoughness();
 
 
-    glm::vec3 colorfinal{1,1,1};//shape->getMaterial()->getColor()};
+    glm::vec3 color_final{1,1,1};//shape->getMaterial()->getColor()};
 
-    colorfinal = colorfinal  * (0.05f * (1 - transparency));
+    color_final = color_final  * (0.05f * (1 - transparency));
 
 
     /*** Colorcalculations: //TODO clean up in different function ***/
     if (!(transparency == 1.0f || glossy == 1.0f)) {
-        float lightStrength = 0;
+        float light_strength = 0;
 
 
-        glm::vec3 HitToLight = {};
-        for (int i = 0; i < lights.size(); ++i) {
+        glm::vec3 hit_to_light = {};
+        for (int i = 0; i < lights_.size(); ++i) {
 
-            if (lights[i]->brightness > 0) {
+            if (lights_[i]->brightness > 0) {
 
-                glm::vec3 Normal = HitNormal;
+                glm::vec3 normal = hit_normal;
                 //Normal = glm::normalize(Normal);
 
 
-                HitToLight = (lights[i]->position - HitPoint);
-                lightStrength = glm::length(HitToLight);
-                HitToLight = glm::normalize(HitToLight);
+                hit_to_light = (lights_[i]->position - hit_point);
+                light_strength = glm::length(hit_to_light);
+                hit_to_light = glm::normalize(hit_to_light);
 
-                float angle = glm::dot(Normal,HitToLight);
+                float angle = glm::dot(normal,hit_to_light);
 
                 if (0 < angle) { // normal facing in direction of light
-                    Normal *= 0.1f;
-                    if (!castShadowRay({HitPoint + Normal, HitToLight}, lightStrength)) {
+                    normal *= 0.1f;
+                    if (!cast_shadow_ray({hit_point + normal, hit_to_light}, light_strength)) {
 
-                        glm::vec3 Lightcolor = (lights[i]->color * (angle * lights[i]->brightness)) / (lightStrength * lightStrength); // brightness
+                        glm::vec3 light_color = (lights_[i]->color * (angle * lights_[i]->brightness)) / (light_strength * light_strength); // brightness
 
-                        colorfinal += Lightcolor;//(shape->getMaterial()->getColor() * Lightcolor); //TODO change in one line or with material
+                        color_final += light_color;//(shape->getMaterial()->getColor() * Lightcolor); //TODO change in one line or with material
                     }
                 }
             }
@@ -87,54 +87,67 @@ glm::vec3 Render::getColor(Ray ray, int depth) const{
     }
 
 
-    glm::vec3 reflectionColor;
-    glm::vec3 refractionColor;
+    glm::vec3 reflection_color;
+    glm::vec3 refraction_color;
 
     if (depth < 20) { // calculates as n reflections because depth < n
 
         //glm::vec3 Normal{HitNormal};//HitNormal.scale(0.001);
 
 
-        /*** Colorcalculations reflection: //TODO clean up in different function ***/
+        /*** Color calculations reflection: //TODO clean up in different function ***/
         if (glossy > 0) {
-            int reflectionsamples = roughness == 0.0f ? 1 : 3 * (depth == 0) + 1;
+            int reflection_samples = roughness == 0.0f ? 1 : 3 * (depth == 0) + 1;
             // max number of rays is 4, if the depth (iteration) is greater than 1, we do only have one new ray
             // 4 rays in the first iteration, only 1 in each following iteration. If the roughness is 0.0f, we do always have one new ray only
 
-            for (int i = 0; i < reflectionsamples; ++i) {
-                reflectionColor += getReflectedColor(ray, HitPoint, HitNormal, depth, shape);// increasing the depth is not really necessary
+            for (int i = 0; i < reflection_samples; ++i) {
+                reflection_color += get_reflected_color(ray, hit_point, hit_normal, depth, shape);// increasing the depth is not really necessary
             }
-            reflectionColor *= glossy / (float) reflectionsamples;
+            reflection_color *= glossy / (float) reflection_samples;
         }
 
 
         /*** Colorcalculations refractions: //TODO clean up in different function ***/
         if (transparency > 0) {
-            int refractionsamples = roughness == 0.0f ? 1 : 3 * (depth == 0) + 1;
+            int refraction_samples = roughness == 0.0f ? 1 : 3 * (depth == 0) + 1;
             // max number of rays is 4, if the depth (iteration) is greater than 1, we do only have one new ray
             // 4 rays in the first iteration, only 1 in each following iteration. If the roughness is 0.0f, we do always have one new ray only
 
-            for (int i = 0; i < refractionsamples; ++i) {
-                refractionColor += getRefractedColor(ray, HitPoint, HitNormal, depth,
+            for (int i = 0; i < refraction_samples; ++i) {
+                refraction_color += get_refracted_color(ray, hit_point, hit_normal, depth,
                                                      shape);// increasing the depth is not really necessary
             }
-            refractionColor *= transparency / (float) refractionsamples;
+            refraction_color *= transparency / (float) refraction_samples;
         }
     }
 
 
     /*** Color mixing: //TODO clean up in different function (Optional) ***/
-    colorfinal *= (1.0f - transparency);
+    color_final *= (1.0f - transparency);
 
-    colorfinal += (reflectionColor + refractionColor);
+    color_final += (reflection_color + refraction_color);
 
     float value = 1 - transparency;
 
-    glm::vec3 Brightness{value, transparency, glossy};
+    glm::vec3 brightness{value, transparency, glossy};
 
-    colorfinal /= glm::length(Brightness);
+    color_final /= glm::length(brightness);
 
-    return colorfinal;
+    return color_final;
+}
+
+/**
+ * Set the composite object for this Renderer
+ * All shapes inside the composite object will be drawn.
+ * @param composite object with the information to be rendered
+ */
+void Render::set_composite(std::shared_ptr<Composite> const& composite_1) {
+    this->composite_ = std::move(composite_1);
+}
+
+void Render::set_lights(std::vector<std::shared_ptr<Light>> const& lights_1) {
+    this->lights_ = std::move(lights_1);
 }
 
 /**
@@ -143,42 +156,33 @@ glm::vec3 Render::getColor(Ray ray, int depth) const{
  * @param distance to the light, if it hits anything closer, we have shadow
  * @return intersection further than distance
  */
-bool Render::castShadowRay(const Ray& ray, float distance) const{
+bool Render::cast_shadow_ray(const Ray& ray, float distance) const{
 
 
-    glm::vec3 Hitpoint;
-    glm::vec3 HitNormal;
+    glm::vec3 hit_point;
+    glm::vec3 hit_normal;
     float dist = INFINITY;
     std::shared_ptr<Shape> shape;
 
-    composite->get_intersected_shape(ray, shape, Hitpoint,HitNormal,dist);
+    composite_->get_intersected_shape(ray, shape, hit_point, hit_normal, dist);
     //TODO clean up
     return (dist != INFINITY) && dist < distance && dist >= 0;
 }
 
 
-/**
- * for roughness to get a value between -range and range
- * @param range
- * @return random float value
- */
-float Render::randomFloat(float range) const{
-    return ((((float) rand()) / (float) (RAND_MAX / 2.0f))-1.0f) * range;// range from -range to range
-}
-
 
 /**
  * Function to calculate the color of the reflected ray
  * @param ray will be reflected and sent away
- * @param HitPoint Point where the old ray has intersected the shape
- * @param HitNormal normal at the intersected position
+ * @param hit_point Point where the old ray has intersected the shape
+ * @param hit_normal normal at the intersected position
  * @param depth of the ray to set a recursion depth
  * @param shape pointer of the last intersected shape (for material/ refractive index information later on)
  * @return the calculated color after all recursions came to an end
  */
-glm::vec3 Render::getReflectedColor(Ray ray, glm::vec3 HitPoint, glm::vec3 HitNormal, int depth, std::shared_ptr<Shape> shape/*** dont remove, we need the roughness*/) const{
+glm::vec3 Render::get_reflected_color(Ray const& ray, glm::vec3 const& hit_point, glm::vec3 const& hit_normal, int depth, std::shared_ptr<Shape> const& shape/*** dont remove, we need the roughness*/) const{
 
-    glm::vec3 reflectedVector = getReflected(ray.direction,HitNormal);
+    glm::vec3 reflected_vector = get_reflected(ray.direction, hit_normal);
 
 
     float roughness = 0;//shape->getMaterial()->getRoughness();//TODO change
@@ -188,16 +192,16 @@ glm::vec3 Render::getReflectedColor(Ray ray, glm::vec3 HitPoint, glm::vec3 HitNo
         // the first vector doesent need to be changed, but I did it this way for now
 
         for (int i = 0; i < 3; ++i) {
-            offset[i] = randomFloat(roughness);
+            offset[i] = random_float(roughness);
         }
         offset = glm::normalize(offset) * roughness;
-        reflectedVector = reflectedVector + offset;
+        reflected_vector = reflected_vector + offset;
     }
 
 
-    Ray reflectionray = {HitPoint + HitNormal * 0.001f, reflectedVector};
+    Ray reflection_ray = {hit_point + hit_normal * 0.001f, reflected_vector};
 
-    return getColor(reflectionray, depth);
+    return get_color(reflection_ray, depth);
 }
 
 /**
@@ -205,33 +209,39 @@ glm::vec3 Render::getReflectedColor(Ray ray, glm::vec3 HitPoint, glm::vec3 HitNo
  * @param ray stores information about the refractive index of the new/ old object to make the correct calculations
  * the ray does have a refractive index of 1.0 in the beginning regardless of its actual position -> wrong calculations when
  * the camera starts inside an object/ two shapes intersect
- * @param HitPoint Point where the old ray has intersected the shape
- * @param HitNormal normal at the intersected position
+ * @param hit_point Point where the old ray has intersected the shape
+ * @param hit_normal normal at the intersected position
  * @param depth of the ray to set a recursion depth
  * @param shape pointer of the last intersected shape (for material/ refractive index information)
  * @return the calculated color after all recursions came to an end
  */
-glm::vec3 Render::getRefractedColor(Ray ray, glm::vec3 HitPoint, glm::vec3 HitNormal, int depth, std::shared_ptr<Shape> shape/*** dont remove, we need the reflective index*/) const{
+glm::vec3 Render::get_refracted_color(Ray const& ray, glm::vec3 const& hit_point, glm::vec3 const& hit_normal, int depth, std::shared_ptr<Shape> const& shape/*** dont remove, we need the reflective index*/) const{
 
     glm::vec3 position = {};
 
-    float newRefractionindex;
-    float oldrefractionIndex;
+    float new_refraction_index;
+    float old_refraction_index;
 
     if (depth % 2 == 0) { // Camera is in air // Normal is ok
-        position = HitPoint - HitNormal * 0.001f; // small offset to not intersect the last shape
-        oldrefractionIndex = 1;
-        newRefractionindex = 1.36f;//shape->getMaterial()->getRefractiveIndex();//TODO change see, if the right normal has been used
+        position = hit_point - hit_normal * 0.001f; // small offset to not intersect the last shape
+        old_refraction_index = 1;
+        new_refraction_index = 1.36f;//shape->getMaterial()->getRefractiveIndex();//TODO change see, if the right normal has been used
 
     } else {
-        HitNormal *= -1;// Normal needs to be inverted because the ray enters air again
-        position = HitPoint - HitNormal * 0.001f; // small offset to not intersect the last shape
-        oldrefractionIndex = 1.36;//shape->getMaterial()->getRefractiveIndex(); // hitting the same shape from the inside//TODO change
-        newRefractionindex = 1;
+        
+        glm::vec3 hit_normal_inverted = hit_normal;
+        /*
+        glm::vec3 hit_normal_inverted = hit_normal * -1; // Normal needs to be inverted because the ray enters air again
+        //TODO fix binary expression -> const problem!
+        */
+        
+        position = hit_point - hit_normal_inverted * 0.001f; // small offset to not intersect the last shape
+        old_refraction_index = 1.36;//shape->getMaterial()->getRefractiveIndex(); // hitting the same shape from the inside//TODO change
+        new_refraction_index = 1;
 
     }
 
-    glm::vec3 refractedVector = getRefracted(ray.direction,HitNormal, oldrefractionIndex / newRefractionindex);
+    glm::vec3 refracted_vector = get_refracted(ray.direction, hit_normal, (old_refraction_index / new_refraction_index));
 
 
     float roughness = 0.0f;//shape->getMaterial()->getRoughness(); //TODO change
@@ -242,44 +252,28 @@ glm::vec3 Render::getRefractedColor(Ray ray, glm::vec3 HitPoint, glm::vec3 HitNo
         // the first vector doesn't need to be changed, but I did it this way for now
 
         for (int i = 0; i < 3; ++i) {
-            offset[i] =  randomFloat(roughness);
+            offset[i] =  random_float(roughness);
         }
         offset = glm::normalize(offset) * roughness;
-        refractedVector = refractedVector + offset;
+        refracted_vector = refracted_vector + offset;
     }
 
 
-    Ray refractionray = {position, refractedVector};
+    Ray refraction_ray = {position, refracted_vector};
     //refractionray.setRefractionindex(shape->getMaterial()->getRefractiveIndex()); //TODO add refraciveindex to ray
 
-    return getColor(refractionray, depth + 1);
+    return get_color(refraction_ray, (depth + 1));
 }
 
 /**
- * Set the composite object for this Renderer
- * All shapes inside the composite object will be drawn.
- * @param composite object with the information to be rendered
+ * for roughness to get a value between -range and range
+ * @param range
+ * @return random float value
  */
-void Render::setComposite(std::shared_ptr<Composite> composite1) {
-    this->composite = std::move(composite1);
+float Render::random_float(float range) const{
+    return ((((float) rand()) / (float) (RAND_MAX / 2.0f)) -1.0f) * range;// range from -range to range
 }
 
-void Render::setLights(std::vector<std::shared_ptr<Light>> lights1) {
-    this->lights = std::move(lights1);
-}
-
-/**
- * Function to get a reflected Vector of a normal
- * @param vector input to be reflected
- * @param normal vector to be reflected of
- * @return reflected vector (not normalized)
- */
-glm::vec3 Render::getReflected(const glm::vec3& vector, glm::vec3 normal) const{
-
-    float NV = fmax(glm::dot(normal,-vector), 0);//angle
-    normal *= NV * 2;
-    return normal + vector;
-}
 
 /**
  * Function to get a refracted Vector of a normal vector
@@ -288,14 +282,30 @@ glm::vec3 Render::getReflected(const glm::vec3& vector, glm::vec3 normal) const{
  * @param n n of Material1/ n of Material2
  * @return new refracted vector
  */
-glm::vec3 Render::getRefracted(const glm::vec3& vector, const glm::vec3& normal, float n) const{
+glm::vec3 Render::get_refracted(const glm::vec3& vector, glm::vec3 const& normal, float n) const{
 
-    float cosI = -glm::dot(vector,normal);
-    float sinT2 = (float)(n * n * (1.0 - cosI * cosI));
-    if (sinT2 > 1.0) return getReflected(vector,normal); // TIR
-    float cosT = (float) sqrt(1.0 - sinT2);
+    float cos_i = -glm::dot(vector, normal);
+    float sin_t2 = (float)(n * n * (1.0 - cos_i * cos_i));
+    if (sin_t2 > 1.0) return get_reflected(vector, normal); // TIR
+    float cos_t = (float) sqrt(1.0 - sin_t2);
 
-    return vector * n + normal * (n * cosI - cosT);
+    return vector * n + normal * (n * cos_i - cos_t);
 }
 
+/**
+ * Function to get a reflected Vector of a normal
+ * @param vector input to be reflected
+ * @param normal vector to be reflected of
+ * @return reflected vector (not normalized)
+ */
+glm::vec3 Render::get_reflected(const glm::vec3& vector, glm::vec3 const& normal) const{
+
+    float nv = fmax(glm::dot(normal,-vector), 0);//angle
+    glm::vec3 normal_non_const = normal;
+       /*
+       normal *= nv * 2;
+       //TODO fix binary expression -> const problem!
+       */
+    return normal_non_const + vector;
+}
 
