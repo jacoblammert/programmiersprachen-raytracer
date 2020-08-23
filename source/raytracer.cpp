@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 20; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
@@ -66,12 +66,13 @@ int main(int argc, char *argv[]) {
 
     shapes.push_back(std::make_shared<Triangle>(Triangle{{-10, 10, -8},{10, -10, -8},{10, 10, -8}}));
     shapes.push_back(std::make_shared<Triangle>(Triangle{{10, -10, -8},{-10, 10, -8},{-10, -10, -8}}));
+    shapes.push_back(std::make_shared<Box>( Box{{0,0,-7}, 2, 2, 2}));
 
 
     std::vector<std::shared_ptr<Light>> lights;
 
-    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 5}));
-    lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 8}));
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 20}));
+    //lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 11}));
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
 
@@ -79,12 +80,15 @@ int main(int argc, char *argv[]) {
     //std::vector<std::shared_ptr<Composite>> compositevector;
     //compositevector.push_back(composite);
 
-    float stepsize = 0.1f;
+    float stepsize = 0.01f;
     float step = 0;
     Renderer renderer{image_width, image_height, filename};
 
 
     Camera camera{{5, 5, 5}, {-1, 0, 0}, image_width, image_height, 1};
+
+    bool pause = false;
+    float pausetime = window.get_time();
 
     while (!window.should_close()) {
         if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -94,9 +98,17 @@ int main(int argc, char *argv[]) {
         camera.set_direction(window);
         camera.move(window);
 
+        /// The pause button (left click) can only be pressed in a given intervall
+        if (window.get_mouse_button(0) == 1 && 0.3f < (window.get_time() - pausetime)){
+            pause = !pause;
+            pausetime = window.get_time();
+        }
 
-        //step += stepsize;
-        step = window.get_time();
+        if (!pause) {
+            step += stepsize;
+        }
+
+        //step = window.get_time() * 0.3;
         
         float starttime = window.get_time();
 
@@ -108,8 +120,8 @@ int main(int argc, char *argv[]) {
         //lights[0]->color = {1,1,1};
 
 
-        lights[1]->position = {3 * std::sin(1.7 * step), 3 * std::cos(3.4 * step), 5 * std::cos( 1.5*0.75 * step)};
-        lights[1]->color = {lights[0]->color[2],1-lights[0]->color[0],1-lights[0]->color[1]};
+        //lights[1]->position = {3 * std::sin(1.7 * step), 3 * std::cos(3.4 * step), 5 * std::cos( 1.5*0.75 * step)};
+        //lights[1]->color = {lights[0]->color[2],1-lights[0]->color[0],1-lights[0]->color[1]};
 
         /// The color of the light ranges from 0 to 1
 
