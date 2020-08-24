@@ -19,7 +19,7 @@ class Camera {
 public:
     Camera(glm::vec3 const& position, glm::vec3 const& direction, int width, int height, float distance);
 
-    Camera(glm::vec3 const& position, int width, int height, float angle, std::string const& name); //TODO implement this function
+    Camera(glm::vec3 const& position, int width, int height, float fov);
 
     Ray generate_ray(int x, int y) const;
     void set_position(glm::vec3 const& pos);

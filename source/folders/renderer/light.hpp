@@ -1,7 +1,3 @@
-//
-// Created by Jacob Lammert on 21.08.2020.
-//
-
 #ifndef RAYTRACER_LIGHT_HPP
 #define RAYTRACER_LIGHT_HPP
 
@@ -10,13 +6,21 @@
 
 struct Light {
 
-    //Light(glm::vec3 position,glm::vec3 color, float brightness);
-    Light(glm::vec3 const& position, glm::vec3 const& color, float brightness):
-            position{position},color{color},brightness{brightness}
+    /**
+     *
+     * @param position as vec 3
+     * @param color as vec 3 (red, gren, blue)
+     * @param brightness as float
+     * @param hardness as float => 1 = hard shadows, 0 = really soft shadows
+     */
+    Light(glm::vec3 const& position, glm::vec3 const& color, float brightness,float hardness = 1):
+            position{position},color{color},brightness{brightness},hardness{hardness}
     {}
+
     glm::vec3 position;
-    glm::vec3 color; //könnten Typ Color benutzen
+    glm::vec3 color;
     float brightness;
+    float hardness;
 
 };
 

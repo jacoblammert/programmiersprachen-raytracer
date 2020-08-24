@@ -27,13 +27,11 @@ public:
 
 private:
 
-    bool cast_shadow_ray(const Ray& ray, float distance) const;
-
     glm::vec3 get_refracted_color(Ray const& ray, glm::vec3 const& HitPoint, glm::vec3 const& hit_normal, int depth, std::shared_ptr<Shape> const& shape) const;
 
     glm::vec3 get_reflected_color(Ray const& ray, glm::vec3 const& hit_point, glm::vec3 const& hit_normal, int depth, std::shared_ptr<Shape> const& shape) const;
 
-    float random_float(float range) const;
+    float random_float() const;
 
     glm::vec3 get_refracted(const glm::vec3& vector, glm::vec3 const& normal, float n) const;
 

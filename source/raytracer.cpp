@@ -33,15 +33,10 @@ int main(int argc, char *argv[]) {
 
     Window window{{image_width, image_height}};
 
-    std::vector<std::shared_ptr<Shape>> object; // usefull later on
 
-    object.push_back(std::make_shared<Sphere>(Sphere{{0, 0, 0}, 2}));
-    object.push_back(std::make_shared<Box>(Box{{0, 0, 0}, 2, 2, 2}));
-    object.push_back(std::make_shared<Triangle>(Triangle{{2, 0, 0},
-                                                         {0, 2, 0},
-                                                         {0, 0, 2}}));
-    object.push_back(std::make_shared<Plane>(Plane{{2, 0, 0},
-                                                   {0, 0, 1}}));
+    std::shared_ptr<Material> white = std::make_shared<Material>(Material{0,0,0,1,{1,1,1}});
+    std::shared_ptr<Material> transparent = std::make_shared<Material>(Material{0,0,1,1.36f,{1,1,1}});
+    std::shared_ptr<Material> mirror = std::make_shared<Material>(Material{0,1,0,1,{1,1,1}});
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
@@ -52,40 +47,50 @@ int main(int argc, char *argv[]) {
         glm::vec3 position{x, y, z};
         position *= 5;
         if (i % 2 == 1) {
-        shapes.push_back(std::make_shared<Sphere>(Sphere{position, 0.3512636125}));
+            shapes.push_back(std::make_shared<Sphere>(Sphere{position, 0.512636125}));
+            shapes[i]->set_material(transparent);
         } else {
-            shapes.push_back(std::make_shared<Box>( Box{position, 0.125f, 0.125f, 0.125f}));
+            shapes.push_back(std::make_shared<Box>( Box{position, 0.25f, 0.25f, 0.25f}));
+            shapes[i]->set_material(white);
         }
     }
 
 
-    shapes.push_back(std::make_shared<Sphere>(Sphere{{0,0,-2}, 0.3512636125}));
+    //shapes.push_back(std::make_shared<Sphere>(Sphere{{0,0,-2}, 0.3512636125}));
 
     //shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, -8},{0, 0, 1}}));
 
 
     shapes.push_back(std::make_shared<Triangle>(Triangle{{-10, 10, -8},{10, -10, -8},{10, 10, -8}}));
+    shapes[shapes.size()-1]->set_material(white);
     shapes.push_back(std::make_shared<Triangle>(Triangle{{10, -10, -8},{-10, 10, -8},{-10, -10, -8}}));
-    shapes.push_back(std::make_shared<Box>( Box{{0,0,-7}, 2, 2, 2}));
+    shapes[shapes.size()-1]->set_material(white);
+
+
+
+
+    shapes.push_back(std::make_shared<Box>( Box{{0,0,-6.95}, 4, 2, 2}));
+    shapes[shapes.size()-1]->set_material(mirror);
+
+
+    //TODO if it loads really slowly or not at all, pr its running way to slow, try activating a few lines in the cmake file and set the mode from default or debug to release
 
 
     std::vector<std::shared_ptr<Light>> lights;
 
-    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 20}));
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 20,0.95}));
     //lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 11}));
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
 
-
-    //std::vector<std::shared_ptr<Composite>> compositevector;
-    //compositevector.push_back(composite);
 
     float step_size = 0.01f;
     float step = 0;
     Renderer renderer {image_width, image_height, filename};
 
 
-    Camera camera{{5, 5, 5}, {-1, 0, 0}, image_width, image_height, 1};
+    Camera camera{{5, 5, 5}, {0, 0, -1}, image_width, image_height, 1}; // old, no fov
+    //Camera camera{{5, 5, 5}, image_width, image_height, 60}; // new, with fov
 
     bool pause = false;
     float pause_time = window.get_time();
@@ -149,12 +154,12 @@ int main(int argc, char *argv[]) {
         }
         window.show(renderer.color_buffer());
 
-        std::cout << "Time: " << window.get_time() - start_time << std::endl;
+        std::cout << "Time: " << round((window.get_time() - start_time) * 100)/100 << " Fps: " << round(100/(window.get_time() - start_time))/100<< std::endl;
     }
 
     return 0;
 }
-/* checkerboard pattern:
+/* checkerboard pattern: // könnte man vielleicht auch für ein Material nutzen
                     int x = positionvec[0] < 0 ? positionvec[0] - 1 : positionvec[0];
                     int y = positionvec[1] < 0 ? positionvec[1] - 1 : positionvec[1];
                     x /=5;
@@ -168,22 +173,26 @@ int main(int argc, char *argv[]) {
 
 /*
  TODO:
- - einlesen einer Szene im SDF-Format und rendern der Szene
- - Szene kann aus bliebig vielen Objekten bestehen
+ fertig:
+ - Szene kann aus bliebig vielen Objekten bestehen - eine Szene kommt in ein composite objekt (mit shapes und Lichtern & kleineren Comosite objekten)
  - mindestens achsenparalleler Quader, Kugeln
  - objekt kann ein Material haben
- - Szene hat beliebig viele Punktlichtquellen (in der Vorlesung vorgestelltes Beleuchtungsmodell) - phong shading
  - Objekte werfen Schatten
- - Beobachter ist im Ursprung und blickt entlang negativer z-Achse
- - finaler Farbwert wird berechnet und im Window angezeigt/ in der Ausgabedatei gespeichert
- 
  - Spiegelung hinzufügen (optional)
  - Refraktion hinzufügen (optional)
- - Kameramodell der Vorlesung hinzufügen, Parser erweitern
- - Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions)
  - Composite Pattern hinzufügen, Parser erweitern
- - Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert)
- - Dreieck, Kegel und Zylinder hinzufügen (optional)
+ - Kameramodell aus der Vorlesung mit fov
+ - Dreieck
+
+ nicht fertig:
+ - einlesen einer Szene im SDF-Format und rendern der Szene
+ - Szene hat beliebig viele Punktlichtquellen -> ja (in der Vorlesung vorgestelltes Beleuchtungsmodell) - phong shading-> fehlt noch
+ - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov
+ - finaler Farbwert wird berechnet und im Window angezeigt/ in der Ausgabedatei gespeichert -> framework sollte das schon können. Falls nicht, habe ich auch noch eine alte Klasse um .ppm Dateien zu speichern
+ - Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions)
+ - Kameramodell im Parser erweitern
+ - Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert online suchen)
+ - Kegel und Zylinder hinzufügen (optional)
     -> Zylinder + Kegel (intersections with ray * inverted translations/ scalations/ rotations) + min max mid functions
  - Anti-Aliasing, Interpolation (optional)
  

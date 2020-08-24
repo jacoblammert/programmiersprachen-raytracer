@@ -1,8 +1,5 @@
-//
-// Created by Jacob Lammert on 17.08.2020.
-//
-
 #include "camera.hpp"
+#include <math.h>
 
 /**
  * Camera constructor without angle / fov
@@ -21,8 +18,26 @@
 {
     this->direction_ = glm::normalize(this->direction_);
 }
+/**
+ *
+ * Camera constructor with fov
+ * Looks at 0, 0, -1
+ * @param position of the camera as vec3
+ * @param direction of the camera as vec3
+ * @param width of the screen in pixel/ int
+ * @param height of the screen in pixel/ int
+ * @param fov field of view in degrees
+ */
+  Camera::Camera(glm::vec3 const& position, int width, int height, float fov):
+          position_ {position},
+          direction_ {glm::vec3{0,0,-1}},
+          width_ {width},
+          height_ {height},
+          distance_ {fov}{ // from presentation
+      distance_ *= MATH_PI / 360.0f;
+      distance_ = (float)(0.5f / std::tan(distance_)); // from presentation
 
-  //Camera::Camera(glm::vec3 const& position, int width, int height, float angle, std::string const& name); - TODO
+ }
  
  
  /**
@@ -133,7 +148,7 @@ void Camera::set_direction(Window const& window) {
         x *= (1 - abs(z));
         y *= (1 - abs(z));
 
-        this->direction_ = {x, y, z};
+        this->direction_ = glm::normalize(glm::vec3{x, y, z});
     }
 }
 
