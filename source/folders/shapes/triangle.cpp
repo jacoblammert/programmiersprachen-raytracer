@@ -12,12 +12,13 @@
  * @param c glm::vec3 number 3
  */
 Triangle::Triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
-        a{a},
-        b{b},
-        c{c} {
+        a_ {a},
+        b_ {b},
+        c_ {c}
+{
     glm::vec3 ab = b - a;
     glm::vec3 ac = c - a;
-    this->normal = glm::normalize(glm::cross(ab,ac));
+    this->normal_ = glm::normalize(glm::cross(ab,ac));
 }
 
 /*/
@@ -34,16 +35,16 @@ Triangle::Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, C
  * returns true, if the triangle was in front of the ray and the ray intersected the triangle
  * both sides of the triangle can be intersected (front and back) for refraction usefull
  * @param ray to be tested
- * @param HitPoint position where the ray intersects the triangle first as reference
- * @param HitNormal The normal of the triangle at the intersected position as reference
+ * @param hit_point position where the ray intersects the triangle first as reference
+ * @param hit_normal The normal of the triangle at the intersected position as reference
  * @param distance from the normalized ray to the intersection point as reference
  * @return true, of the triangle is in front of the ray and has been intersected
  */
-bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
+bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
 
-    glm::vec3 pvec = glm::cross(ray.direction , (c - a));
-    float det = glm::dot(pvec, (b - a));
+    glm::vec3 p_vec = glm::cross(ray.direction , (c_ - a_));
+    float det = glm::dot(p_vec, (b_ - a_));
 
     // ray and triangle are parallel if det is close to 0 -> no division by zero
     if (std::fabs(det) == 0.0f)
@@ -51,25 +52,25 @@ bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 
 
     //glm::vec3 rayposition = ray.position;
 
-    float u = glm::dot(pvec, ray.position - a) / det;
+    float u = glm::dot(p_vec, ray.position - a_) / det;
 
     if (u < 0 || u > 1)
         return false;
 
-    pvec = glm::cross((ray.position - a) , (b - a));
-    float v = glm::dot(pvec, ray.direction) / det;
+    p_vec = glm::cross((ray.position - a_), (b_ - a_));
+    float v = glm::dot(p_vec, ray.direction) / det;
 
     if (v < 0 || (u + v) > 1)
         return false;
 
-    det = glm::dot(pvec, c - a) / det;
+    det = glm::dot(p_vec, c_ - a_) / det;
 
     if (0 < det && det < distance) {
         distance = det;
-        pvec = ray.direction;
-        pvec *= det;
-        HitPoint = ray.position + pvec;
-        HitNormal = get_normal(ray.position);
+        p_vec = ray.direction;
+        p_vec *= det;
+        hit_point = ray.position + p_vec;
+        hit_normal = get_normal(ray.position);
         return true;
     }
     return false;
@@ -84,7 +85,7 @@ glm::vec3 Triangle::get_normal(glm::vec3 const& pos) const {
     //if (glm::dot(glm::normalize(pos-this->a),normal) < 0) {
     //    return -normal;
     //} else{
-        return normal;
+        return normal_;
     //}
 }
 
@@ -92,17 +93,17 @@ glm::vec3 Triangle::get_normal(glm::vec3 const& pos) const {
  * @return a vector with the minimal values of x, y and z for the triangle (for a box around the triangle)
  */
 glm::vec3 Triangle::get_min() const {
-    glm::vec3 min = a;
+    glm::vec3 min = a_;
 
     for (int j = 0; j < 3; ++j) {
-        if (min[j] > b[j]) {
-            min[j] = b[j];
+        if (min[j] > b_[j]) {
+            min[j] = b_[j];
         }
     }
 
     for (int j = 0; j < 3; ++j) {
-        if (min[j] > c[j]) {
-            min[j] = c[j];
+        if (min[j] > c_[j]) {
+            min[j] = c_[j];
         }
     }
     return min;
@@ -112,15 +113,16 @@ glm::vec3 Triangle::get_min() const {
  * @return a vector with the maximal values of x, y and z for the triangle (for a box around the triangle)
  */
 glm::vec3 Triangle::get_max() const {
-    glm::vec3 max = a;
+    glm::vec3 max = a_;
+    
     for (int j = 0; j < 3; ++j) {
-        if (max[j] < b[j]) {
-            max[j] = b[j];
+        if (max[j] < b_[j]) {
+            max[j] = b_[j];
         }
     }
     for (int j = 0; j < 3; ++j) {
-        if (max[j] < c[j]) {
-            max[j] = c[j];
+        if (max[j] < c_[j]) {
+            max[j] = c_[j];
         }
     }
     return max;
@@ -131,7 +133,7 @@ glm::vec3 Triangle::get_max() const {
  */
 glm::vec3 Triangle::get_median() const {
 
-    glm::vec3 median = a + b + c;
+    glm::vec3 median = a_ + b_ + c_;
     median *= (1.0f / 3.0f);
     return median;
 }
@@ -163,7 +165,7 @@ void Triangle::setMaterial(Material *material) {
  * @param position
  */
 void Triangle::translate(glm::vec3 const& position) {
-    a += position;
-    b += position;
-    c += position;
+    a_ += position;
+    b_ += position;
+    c_ += position;
 }

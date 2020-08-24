@@ -17,7 +17,7 @@ public:
     //Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, Color const& color);
 
 
-    bool get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
+    bool get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const override;
 
     glm::vec3 get_normal(glm::vec3 const& pos) const override;
 
@@ -38,10 +38,10 @@ public:
     void print() const override;
 
 private:
-    glm::vec3 a;
-    glm::vec3 b;
-    glm::vec3 c;
-    glm::vec3 normal;
+    glm::vec3 a_;
+    glm::vec3 b_;
+    glm::vec3 c_;
+    glm::vec3 normal_;
 
 
 };
