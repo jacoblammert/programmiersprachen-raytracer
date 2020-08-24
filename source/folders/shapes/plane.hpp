@@ -6,7 +6,6 @@
 #define RAYTRACER_PLANE_H
 
 #include <iostream>
-
 #include "shape.hpp"
 
 class Plane : public Shape {
@@ -33,8 +32,8 @@ public:
     void print() const override;
 
 private:
-    glm::vec3 pos;
-    glm::vec3 normal;
+    glm::vec3 pos_;
+    glm::vec3 normal_;
 };
 
 

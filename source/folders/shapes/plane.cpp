@@ -10,7 +10,7 @@
  * @param normal of the pane (will be normalized automatically)
  */
 Plane::Plane(glm::vec3 const &position, glm::vec3 const &normal) :
-        pos{position}, normal{glm::normalize(normal)} {
+        pos_ {position}, normal_ {glm::normalize(normal)} {
 }
 /*///TODO add later (with materials)
 plane::Plane(Vector const& position, Vector const& normal, Material *material) :
@@ -27,13 +27,13 @@ plane::Plane(Vector const& position, Vector const& normal, Material *material) :
  * @param distance as float (scalar for the normalized direction of the ray)
  * @return true, if intersected in front of the ray, false otherwise
  */
-bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
-    float t = glm::dot(pos - ray.position, normal) / glm::dot(ray.direction,normal);
+bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
+    float t = glm::dot(pos_ - ray.position, normal_) / glm::dot(ray.direction, normal_);
 
     if (0 <= t && t < distance) {
         distance = t;
-        HitPoint = ray.position + ray.direction * t;
-        HitNormal = get_normal(ray.position);
+        hit_point = ray.position + ray.direction * t;
+        hit_normal = get_normal(ray.position);
         return true;
     }
     return false;
@@ -47,7 +47,7 @@ glm::vec3 Plane::get_normal(glm::vec3 const &pos) const {
     //if (glm::dot(glm::normalize(pos-this->pos),normal) < 0) {
     //    return -normal;
     //} else{
-        return normal;
+        return normal_;
     //}
 }
 
@@ -71,7 +71,7 @@ glm::vec3 Plane::get_max() const {
  * @return position of the plane
  */
 glm::vec3 Plane::get_median() const {
-    return pos;
+    return pos_;
 }
 
 /**
@@ -95,6 +95,6 @@ void Plane::setMaterial(Material *material) {
  * Changes the position of the Sphere with a given glm::vec3
  * @param position
  */
-void Plane::translate(glm::vec3 const &position) {
-    pos += position;
+void Plane::translate(glm::vec3 const& position) {
+    pos_ += position;
 }
