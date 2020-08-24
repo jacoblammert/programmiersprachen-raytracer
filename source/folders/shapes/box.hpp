@@ -37,11 +37,11 @@ public:
 
     glm::vec3 get_median() const override;
 
-/*/
+/*
     Material* getMaterial() override;
 
     void setMaterial(Material* material) override;
-/**/
+*/
     void print() const override;
 
 private:

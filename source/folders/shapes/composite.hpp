@@ -44,10 +44,10 @@ public:
 
     void translate(glm::vec3 const &position) override;
 
-/*/ /// The compositeobject does not require a material at all
+/* The composite object does not require a material at all
     Material* getMaterial() override;
     void setMaterial(Material* material) override;
-/**/
+*/
     void print() const override;
 
     void build();

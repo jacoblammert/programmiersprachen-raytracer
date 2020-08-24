@@ -25,10 +25,10 @@ public:
 
     void translate(glm::vec3 const& position) override;
 
-/*/
+/*
     Material* getMaterial() override;
     void setMaterial(Material* material) override;
-/**/
+*/
     void print() const override;
 
 private:

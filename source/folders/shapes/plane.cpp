@@ -12,12 +12,12 @@
 Plane::Plane(glm::vec3 const &position, glm::vec3 const &normal) :
         pos_ {position}, normal_ {glm::normalize(normal)} {
 }
-/*///TODO add later (with materials)
+/* //TODO add later (with materials)
 plane::Plane(Vector const& position, Vector const& normal, Material *material) :
         pos{position}, normal{normal} {
     this->normal.normalize();
     this->material = material;
-}/**/
+}*/
 
 /**
  * returns true, if this plane has been intersected in front of the ray, no intersections with negative scalar for ray direction allowed
@@ -82,7 +82,7 @@ void Plane::print() const {
     //print();
 }
 
-/*/
+/*
 Material *Plane::getMaterial() {
     return material;
 }
@@ -90,7 +90,7 @@ Material *Plane::getMaterial() {
 void Plane::setMaterial(Material *material) {
     this->material = material;
 }
-/**/
+*/
 /**
  * Changes the position of the Sphere with a given glm::vec3
  * @param position

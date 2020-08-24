@@ -131,7 +131,7 @@ void Composite::translate(const glm::vec3 &position) {
  * comments
  */
 void Composite::print() const {
-/*/
+/*
        std::cout << std::endl << "Depth: " << this->depth << std::endl;
     std::cout << "Size: " << shapes.size() << std::endl;
     std::cout << "MinX: " << minXminYminZ.get(0) << " MinY: " << minXminYminZ.get(1) << " MinZ: " << minXminYminZ.get(2)
@@ -146,7 +146,7 @@ void Composite::print() const {
             boxe.print(depthToPrint);
         }
     }
-    /**/
+  */
 }
 
 /**

@@ -26,8 +26,8 @@ int main(int argc, char *argv[]) {
     loader.load_file();
 
 
-    unsigned const image_width = 1920  /*/ * 2/**/ /  2; //640
-    unsigned const image_height = 1080 /*/ * 2/**/ / 2;//360
+    unsigned const image_width = 1920  /* 2 */ /  2; //640
+    unsigned const image_height = 1080 /* 2 */ / 2;//360
     std::string const filename = "./checkerboard.ppm";
 
 
@@ -80,15 +80,15 @@ int main(int argc, char *argv[]) {
     //std::vector<std::shared_ptr<Composite>> compositevector;
     //compositevector.push_back(composite);
 
-    float stepsize = 0.01f;
+    float step_size = 0.01f;
     float step = 0;
-    Renderer renderer{image_width, image_height, filename};
+    Renderer renderer {image_width, image_height, filename};
 
 
     Camera camera{{5, 5, 5}, {-1, 0, 0}, image_width, image_height, 1};
 
     bool pause = false;
-    float pausetime = window.get_time();
+    float pause_time = window.get_time();
 
     while (!window.should_close()) {
         if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -99,18 +99,18 @@ int main(int argc, char *argv[]) {
         camera.move(window);
 
         /// The pause button (left click) can only be pressed in a given intervall
-        if (window.get_mouse_button(0) == 1 && 0.3f < (window.get_time() - pausetime)){
+        if (window.get_mouse_button(0) == 1 && 0.3f < (window.get_time() - pause_time)){
             pause = !pause;
-            pausetime = window.get_time();
+            pause_time = window.get_time();
         }
 
         if (!pause) {
-            step += stepsize;
+            step += step_size;
         }
 
         //step = window.get_time() * 0.3;
         
-        float starttime = window.get_time();
+        float start_time = window.get_time();
 
         lights[0]->position = {0.5*std::cos(step/3), 0.25*std::sin(step/3), -3.5 + std::sin(step/3)};
         lights[0]->position = {3 * std::cos(3 * step), 3 * std::sin(2 * step), 7 * std::cos( 0.75 * step)};
@@ -140,21 +140,21 @@ int main(int argc, char *argv[]) {
 
                 Pixel color{(unsigned int) i, (unsigned int) j};
 
-                glm::vec3 colorveec = render.get_color(camera.generate_ray(i, j), 0);
+                glm::vec3 color_vec = render.get_color(camera.generate_ray(i, j), 0);
 
-                color.color = {colorveec[0], colorveec[1], colorveec[2]};
+                color.color = {color_vec[0], color_vec[1], color_vec[2]};
 
                 renderer.write(color);
             }
         }
         window.show(renderer.color_buffer());
 
-        std::cout<<"Time: " << window.get_time() - starttime << std::endl;
+        std::cout << "Time: " << window.get_time() - start_time << std::endl;
     }
 
     return 0;
 }
-/*////checkerboard pattern:
+/* checkerboard pattern:
                     int x = positionvec[0] < 0 ? positionvec[0] - 1 : positionvec[0];
                     int y = positionvec[1] < 0 ? positionvec[1] - 1 : positionvec[1];
                     x /=5;
@@ -164,4 +164,4 @@ int main(int argc, char *argv[]) {
                     } else {
                         color.color = {};
                     }
-                    /**/
+*/

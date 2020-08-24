@@ -21,7 +21,7 @@ Triangle::Triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
     this->normal_ = glm::normalize(glm::cross(ab,ac));
 }
 
-/*/
+/*
 Triangle::Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, Color const& color) :
         a{a},
         b{b},
@@ -29,7 +29,8 @@ Triangle::Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, C
     glm::vec3 ab = b - a;
     glm::vec3 ac = c - a;
     this->normal = glm::normalize(glm::cross(ab,ac));
-}/**/
+}
+*/
 
 /**
  * returns true, if the triangle was in front of the ray and the ray intersected the triangle
@@ -151,14 +152,15 @@ void Triangle::print() const {
     //c.print();
 }
 
-/*/
+/*
 Material *Triangle::getMaterial() const{
     return this->material;
 }
 
 void Triangle::setMaterial(Material *material) {
     this->material = material;
-}/**/
+}
+*/
 
 /**
  * Changes the position of the triangle with a given glm::vec3
