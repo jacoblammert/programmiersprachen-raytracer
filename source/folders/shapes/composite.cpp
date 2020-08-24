@@ -3,9 +3,6 @@
 //
 
 #include "composite.hpp"
-#include "plane.hpp"
-
-#include <utility>
 
 /**
  * default constructor
@@ -18,9 +15,9 @@ Composite::Composite() {
  * Initializer with a depth
  * @param depth must be incremented, shapes will most likely be added after this constructor is called
  */
-Composite::Composite(int depth) : depth{++depth} {
-
-}
+Composite::Composite(int depth) :
+    depth_ {++depth}
+{}
 
 
 /**
@@ -28,30 +25,30 @@ Composite::Composite(int depth) : depth{++depth} {
  * @param shapes
  * @param depth
  */
-Composite::Composite(std::vector<std::shared_ptr<Shape>> shapes) :
-        shapes{std::move(shapes)} {
+Composite::Composite(std::vector<std::shared_ptr<Shape>> const& shapes) :
 
+    shapes_ {std::move(shapes)} {
+        set_min_max_mid();
 
-    set_min_max_mid();
-
-    if (!this->shapes.empty()) {
-        split(); // it is not an endless loop
-    }
+        if (!this->shapes_.empty()) {
+            split(); // it is not an endless loop
+        }
+            
 }
 
 
 /**
  * //Not usefull!!! must be implemented anyways
- * To check if the Compositeobject has been hit is to check, if the boxobject has been hit
+ * To check if the Composite object has been hit is to check, if the boxobject has been hit
  * Therefore we use the box.getIntersectVect(...) function
  * @param ray to be tested
- * @param HitPoint position where the ray intersects the box first (for two intersections the closest point will be returned) as reference
- * @param HitNormal The normal of the box at the intersected position as reference
+ * @param hit_point position where the ray intersects the box first (for two intersections the closest point will be returned) as reference
+ * @param hit_normal The normal of the box at the intersected position as reference
  * @param distance from the normalized ray to the intersection point as reference
  * @return true, of the box is in front of the ray and has been intersected
  */
-bool Composite::get_intersect_vec(const Ray &ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
-    return box.get_intersect_vec(ray, HitPoint, HitNormal, distance);
+bool Composite::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
+    return box_.get_intersect_vec(ray, hit_point, hit_normal, distance);
 }
 
 /**
@@ -61,24 +58,24 @@ bool Composite::get_intersect_vec(const Ray &ray, glm::vec3 &HitPoint, glm::vec3
  *
  * @param ray to be tested
  * @param shape intersected shape as pointer
- * @param Hitpoint of intersection as glm::vec3
- * @param Hitnormal at intersection as glm::vec3 (normalized)
+ * @param hit_point of intersection as glm::vec3
+ * @param hit_normal at intersection as glm::vec3 (normalized)
  * @param distance as float
  * @param hit boolean, false, if no shape has been intersected
  */
 void
-Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> shape, glm::vec3 &Hitpoint, glm::vec3 &Hitnormal, float &distance) {
+Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> & shape, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) {
 
-    for (auto &box : boxes) {
-        if (box.box.get_intersect(ray)) {
-            box.get_intersected_shape(ray, shape, Hitpoint, Hitnormal, distance);
+    for (auto &box : boxes_) {
+        if (box.box_.get_intersect(ray)) {
+            box.get_intersected_shape(ray, shape, hit_point, hit_normal, distance);
         }
     }
 
-    if (!shapes.empty()) {
-        for (auto &shapehit : shapes) {
-            if (shapehit->get_intersect_vec(ray, Hitpoint, Hitnormal, distance)) {
-                shape = shapehit; // shapehit is the closest intersected shape of all
+    if (!shapes_.empty()) {
+        for (auto &shape_hit : shapes_) {
+            if (shape_hit->get_intersect_vec(ray, hit_point, hit_normal, distance)) {
+                shape = shape_hit; // shape_hit is the closest intersected shape of all
             }
         }
     }
@@ -91,7 +88,7 @@ Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> shape, g
  * @return
  */
 glm::vec3 Composite::get_normal(const glm::vec3 &pos) const {
-    return box.get_normal(pos);
+    return box_.get_normal(pos);
 }
 
 
@@ -100,7 +97,7 @@ glm::vec3 Composite::get_normal(const glm::vec3 &pos) const {
  * smallest possible x,y,z for all shapes
  */
 glm::vec3 Composite::get_min() const {
-    return minXminYminZ;
+    return min_x_y_z_;
 }
 
 
@@ -109,14 +106,14 @@ glm::vec3 Composite::get_min() const {
  * largest possible x,y,z for all shapes
  */
 glm::vec3 Composite::get_max() const {
-    return maxXmaxYmaxZ;
+    return max_x_y_z_;
 }
 
 /**
  * @return the mid point of all the midpoints of all shapes contained in this composite object
  */
 glm::vec3 Composite::get_median() const {
-    return median;
+    return median_;
 }
 
 
@@ -156,25 +153,25 @@ void Composite::print() const {
  * This function sets the minimum, the maximum and medium vector for the box
  */
 void Composite::set_min_max_mid() {
-    minXminYminZ = glm::vec3(INFINITY, INFINITY,
+    min_x_y_z_ = glm::vec3(INFINITY, INFINITY,
                              INFINITY); // need to be set to opposite values to get the correct ones for all the shapes inside this box
-    maxXmaxYmaxZ = glm::vec3(-INFINITY, -INFINITY,
+    max_x_y_z_ = glm::vec3(-INFINITY, -INFINITY,
                              -INFINITY); // need to be set to opposite values to get the correct ones for all the shapes inside this box
 
-    median = glm::vec3();
+    median_ = glm::vec3();
 
-    glm::vec3 medianShape;
+    glm::vec3 median_shape;
 
-    for (auto &shape : shapes) {
+    for (auto &shape : shapes_) {
         get_min(shape->get_min());
         get_max(shape->get_max());
 
-        medianShape = shape->get_median();
-        median = median + medianShape;
+        median_shape = shape->get_median();
+        median_ = median_ + median_shape;
     }
-    median *= (1.0f / (float) shapes.size());
+    median_ *= (1.0f / (float) shapes_.size());
 
-    box = Box{minXminYminZ, maxXmaxYmaxZ};
+    box_ = Box{min_x_y_z_, max_x_y_z_};
 }
 
 
@@ -186,7 +183,7 @@ void Composite::set_min_max_mid() {
 void Composite::split() {
 
     int axis;
-    glm::vec3 size = maxXmaxYmaxZ - minXminYminZ; // max of the Box in terms of width, height, depth
+    glm::vec3 size = max_x_y_z_ - min_x_y_z_; // max of the Box in terms of width, height, depth
 
 
     if (size[0] > size[1] && size[0] > size[2]) { // X is largest
@@ -198,31 +195,31 @@ void Composite::split() {
     }
 
 
-    Composite left = Composite(depth);
-    Composite right = Composite(depth);
+    Composite left = Composite(depth_);
+    Composite right = Composite(depth_);
 
-    boxes = std::vector<Composite>(2);
+    boxes_ = std::vector<Composite>(2);
 
-    boxes[0] = (right);
-    boxes[1] = (left);
+    boxes_[0] = (right);
+    boxes_[1] = (left);
 
-    for (int i = (int) shapes.size() - 1; 0 <= i; --i) {
+    for (int i = (int) shapes_.size() - 1; 0 <= i; --i) {
         //std::cout<<i << " " << count++ <<" Type: " << typeid(*shapes[i].get()).hash_code()<<std::endl;
         /// hashcode must not be equal to the planes hashcode
         //TODO check, if a hashcode might be different on different systems
-        if (typeid(*shapes[i].get()).hash_code() != 3060751613) { // Planes stay in the first Box, because they are really big
+        if (typeid(*shapes_[i].get()).hash_code() != 3060751613) { // Planes stay in the first Box, because they are really big
 
-            if (shapes[i]->get_median()[axis] > median[axis]) { // right
-                boxes[0].add_shape(shapes[i]); // right
+            if (shapes_[i]->get_median()[axis] > median_[axis]) { // right
+                boxes_[0].add_shape(shapes_[i]); // right
             } else {
-                boxes[1].add_shape(shapes[i]);
+                boxes_[1].add_shape(shapes_[i]);
             }
-            shapes.erase(shapes.begin() + i);
+            shapes_.erase(shapes_.begin() + i);
         }
     }
 
-    for (auto &boxe : boxes) {
-        boxe.build();
+    for (auto &box : boxes_) {
+        box.build();
     }
 }
 
@@ -234,7 +231,7 @@ void Composite::split() {
 void Composite::build() {
     set_min_max_mid();
 
-    if (depth < 20 && shapes.size() >= 4) { // TODO make better system to change these values
+    if (depth_ < 20 && shapes_.size() >= 4) { // TODO make better system to change these values
         split();
     }
 }
@@ -245,10 +242,10 @@ void Composite::build() {
  * and sets the corresponding value to the newer, smaller one
  * @param shapemin vec3
  */
-void Composite::get_min(glm::vec3 shapemin) {
+void Composite::get_min(glm::vec3 const& shape_min) {
     for (int i = 0; i < 3; ++i) {
-        if (minXminYminZ[i] > shapemin[i]) {
-            minXminYminZ[i] = shapemin[i];
+        if (min_x_y_z_[i] > shape_min[i]) {
+            min_x_y_z_[i] = shape_min[i];
         }
     }
 }
@@ -258,10 +255,10 @@ void Composite::get_min(glm::vec3 shapemin) {
  * and sets the corresponding value to the newer, larger one
  * @param shapemax vec3
  */
-void Composite::get_max(glm::vec3 shapemax) {
+void Composite::get_max(glm::vec3 const& shape_max) {
     for (int i = 0; i < 3; ++i) {
-        if (maxXmaxYmaxZ[i] < shapemax[i]) {
-            maxXmaxYmaxZ[i] = shapemax[i];
+        if (max_x_y_z_[i] < shape_max[i]) {
+            max_x_y_z_[i] = shape_max[i];
         }
     }
 }
@@ -271,14 +268,14 @@ void Composite::get_max(glm::vec3 shapemax) {
  * @param shape pointer
  */
 void Composite::add_shape(const std::shared_ptr<Shape>& shape) {
-    shapes.push_back(shape);
+    shapes_.push_back(shape);
 }
 /**
  * Adds a vector with Shape pointers to the Compositeobject usefull, if the object has not been build yet
  * @param shapes  = vector with Shape pointers
  */
-void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> newshapes) {
-    this->shapes.insert(this->shapes.end(),newshapes.begin(),newshapes.end());
+void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> const& new_shapes) {
+    this->shapes_.insert(this->shapes_.end(),new_shapes.begin(),new_shapes.end());
 }
 
 
