@@ -10,8 +10,8 @@
  * @param radius value of input, if radius = -10, radius will be made positive
  */
 Sphere::Sphere(const glm::vec3 &position, float radius) :
-        pos{position},
-        radius{abs(radius)}
+        pos_ {position},
+        radius_ {abs(radius)}
 {}
 
 /**
@@ -22,28 +22,28 @@ Sphere::Sphere(const glm::vec3 &position, float radius) :
  * @param distance from the normalized ray to the intersection point as reference
  * @return true, of the sphere is in front of the ray and has been intersected
  */
-bool Sphere::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const {
+bool Sphere::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
-    float t = glm::dot(pos - ray.position,ray.direction);
-    float x = glm::length(pos - ray.position - (ray.direction * t));
+    float t = glm::dot(pos_ - ray.position, ray.direction);
+    float x = glm::length(pos_ - ray.position - (ray.direction * t));
 
-    if (x < radius) {
+    if (x < radius_) {
 
-        x = sqrt(radius * radius - x * x);
+        x = sqrt(radius_ * radius_ - x * x);
 
         // "improved" code by reusing variables & removing some for simplicity/ speed
 
         if (0 < (t - x) && (t - x) < distance) {
             distance = (t - x);
-            HitPoint = ray.position + (ray.direction * (t - x));
-            HitNormal = get_normal(HitPoint);
+            hit_point = ray.position + (ray.direction * (t - x));
+            hit_normal = get_normal(hit_point);
             return true;
         }
 
         if ((t - x) < 0 && 0 < (t + x) && (t + x) < distance) {
             distance = (t + x);
-            HitPoint = ray.position + (ray.direction * (t + x));
-            HitNormal = get_normal(HitPoint);
+            hit_point = ray.position + (ray.direction * (t + x));
+            hit_normal = get_normal(hit_point);
             return true;
         }
     }
@@ -56,7 +56,7 @@ bool Sphere::get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &H
  * @return normal (Vector from the Center to the input vector)
  */
 glm::vec3 Sphere::get_normal(glm::vec3 const& position) const {
-    glm::vec3 normal = position - this->pos;
+    glm::vec3 normal = position - this->pos_;
     //if (glm::length(normal) > this->radius){
     //    return glm::normalize(normal);
     //} else{
@@ -68,8 +68,9 @@ glm::vec3 Sphere::get_normal(glm::vec3 const& position) const {
  * @return a vector with the minimal values of x, y and z for the sphere (for a box around the sphere)
  */
 glm::vec3 Sphere::get_min() const {
-    glm::vec3 rad = glm::vec3(radius, radius, radius);
-    return pos - rad;
+    //glm::vec3 rad = glm::vec3(radius_, radius_, radius_);
+    glm::vec3 rad {radius_, radius_, radius_};
+    return pos_ - rad;
 }
 
 
@@ -77,15 +78,16 @@ glm::vec3 Sphere::get_min() const {
  * @return a vector with the maximal values of x, y and z for the sphere (for a box around the sphere)
  */
 glm::vec3 Sphere::get_max() const {
-    glm::vec3 rad = glm::vec3(radius, radius, radius);
-    return pos + rad;
+    //glm::vec3 rad = glm::vec3(radius_, radius_, radius_);
+    glm::vec3 rad {radius_, radius_, radius_};
+    return pos_ + rad;
 }
 
 /**
  * @return position of the sphere
  */
 glm::vec3 Sphere::get_median() const {
-    return pos;
+    return pos_;
 }
 
 /**
@@ -111,5 +113,5 @@ void Sphere::set_material(Material* material) {
  * @param position
  */
 void Sphere::translate(glm::vec3 const& position) {
-    pos += position;
+    pos_ += position;
 }

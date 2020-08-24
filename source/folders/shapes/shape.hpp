@@ -13,7 +13,7 @@
 class Shape {
 public:
 
-    virtual bool get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &Hitnormal,
+    virtual bool get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal,
                                  float &distance) const = 0; // returns true, if the Ray and the object intersect
 
     virtual glm::vec3 get_normal(glm::vec3 const& pos) const = 0;
@@ -30,12 +30,11 @@ public:
 
     virtual void print() const = 0;
 
-    virtual void translate(
-            glm::vec3 const& position) = 0;
+    virtual void translate(glm::vec3 const& position) = 0;
     //TODO add rotate_x (float angle (degrees)), rotateY(float angle (degrees)), rotateZ(float angle (degrees)) + scale(float size)
 
 protected:
-    //Material* material;
+    //Material* material_;
 };
 
 
