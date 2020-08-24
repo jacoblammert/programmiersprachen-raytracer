@@ -168,7 +168,23 @@ int main(int argc, char *argv[]) {
 
 /*
  TODO:
-
+ - einlesen einer Szene im SDF-Format und rendern der Szene
+ - Szene kann aus bliebig vielen Objekten bestehen
+ - mindestens achsenparalleler Quader, Kugeln
+ - objekt kann ein Material haben
+ - Szene hat beliebig viele Punktlichtquellen (in der Vorlesung vorgestelltes Beleuchtungsmodell)
+ - Objekte werfen Schatten
+ Beobachter ist im Ursprung und blickt entlang negativer z-Achse
+ - finaler Farbwert wird berechnet und im Window angezeigt/ in der Ausgabedatei gespeichert
+ 
+ - Spiegelung hinzufügen (optional)
+ - Refraktion hinzufügen (optional)
+ - Kameramodell der Vorlesung hinzufügen, Parser erweitern
+ - Translation, Rotation, Skalierung hinzufügen
+ - Composite Pattern hinzufügen, Parser erweitern
+ - Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert)
+ - Dreieck, Kegel und Zylinder hinzufügen (optional)
+ - Anti-Aliasing, Interpolation (optional)
  
  Anmerkungen:
  - eventuell shared pointer als const möglich? z.B. std::shared_ptr <Shape const>
