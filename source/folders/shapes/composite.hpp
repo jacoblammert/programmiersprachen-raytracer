@@ -8,7 +8,6 @@
 
 #include <utility>
 #include <vector>
-#include <memory>
 #include "shape.hpp"
 #include "box.hpp"
 #include "plane.hpp"
@@ -41,13 +40,12 @@ public:
 
     glm::vec3 get_median() const override;
 
-
     void translate(glm::vec3 const &position) override;
 
-/* The composite object does not require a material at all
-    Material* getMaterial() override;
-    void setMaterial(Material* material) override;
-*/
+    std::shared_ptr<Material> get_material() override; //muss drin sein aber nicht sinnvoll?
+
+    void set_material (std::shared_ptr<Material> const& material) override;
+    
     void print() const override;
 
     void build();
@@ -58,9 +56,9 @@ public:
 
 private:
 
-    void split();
-
     void set_min_max_mid();
+    
+    void split();
 
     void get_min(glm::vec3 const& shape_min);
 

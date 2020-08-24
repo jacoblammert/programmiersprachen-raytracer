@@ -91,6 +91,20 @@ glm::vec3 Sphere::get_median() const {
 }
 
 /**
+* @return material of the sphere
+*/
+std::shared_ptr<Material> Sphere::get_material() {
+    return material_;
+}
+
+/**
+* @param material is given to sphere
+*/
+void Sphere::set_material(std::shared_ptr<Material> const& material) {
+    this->material_ = std::move(material);
+}
+
+/**
  * //TODO implement a good print function
  * outputs important information in the console
  */
@@ -98,15 +112,6 @@ void Sphere::print() const {
     std::cout << "Sphere" << std::endl;
     //print();
 }
-
-/*/ //TODO add material later
-Material* Sphere::get_material() {
-    return material;
-}
-
-void Sphere::set_material(Material* material) {
-    this->material = material;
-}/**/
 
 /**
  * Changes the position of the sphere with a given glm::vec3

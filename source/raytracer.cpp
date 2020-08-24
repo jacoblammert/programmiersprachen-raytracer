@@ -165,3 +165,11 @@ int main(int argc, char *argv[]) {
                         color.color = {};
                     }
 */
+
+/*
+ TODO:
+
+ 
+ Anmerkungen:
+ - eventuell shared pointer als const möglich? z.B. std::shared_ptr <Shape const>
+ */

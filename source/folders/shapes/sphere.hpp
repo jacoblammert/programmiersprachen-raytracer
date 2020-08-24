@@ -26,15 +26,15 @@ public:
 
     glm::vec3 get_max() const override;
 
-    void translate(glm::vec3 const& position) override;
-
     glm::vec3 get_median() const override;
 
-    //Material* getMaterial() override;
+    std::shared_ptr<Material> get_material() override;
 
-    //void setMaterial(Material* material) override;
+    void set_material (std::shared_ptr<Material> const& material) override;
 
     void print() const override;
+    
+    void translate(glm::vec3 const& position) override;
 
 private:
     glm::vec3 pos_;

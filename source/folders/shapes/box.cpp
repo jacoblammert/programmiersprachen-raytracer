@@ -41,7 +41,7 @@ Box::Box(glm::vec3 const &pos, float xScale, float yScale, float zScale):
     bounds_.push_back(min_x_y_z);
     bounds_.push_back(max_x_y_z);
 }
-/*///TODO additional constructors with materials
+/* //TODO additional constructors with materials
 Box::Box(Vector const& minXminYminZ, Vector const& maxXmaxYmaxZ, Color const& color) {
     bounds.push_back(minXminYminZ);
     bounds.push_back(maxXmaxYmaxZ);
@@ -56,7 +56,7 @@ Box::Box(Vector const& Pos, float xScale, float yScale, float zScale, Color cons
     bounds.push_back(minXminYminZ);
     bounds.push_back(maxXmaxYmaxZ);
     position = Pos; //vorherigen Konstruktor nutzen?
-}/**/
+}*/
 
 
 /**
@@ -235,14 +235,19 @@ void Box::print() const {
     //TODO add print function
 }
 
-/*/
-Material *Box::getMaterial() {
-    return material;
+/**
+* @return material of the box
+*/
+std::shared_ptr<Material> Box::get_material() {
+    return material_;
 }
 
-void Box::setMaterial(Material *material) {
-    this->material = material;
-}/**/
+/**
+* @param material is given to box
+*/
+void Box::set_material(std::shared_ptr<Material> const& material) {
+    this->material_ = std::move(material);
+}
 
 /**
  * Changes the position of the Sphere with a given glm::vec3

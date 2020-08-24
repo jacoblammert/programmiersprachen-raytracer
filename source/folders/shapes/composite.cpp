@@ -127,6 +127,22 @@ void Composite::translate(const glm::vec3 &position) {
 }
 
 /**
+* @return material of the box
+*/
+std::shared_ptr<Material> Composite::get_material() {
+    std::shared_ptr <Material> material_;
+    return material_;
+}
+
+/**
+* @param material is given to box
+*/
+void Composite::set_material(std::shared_ptr<Material> const& material) {
+   //
+}
+
+
+/**
  * Only really usefull, if there are not to many shapes in total, or the console will be filled with exponentially many
  * comments
  */
@@ -147,6 +163,34 @@ void Composite::print() const {
         }
     }
   */
+}
+
+/**
+ * The box is now filled with shapes which can be sorted into smaller ones
+ * This function gets the new largest  & smallest values of the shapes inside the vector
+ * and splits them up into new Compositeobjects, if the depth is greater than a given value, or the shape vector has reached a certain size
+ */
+void Composite::build() {
+    set_min_max_mid();
+
+    if (depth_ < 20 && shapes_.size() >= 4) { // TODO make better system to change these values
+        split();
+    }
+}
+
+/**
+ * Adds a Shape pointer to the Compositeobject usefull, if the object has not been build yet
+ * @param shape pointer
+ */
+void Composite::add_shape(const std::shared_ptr<Shape>& shape) {
+    shapes_.push_back(shape);
+}
+/**
+ * Adds a vector with Shape pointers to the Compositeobject usefull, if the object has not been build yet
+ * @param shapes  = vector with Shape pointers
+ */
+void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> const& new_shapes) {
+    this->shapes_.insert(this->shapes_.end(),new_shapes.begin(),new_shapes.end());
 }
 
 /**
@@ -223,19 +267,6 @@ void Composite::split() {
     }
 }
 
-/**
- * The box is now filled with shapes which can be sorted into smaller ones
- * This function gets the new largest  & smallest values of the shapes inside the vector
- * and splits them up into new Compositeobjects, if the depth is greater than a given value, or the shape vector has reached a certain size
- */
-void Composite::build() {
-    set_min_max_mid();
-
-    if (depth_ < 20 && shapes_.size() >= 4) { // TODO make better system to change these values
-        split();
-    }
-}
-
 
 /**
  * Changes the minXminYminZ vector, if either x, y or z of the vector shapemax is smaller
@@ -261,21 +292,6 @@ void Composite::get_max(glm::vec3 const& shape_max) {
             max_x_y_z_[i] = shape_max[i];
         }
     }
-}
-
-/**
- * Adds a Shape pointer to the Compositeobject usefull, if the object has not been build yet
- * @param shape pointer
- */
-void Composite::add_shape(const std::shared_ptr<Shape>& shape) {
-    shapes_.push_back(shape);
-}
-/**
- * Adds a vector with Shape pointers to the Compositeobject usefull, if the object has not been build yet
- * @param shapes  = vector with Shape pointers
- */
-void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> const& new_shapes) {
-    this->shapes_.insert(this->shapes_.end(),new_shapes.begin(),new_shapes.end());
 }
 
 

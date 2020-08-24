@@ -140,6 +140,20 @@ glm::vec3 Triangle::get_median() const {
 }
 
 /**
+* @return material of the sphere
+*/
+std::shared_ptr<Material> Triangle::get_material() {
+    return material_;
+}
+
+/**
+* @param material is given to sphere
+*/
+void Triangle::set_material(std::shared_ptr<Material> const& material) {
+    this->material_ = std::move(material);
+}
+
+/**
  * outputs important information in the console
  */
 void Triangle::print() const {
@@ -151,16 +165,6 @@ void Triangle::print() const {
     std::cout << "C: ";
     //c.print();
 }
-
-/*
-Material *Triangle::getMaterial() const{
-    return this->material;
-}
-
-void Triangle::setMaterial(Material *material) {
-    this->material = material;
-}
-*/
 
 /**
  * Changes the position of the triangle with a given glm::vec3

@@ -27,15 +27,13 @@ public:
 
     glm::vec3 get_median() const override;
 
-/*
-    Material* get_material() override;
+    std::shared_ptr<Material> get_material() override;
 
-    void set_material(Material* material) override;
-*/
-
-    void translate(glm::vec3 const& position) override;
+    void set_material (std::shared_ptr<Material> const& material) override;
 
     void print() const override;
+    
+    void translate(glm::vec3 const& position) override;
 
 private:
     glm::vec3 a_;

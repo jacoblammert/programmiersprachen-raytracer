@@ -8,7 +8,9 @@
 
 #include <glm-0.9.5.3/glm/vec3.hpp>
 #include <glm-0.9.5.3/glm/geometric.hpp>
+#include <memory>
 #include "../camera/ray.hpp"
+#include "material.hpp"
 
 class Shape {
 public:
@@ -24,17 +26,18 @@ public:
 
     virtual glm::vec3 get_median() const = 0;
 
-    //virtual Material* get_material() = 0; // needs override for composite object
+    virtual std::shared_ptr<Material> get_material() = 0; // needs override for composite object
 
-    //virtual void set_material(Material* material) = 0; // needs override for composite object
+    virtual void set_material (std::shared_ptr<Material> const& material) = 0; // needs override for composite object
 
     virtual void print() const = 0;
 
     virtual void translate(glm::vec3 const& position) = 0;
+    
     //TODO add rotate_x (float angle (degrees)), rotateY(float angle (degrees)), rotateZ(float angle (degrees)) + scale(float size)
 
 protected:
-    //Material* material_;
+    std::shared_ptr<Material> material_;
 };
 
 

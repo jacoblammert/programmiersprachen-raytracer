@@ -75,6 +75,20 @@ glm::vec3 Plane::get_median() const {
 }
 
 /**
+* @return material of the plane
+*/
+std::shared_ptr<Material> Plane::get_material() {
+    return material_;
+}
+
+/**
+* @param material is given to plane
+*/
+void Plane::set_material(std::shared_ptr<Material> const& material) {
+    this->material_ = std::move(material);
+}
+
+/**
  * should print "interesting" information about our plane (position, normal, material,...)
  */
 void Plane::print() const {
@@ -82,15 +96,6 @@ void Plane::print() const {
     //print();
 }
 
-/*
-Material *Plane::getMaterial() {
-    return material;
-}
-
-void Plane::setMaterial(Material *material) {
-    this->material = material;
-}
-*/
 /**
  * Changes the position of the Sphere with a given glm::vec3
  * @param position
