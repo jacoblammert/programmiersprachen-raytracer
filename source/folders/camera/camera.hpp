@@ -1,9 +1,5 @@
-//
-// Created by Jacob Lammert on 17.08.2020.
-//
-
-#ifndef RAYTRACER_CAMERA_H
-#define RAYTRACER_CAMERA_H
+#ifndef RAYTRACER_CAMERA_HPP
+#define RAYTRACER_CAMERA_HPP
 
 #define MATH_PI 3.14159265359
 
@@ -42,4 +38,4 @@ private:
 };
 
 
-#endif //RAYTRACER_CAMERA_H
+#endif //RAYTRACER_CAMERA_HPP

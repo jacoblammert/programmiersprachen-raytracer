@@ -1,9 +1,5 @@
-//
-// Created by Jacob Lammert on 17.08.2020.
-//
-
-#ifndef RAYTRACER_PLANE_H
-#define RAYTRACER_PLANE_H
+#ifndef RAYTRACER_PLANE_HPP
+#define RAYTRACER_PLANE_HPP
 
 #include <iostream>
 #include "shape.hpp"
@@ -36,4 +32,4 @@ private:
 };
 
 
-#endif //RAYTRACER_PLANE_H
+#endif //RAYTRACER_PLANE_HPP

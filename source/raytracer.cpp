@@ -1,13 +1,13 @@
 #include <cmath>
 #include <renderer.hpp>
 #include <window.hpp>
-
 #include <GLFW/glfw3.h>
 #include <thread>
 #include <utility>
 #include <cmath>
 #include <memory>
 //#include <omp.h>
+
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"

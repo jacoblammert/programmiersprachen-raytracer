@@ -1,9 +1,5 @@
-//
-// Created by Jacob Lammert on 17.08.2020.
-//
-
-#ifndef RAYTRACER_MATERIAL_H
-#define RAYTRACER_MATERIAL_H
+#ifndef RAYTRACER_MATERIAL_HPP
+#define RAYTRACER_MATERIAL_HPP
 
 
 #include <glm-0.9.5.3/glm/vec3.hpp>
@@ -22,4 +18,4 @@ struct Material {
 };
 
 
-#endif //RAYTRACER_MATERIAL_H
+#endif //RAYTRACER_MATERIAL_HPP

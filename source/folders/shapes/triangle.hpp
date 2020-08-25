@@ -1,9 +1,5 @@
-//
-// Created by Jacob Lammert on 17.08.2020.
-//
-
-#ifndef RAYTRACER_TRIANGLE_H
-#define RAYTRACER_TRIANGLE_H
+#ifndef RAYTRACER_TRIANGLE_HPP
+#define RAYTRACER_TRIANGLE_HPP
 
 #include <cmath>
 #include <iostream>
@@ -45,4 +41,4 @@ private:
 };
 
 
-#endif //RAYTRACER_TRIANGLE_H
+#endif //RAYTRACER_TRIANGLE_HPP
