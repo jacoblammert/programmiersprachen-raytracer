@@ -251,7 +251,8 @@ void Composite::split() {
         //std::cout<<i << " " << count++ <<" Type: " << typeid(*shapes[i].get()).hash_code()<<std::endl;
         /// hashcode must not be equal to the planes hashcode
         //TODO check, if a hashcode might be different on different systems
-        if (typeid(*shapes_[i].get()).hash_code() != 3060751613) { // Planes stay in the first Box, because they are really big
+        auto obj = shapes_[i].get();
+        if (typeid(*obj).hash_code() != 3060751613) { // Planes stay in the first Box, because they are really big
 
             if (shapes_[i]->get_median()[axis] > median_[axis]) { // right
                 boxes_[0].add_shape(shapes_[i]); // right
