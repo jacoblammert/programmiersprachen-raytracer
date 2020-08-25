@@ -3,9 +3,13 @@
 
 
 class Scene {
+    
 public:
     Scene();
+    void drawScene();
+    
 private:
+    
 };
 
 
