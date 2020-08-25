@@ -1,4 +1,3 @@
-
 #include "ray.hpp"
 
 /**

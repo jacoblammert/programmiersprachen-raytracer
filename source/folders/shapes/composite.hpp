@@ -1,8 +1,3 @@
-
-//
-// Created by Jacob Lammert on 20.08.2020.
-//
-
 #ifndef RAYTRACER_COMPOSITE_HPP
 #define RAYTRACER_COMPOSITE_HPP
 

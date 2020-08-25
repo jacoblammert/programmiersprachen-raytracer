@@ -1,7 +1,3 @@
-//
-// Created by Jacob Lammert on 21.08.2020.
-//
-
 #ifndef RAYTRACER_RENDER_HPP
 #define RAYTRACER_RENDER_HPP
 

@@ -1,5 +1,5 @@
-#ifndef RAYTRACER_BOX_H
-#define RAYTRACER_BOX_H
+#ifndef RAYTRACER_BOX_HPP
+#define RAYTRACER_BOX_HPP
 
 #include <cmath>
 #include <iostream>
@@ -47,4 +47,4 @@ private:
 };
 
 
-#endif //RAYTRACER_BOX_H
+#endif //RAYTRACER_BOX_HPP

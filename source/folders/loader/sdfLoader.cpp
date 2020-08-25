@@ -1,7 +1,3 @@
-//
-// Created by Jacob on 10.08.2020.
-//
-
 #include "sdfLoader.hpp"
 
 SdfLoader::SdfLoader(std::string filepath) :
@@ -91,7 +87,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                     //parse composite attributes
                     int count = 0;
                     std::string composite_name, param;
-                    std::vector <std::string> composites;
+                    std::vector <std::string> composites; //notwendig?
 
                     in_sstream >> composite_name;
 
@@ -123,13 +119,31 @@ void SdfLoader::load_file() const { //const correctness valid?
                 float kd_red, kd_green, kd_blue;
                 float ks_red, ks_green, ks_blue;
                 float m;
+                
+                std::vector <float> ka;
+                std::vector <float> kd;
+                std::vector <float> ks;
 
                 in_sstream >> material_name;
-                in_sstream >> ka_red >> ka_green >> ka_blue;
-                in_sstream >> kd_red >> kd_green >> kd_blue;
-                in_sstream >> ks_red >> ks_green >> ks_blue;
-                in_sstream >> m;
+                in_sstream >> ka_red >> ka_green >> ka_blue; //abmient reflection
+                in_sstream >> kd_red >> kd_green >> kd_blue; //diffuse reflection
+                in_sstream >> ks_red >> ks_green >> ks_blue; //reflecting reflection
+                in_sstream >> m; //exponent for reflecting reflection
+                
+                ka[0] = ka_red;
+                ka[1] = ka_green;
+                ka[2] = ka_blue;
+                
+                kd[0] = ka_red;
+                kd[1] = ka_green;
+                kd[2] = ka_blue;
+                
+                kd[0] = ka_red;
+                kd[1] = ka_green;
+                kd[2] = ka_blue;
 
+                std::shared_ptr<Material> material = std::make_shared<Material> (Material{0,0,0,1,{1,1,1}});
+                
             } else if ("light" == class_name) {
                 //parse light attributes
                 std::string name_light;

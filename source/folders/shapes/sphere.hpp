@@ -1,9 +1,5 @@
-//
-// Created by Jacob Lammert on 17.08.2020.
-//
-
-#ifndef RAYTRACER_SPHERE_H
-#define RAYTRACER_SPHERE_H
+#ifndef RAYTRACER_SPHERE_HPP
+#define RAYTRACER_SPHERE_HPP
 
 #include <cmath>
 #include <iostream>
@@ -42,4 +38,4 @@ private:
 };
 
 
-#endif //RAYTRACER_SPHERE_H
+#endif //RAYTRACER_SPHERE_HPP

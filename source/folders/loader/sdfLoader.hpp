@@ -1,9 +1,5 @@
-//
-// Created by Jacob on 10.08.2020.
-//
-
-#ifndef RAYTRACER_SDFLOADER_H
-#define RAYTRACER_SDFLOADER_H
+#ifndef RAYTRACER_SDFLOADER_HPP
+#define RAYTRACER_SDFLOADER_HPP
 
 
 #include <string>
@@ -30,4 +26,4 @@ private:
 };
 
 
-#endif //RAYTRACER_SDFLOADER_H
+#endif //RAYTRACER_SDFLOADER_HPP
