@@ -16,6 +16,7 @@
 #include "folders/shapes/plane.hpp"
 #include "folders/shapes/composite.hpp"
 #include "folders/renderer/render.hpp"
+#include "folders/shapes/cone.hpp"
 
 //TODO add folders for saving,...
 
@@ -23,7 +24,7 @@
 int main(int argc, char *argv[]) {
 
     SdfLoader loader{"../../source/folders/sdfFiles/start.sdf"};
-    loader.load_file();
+    //loader.load_file();
 
 
     unsigned const image_width = 1920  /* 2 */ /  2; //640
@@ -56,11 +57,12 @@ int main(int argc, char *argv[]) {
     }
 
 
-    //shapes.push_back(std::make_shared<Cone>(Cone{{2,0,1},{0,0,1},0.5,1})); /// Cone ray intersection not working correctly
-    //shapes[shapes.size()-1]->set_material(transparent);
+    //shapes.push_back(std::make_shared<Cone>(Cone{{0,0,0},{0,0,1},0.5,1})); /// Cone ray intersection not working correctly
+    //shapes[shapes.size()-1]->set_material(white);
 
 
-    //shapes.push_back(std::make_shared<Sphere>(Sphere{{0,0,-2}, 0.3512636125}));
+    shapes.push_back(std::make_shared<Sphere>(Sphere{{2,0,0}, 1}));
+    shapes[shapes.size()-1]->set_material(white);
 
     //shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, -8},{0, 0, 1}}));
 
@@ -82,7 +84,7 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::shared_ptr<Light>> lights;
 
-    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 20,1})); /// Falls es crahen sollte, einfach roughness ändern
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 20,1}));
     //lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 11}));
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});

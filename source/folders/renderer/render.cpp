@@ -56,16 +56,16 @@ glm::vec3 Render::get_color(Ray const &ray, int depth) const {
         glm::vec3 hit_to_light;
 
         for (int i = 0; i < lights_.size(); ++i) {
-            if (lights_[i]->brightness > 0) {
+            if (lights_[i]->brightness_ > 0) {
 
-                hit_to_light = (lights_[i]->position - hit_point/* - hit_normal * 0.001f*/);
+                hit_to_light = (lights_[i]->position_ - hit_point/* - hit_normal * 0.001f*/);
                 light_strength = glm::length(hit_to_light);
                 hit_to_light = glm::normalize(hit_to_light);
 
                 angle = glm::dot(hit_normal, hit_to_light);
 
                 if (0 < angle && depth < 20) { // normal facing in direction of light
-                    glm::vec3 light_color = (lights_[i]->color * (angle * lights_[i]->brightness)) /
+                    glm::vec3 light_color = (lights_[i]->color_ * (angle * lights_[i]->brightness_)) /
                                             (light_strength * light_strength); // brightness
 
 
@@ -83,9 +83,9 @@ glm::vec3 Render::get_color(Ray const &ray, int depth) const {
 
                         offset = {random_float(), random_float(), random_float()};
                         if (depth < 1) {
-                            offset = glm::normalize(offset) * (1 - lights_[i]->hardness) + hit_to_light;
+                            offset = glm::normalize(offset) * (1 - lights_[i]->hardness_) + hit_to_light;
                         } else {
-                            offset = glm::normalize(offset) * (1 - lights_[i]->hardness) + hit_normal;
+                            offset = glm::normalize(offset) * (1 - lights_[i]->hardness_) + hit_normal;
                         }
                         /// offset is now a vec3 with a random direction and the length of roughness
 

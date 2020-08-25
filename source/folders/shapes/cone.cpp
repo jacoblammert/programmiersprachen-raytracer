@@ -1,7 +1,34 @@
 #include "cone.hpp"
+#include "plane.hpp"
 
 bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
-/**/
+
+
+
+/// only for "normalized cone in origin with diameter 1 and height 1
+
+/// Bottom of cone:
+    Plane p{pos_,{0,0,-1}};
+
+    p.set_material({});
+
+    glm::vec3 newnormal;
+    glm::vec3 newhit{INFINITY,INFINITY,INFINITY};
+    float newdist = INFINITY;
+
+    if (p.get_intersect_vec(ray,newhit,newnormal,newdist) && glm::length(newhit - pos_) <= 0.5f) {
+
+        if (0 < newdist &&  newdist < distance && glm::dot(newnormal, ray.direction) < 0) {
+            distance = newdist;
+            hit_point = ray.position + ray.direction * newnormal;
+            hit_normal = newnormal;
+            return true;
+        }
+    }
+
+/// other parts of the cone:
+
+
     glm::vec3 ap_ = ray.position;
     glm::vec3 ad_ = ray.direction;
 
@@ -30,7 +57,6 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
     glm::vec3 cp = ray.position + t1 * ray.direction - pos_;
 
     if (glm::dot(cp, axis_) < 0 || glm::dot(cp, axis_) > height_) return false;
-
     if (0 < t1 && t1 < distance) {
         distance = t1;
         hit_point = ray.position + ray.direction * t1;

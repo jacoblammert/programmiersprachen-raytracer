@@ -14,7 +14,7 @@ struct Light {
      * @param hardness as float => 1 = hard shadows, 0 = really soft shadows
      */
     Light(glm::vec3 const& position, glm::vec3 const& color, float brightness,float hardness = 1):
-        position{position},
+        position_{position},
         color_ {color},
         brightness_ {brightness},
         hardness_ {hardness}
