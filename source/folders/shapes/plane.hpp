@@ -12,7 +12,7 @@ class Plane : public Shape {
 public:
     Plane(glm::vec3 const& position, glm::vec3 const& normal);
 
-    bool get_intersect_vec(Ray const& ray, glm::vec3 &HitPoint, glm::vec3 &HitNormal, float &distance) const override;
+    bool get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const override;
 
     glm::vec3 get_normal(glm::vec3 const& pos) const override;
 

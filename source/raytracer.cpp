@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-//#include <omp.h>
+#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -16,6 +16,7 @@
 #include "folders/shapes/plane.hpp"
 #include "folders/shapes/composite.hpp"
 #include "folders/renderer/render.hpp"
+#include "folders/shapes/cone.hpp"
 
 //TODO add folders for saving,...
 
@@ -36,7 +37,7 @@ int main(int argc, char *argv[]) {
 
     std::shared_ptr<Material> white = std::make_shared<Material>(Material{0,0,0,1,{1,1,1}});
     std::shared_ptr<Material> transparent = std::make_shared<Material>(Material{0,0,1,1.36f,{1,1,1}});
-    std::shared_ptr<Material> mirror = std::make_shared<Material>(Material{0,1,0,1,{1,1,1}});
+    std::shared_ptr<Material> mirror = std::make_shared<Material>(Material{0.0,1,0,1,{1,1,1}});
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
@@ -54,6 +55,9 @@ int main(int argc, char *argv[]) {
             shapes[i]->set_material(white);
         }
     }
+
+    shapes.push_back(std::make_shared<Cone>(Cone{{2,0,1},{0,0,1},0.5,1})); /// Cone ray intersection not working correctly
+    shapes[shapes.size()-1]->set_material(transparent);
 
 
     //shapes.push_back(std::make_shared<Sphere>(Sphere{{0,0,-2}, 0.3512636125}));
@@ -78,7 +82,7 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::shared_ptr<Light>> lights;
 
-    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 20,0.95}));
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 20,1}));
     //lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 11}));
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
@@ -131,8 +135,8 @@ int main(int argc, char *argv[]) {
         /// The color of the light ranges from 0 to 1
 
 
-//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-//#pragma omp parallel for
+        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
