@@ -41,9 +41,9 @@ public:
     void set_rotation_axis(glm::vec3 axis);
 
 protected:
-    glm::vec3 rotation_axis_;
-    float angle_;
-    glm::vec3 position_;
+    glm::vec3 rotation_axis_ = glm::vec3 {1,0,0};
+    float angle_ = 0.0f;
+    glm::vec3 position_ = glm::vec3 {};
 
     std::shared_ptr<Material> material_;
 };
