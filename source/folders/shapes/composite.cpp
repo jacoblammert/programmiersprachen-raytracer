@@ -109,7 +109,7 @@ glm::vec3 Composite::get_max() const {
  * @return the mid point of all the midpoints of all shapes contained in this composite object
  */
 glm::vec3 Composite::get_median() const {
-    return median_;
+    return position_;
 }
 
 
@@ -198,7 +198,7 @@ void Composite::set_min_max_mid() {
     max_x_y_z_ = glm::vec3(-INFINITY, -INFINITY,
                              -INFINITY); // need to be set to opposite values to get the correct ones for all the shapes inside this box
 
-    median_ = glm::vec3();
+    position_ = glm::vec3();
 
     glm::vec3 median_shape;
 
@@ -207,9 +207,9 @@ void Composite::set_min_max_mid() {
         get_max(shape->get_max());
 
         median_shape = shape->get_median();
-        median_ = median_ + median_shape;
+        position_ = position_ + median_shape;
     }
-    median_ *= (1.0f / (float) shapes_.size());
+    position_ *= (1.0f / (float) shapes_.size());
 
     box_ = Box{min_x_y_z_, max_x_y_z_};
 }
@@ -250,7 +250,7 @@ void Composite::split() {
         auto obj = shapes_[i].get();
         if (typeid(*obj).hash_code() != 3060751613) { // Planes stay in the first Box, because they are really big
 
-            if (shapes_[i]->get_median()[axis] > median_[axis]) { // right
+            if (shapes_[i]->get_median()[axis] > position_[axis]) { // right
                 boxes_[0].add_shape(shapes_[i]); // right
             } else {
                 boxes_[1].add_shape(shapes_[i]);

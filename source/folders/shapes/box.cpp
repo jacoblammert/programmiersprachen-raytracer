@@ -13,9 +13,8 @@ Box::Box() {
  * @param minXminYminZ minimum of the box (individual values must be smaller than their counterpart in max vector)
  * @param maxXmaxYmaxZ maximum of the box (individual values must be greater than their counterpart in min vector)
  */
-Box::Box(const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z) :
-
-        position_{(min_x_y_z + max_x_y_z) * 0.5f} {
+Box::Box(const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z){
+    position_ = (min_x_y_z + max_x_y_z) * 0.5f;
     bounds_.push_back(min_x_y_z);
     bounds_.push_back(max_x_y_z);
 }
@@ -27,9 +26,9 @@ Box::Box(const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z) :
  * @param yScale float for size in y direction
  * @param zScale float for size in z direction
  */
-Box::Box(glm::vec3 const &pos, float xScale, float yScale, float zScale) :
+Box::Box(glm::vec3 const &pos, float xScale, float yScale, float zScale){
+    position_ = pos;
 
-        position_{pos} {
     glm::vec3 min_x_y_z = {pos[0] - (xScale / 2), pos[1] - (yScale / 2), pos[2] - (zScale / 2)};
     glm::vec3 max_x_y_z = {pos[0] + (xScale / 2), pos[1] + (yScale / 2), pos[2] + (zScale / 2)};
     bounds_.push_back(min_x_y_z);

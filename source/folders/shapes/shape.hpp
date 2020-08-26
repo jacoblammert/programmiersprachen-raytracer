@@ -29,10 +29,22 @@ public:
     virtual void print() const = 0;
 
     virtual void translate(glm::vec3 const& position) = 0;
-    
-    //TODO add rotate_x (float angle (degrees)), rotateY(float angle (degrees)), rotateZ(float angle (degrees)) + scale(float size)
+
+    glm::vec3 get_translated_vec3(glm::vec3 const& vec3, glm::vec3 const& translation) const;
+
+    glm::vec3 get_scaled_vec3(glm::vec3 const& vec3, float scale_x,float scale_y,float scale_z) const;
+
+    glm::vec3 get_rotated_vec3(glm::vec3 const& vec3,glm::vec3 axis, float angle) const;
+
+    void set_angle(float angle);
+
+    void set_rotation_axis(glm::vec3 axis);
 
 protected:
+    glm::vec3 rotation_axis_;
+    float angle_;
+    glm::vec3 position_;
+
     std::shared_ptr<Material> material_;
 };
 

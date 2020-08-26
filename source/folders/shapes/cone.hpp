@@ -6,7 +6,7 @@
 
 class Cone: public Shape {
 public:
-    Cone(const glm::vec3& position,const glm::vec3& direction,float angle, float height);
+    Cone(const glm::vec3& position,const glm::vec3& axis,float width, float height);
 
     bool get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const override;
 
@@ -27,10 +27,8 @@ public:
     void translate(glm::vec3 const &position) override;
 
 private:
-    glm::vec3 pos_; // bottom of the cone
-    glm::vec3 axis_;
     float height_;
-    float angle_;
+    float width_;
 
 };
 #endif //RAYTRACER_CONE_HPP

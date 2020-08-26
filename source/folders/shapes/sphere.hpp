@@ -33,7 +33,6 @@ public:
     void translate(glm::vec3 const& position) override;
 
 private:
-    glm::vec3 pos_;
     float radius_;
 };
 

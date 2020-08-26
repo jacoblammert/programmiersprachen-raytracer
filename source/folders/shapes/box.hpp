@@ -42,8 +42,6 @@ private:
     int sign (glm::vec3 const& vec3, int position) const;
 
     std::vector<glm::vec3> bounds_;
-
-    glm::vec3 position_;
 };
 
 

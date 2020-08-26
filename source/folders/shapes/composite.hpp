@@ -61,7 +61,6 @@ private:
 
     glm::vec3 min_x_y_z_;
     glm::vec3 max_x_y_z_;
-    glm::vec3 median_;
     int depth_;
     Box box_;
     std::vector<Composite> boxes_; // TODO change from vector to two seperate objects

@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-//#include <omp.h>
+#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     }
 
 
-    //shapes.push_back(std::make_shared<Cone>(Cone{{0,0,0},{0,0,1},0.5,1})); /// Cone ray intersection not working correctly
+    //shapes.push_back(std::make_shared<Cone>(Cone{{1.2,0,0},{0,0,1},1,1})); /// Cone ray intersection not working correctly
     //shapes[shapes.size()-1]->set_material(white);
 
 
@@ -137,8 +137,8 @@ int main(int argc, char *argv[]) {
         /// The color of the light ranges from 0 to 1
 
 
-//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-//#pragma omp parallel for
+        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten

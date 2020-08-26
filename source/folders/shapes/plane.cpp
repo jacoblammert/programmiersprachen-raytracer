@@ -6,7 +6,8 @@
  * @param normal of the pane (will be normalized automatically)
  */
 Plane::Plane(glm::vec3 const &position, glm::vec3 const &normal) :
-        pos_ {position}, normal_ {glm::normalize(normal)} {
+normal_ {glm::normalize(normal)} {
+    position_ = position;
 }
 /* //TODO add later (with materials)
 plane::Plane(Vector const& position, Vector const& normal, Material *material) :
@@ -24,7 +25,7 @@ plane::Plane(Vector const& position, Vector const& normal, Material *material) :
  * @return true, if intersected in front of the ray, false otherwise
  */
 bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
-    float t = glm::dot(pos_ - ray.position, normal_) / glm::dot(ray.direction, normal_);
+    float t = glm::dot(position_ - ray.position, normal_) / glm::dot(ray.direction, normal_);
 
     if (0 <= t && t < distance) {
         distance = t;
@@ -67,7 +68,7 @@ glm::vec3 Plane::get_max() const {
  * @return position of the plane
  */
 glm::vec3 Plane::get_median() const {
-    return pos_;
+    return position_;
 }
 
 /**
@@ -97,5 +98,5 @@ void Plane::print() const {
  * @param position
  */
 void Plane::translate(glm::vec3 const& position) {
-    pos_ += position;
+    position_ += position;
 }

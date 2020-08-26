@@ -8,10 +8,10 @@
  * @param c glm::vec3 number 3
  */
 Triangle::Triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
-        a_ {a},
         b_ {b},
         c_ {c}
 {
+    position_ = a;
     glm::vec3 ab = b - a;
     glm::vec3 ac = c - a;
     this->normal_ = glm::normalize(glm::cross(ab,ac));
@@ -40,8 +40,8 @@ Triangle::Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, C
 bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
 
-    glm::vec3 p_vec = glm::cross(ray.direction , (c_ - a_));
-    float det = glm::dot(p_vec, (b_ - a_));
+    glm::vec3 p_vec = glm::cross(ray.direction , (c_ - position_));
+    float det = glm::dot(p_vec, (b_ - position_));
 
     // ray and triangle are parallel if det is close to 0 -> no division by zero
     if (std::fabs(det) == 0.0f)
@@ -49,18 +49,18 @@ bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3
 
     //glm::vec3 rayposition = ray.position;
 
-    float u = glm::dot(p_vec, ray.position - a_) / det;
+    float u = glm::dot(p_vec, ray.position - position_) / det;
 
     if (u < 0 || u > 1)
         return false;
 
-    p_vec = glm::cross((ray.position - a_), (b_ - a_));
+    p_vec = glm::cross((ray.position - position_), (b_ - position_));
     float v = glm::dot(p_vec, ray.direction) / det;
 
     if (v < 0 || (u + v) > 1)
         return false;
 
-    det = glm::dot(p_vec, c_ - a_) / det;
+    det = glm::dot(p_vec, c_ - position_) / det;
 
     if (0 < det && det < distance) {
         distance = det;
@@ -90,7 +90,7 @@ glm::vec3 Triangle::get_normal(glm::vec3 const& pos) const {
  * @return a vector with the minimal values of x, y and z for the triangle (for a box around the triangle)
  */
 glm::vec3 Triangle::get_min() const {
-    glm::vec3 min = a_;
+    glm::vec3 min = position_;
 
     for (int j = 0; j < 3; ++j) {
         if (min[j] > b_[j]) {
@@ -110,7 +110,7 @@ glm::vec3 Triangle::get_min() const {
  * @return a vector with the maximal values of x, y and z for the triangle (for a box around the triangle)
  */
 glm::vec3 Triangle::get_max() const {
-    glm::vec3 max = a_;
+    glm::vec3 max = position_;
     
     for (int j = 0; j < 3; ++j) {
         if (max[j] < b_[j]) {
@@ -130,7 +130,7 @@ glm::vec3 Triangle::get_max() const {
  */
 glm::vec3 Triangle::get_median() const {
 
-    glm::vec3 median = a_ + b_ + c_;
+    glm::vec3 median = position_ + b_ + c_;
     median *= (1.0f / 3.0f);
     return median;
 }
@@ -146,7 +146,7 @@ std::shared_ptr<Material> Triangle::get_material() {
 * @param material is given to sphere
 */
 void Triangle::set_material(std::shared_ptr<Material> const& material) {
-    this->material_ = std::move(material);
+    this->material_ = material;
 }
 
 /**
@@ -167,7 +167,7 @@ void Triangle::print() const {
  * @param position
  */
 void Triangle::translate(glm::vec3 const& position) {
-    a_ += position;
+    position_ += position;
     b_ += position;
     c_ += position;
 }
