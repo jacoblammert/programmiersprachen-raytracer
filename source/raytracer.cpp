@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::shared_ptr<Light>> lights;
 
-    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, 20,1}));
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, {20.0f, 20.0f, 20.0f}, 1})); //brightness vec3
     //lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 11}));
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
