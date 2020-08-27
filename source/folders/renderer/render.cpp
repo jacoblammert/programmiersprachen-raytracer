@@ -56,7 +56,7 @@ glm::vec3 Render::get_color(Ray const &ray, int depth) const {
         glm::vec3 hit_to_light;
 
         for (int i = 0; i < lights_.size(); ++i) {
-            if (lights_[i]->brightness_ > 0) {
+            if (lights_[i]->brightness_.x > 0) { //brightness vec3!
 
                 hit_to_light = (lights_[i]->position_ - hit_point/* - hit_normal * 0.001f*/);
                 light_strength = glm::length(hit_to_light);

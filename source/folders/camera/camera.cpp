@@ -1,6 +1,20 @@
 #include "camera.hpp"
 #include <math.h>
 
+
+Camera::Camera (float fov_x) :
+    position_ {0.0f, 0.0f, 0.0f},
+    direction_ {glm::vec3 {0, 0, -1}},
+    width_ {1},
+    height_ {1}, //TODO Berechnen durch fov in y Richtung
+    distance_ {fov_x}// from presentation
+
+{
+    distance_ *= MATH_PI / 360.0f;
+    distance_ = (float)(0.5f / std::tan(distance_)); // from presentation
+}
+
+
 /**
  * Camera constructor without angle / fov
  * @param position of the camera as vec3
@@ -33,7 +47,7 @@
           direction_ {glm::vec3{0,0,-1}},
           width_ {width},
           height_ {height},
-          distance_ {fov}{ // from presentation
+          distance_ {fov} { // from presentation
       distance_ *= MATH_PI / 360.0f;
       distance_ = (float)(0.5f / std::tan(distance_)); // from presentation
 

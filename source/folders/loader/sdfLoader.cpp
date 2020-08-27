@@ -21,6 +21,11 @@ void SdfLoader::load_file() const { //const correctness valid?
 
     std::vector<std::shared_ptr<Composite>> composite_vec; /// all possiblt compositepointer  TODO turn to smartpointer
     std::map<std::string,std::shared_ptr<Shape>> shape_map; /// map with all the shapes accessible with their names
+    
+    
+    std::map<std::string,std::shared_ptr<Material>> material_map;
+    std::map<std::string,std::shared_ptr<Light>> light_map;
+    std::map<std::string,std::shared_ptr<Camera>> camera_map;
 
     while (std::getline(in_file, line_buffer)) {
         std::cout << ++line_count << line_buffer << std::endl;
@@ -62,7 +67,8 @@ void SdfLoader::load_file() const { //const correctness valid?
                     p2[2] = p2_z;
 
                     // add a box and access it later with its name from the map
-                    shape_map[name_box] = std::make_shared<Box>(Box{p1, p2});
+                    auto box = std::make_shared<Box>(Box{p1, p2});
+                    shape_map.emplace(std::make_pair(name_box, box));
 
                 } else if (shape_type == "sphere") {
                     //parse sphere attributes
@@ -81,7 +87,8 @@ void SdfLoader::load_file() const { //const correctness valid?
                     center[2] = center_z;
 
                     // add a sphere and access it later with its name from the map
-                    shape_map[name_sphere] = std::make_shared<Sphere>(Sphere{center, radius});
+                    auto sphere = std::make_shared<Sphere>(Sphere{center, radius});
+                    shape_map.emplace(std::make_pair(name_sphere, sphere));
 
                 } else if (shape_type == "composite") {
                     //parse composite attributes
@@ -94,7 +101,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                     std::cout << "Composite: " << std::endl;
 
                     // new composite to be added
-                    std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{});
+                    auto composite = std::make_shared<Composite>(Composite{});
 
                     while (!in_sstream.eof()) {
                         in_sstream >> param;
@@ -142,7 +149,8 @@ void SdfLoader::load_file() const { //const correctness valid?
                 kd[1] = ka_green;
                 kd[2] = ka_blue;
 
-                std::shared_ptr<Material> material = std::make_shared<Material> (Material{0,0,0,1,{1,1,1}});
+                auto material = std::make_shared<Material> (Material{0,0,0,1,{1,1,1}}); //TODO Werte übernehmen
+                material_map.emplace(std::make_pair(material_name, material));
                 
             } else if ("light" == class_name) {
                 //parse light attributes
@@ -166,14 +174,20 @@ void SdfLoader::load_file() const { //const correctness valid?
                 brightness[0] = brightness_x;
                 brightness[1] = brightness_y;
                 brightness[2] = brightness_z;
+                
+                auto light = std::make_shared<Light> (Light(pos, color, brightness));
+                light_map.emplace(std::make_pair(name_light, light));
 
             } else if ("camera" == class_name) {
                 //parse camera attributes
                 std::string name_camera;
-                float angle;
+                float fov_x;
 
                 in_sstream >> name_camera;
-                in_sstream >> angle;
+                in_sstream >> fov_x;
+                
+                auto camera = std::make_shared<Camera> (Camera(fov_x));
+                camera_map.emplace(std::make_pair(name_camera, camera));
 
             } else {
                 std::cout << "Line was not valid!" << std::endl;
@@ -214,7 +228,11 @@ void SdfLoader::load_file() const { //const correctness valid?
                 std::cout << "Line was not valid!" << std::endl;
             }
         } else if ("render" == identifier) {
-            //TODO
+            std::string name_camera, filename;
+            int x_res, y_res;
+            
+            in_sstream >> name_camera >> filename >> x_res >> y_res;
+            
         } else if ("ambient" == identifier) {
             //parse ambient attributes
             glm::vec3 ambient;

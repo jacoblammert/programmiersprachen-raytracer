@@ -13,6 +13,7 @@
 #include <map>
 #include "../shapes/composite.hpp"
 #include "../shapes/sphere.hpp"
+#include "../renderer/scene.hpp"
 
 class SdfLoader {
 public:
