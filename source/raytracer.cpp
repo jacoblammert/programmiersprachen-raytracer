@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 0; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
@@ -57,12 +57,12 @@ int main(int argc, char *argv[]) {
     }
 
 
-    //shapes.push_back(std::make_shared<Cone>(Cone{{1.2,0,0},{0,0,1},1,1})); /// Cone ray intersection not working correctly
+    //shapes.push_back(std::make_shared<Cone>(Cone{{2,0,0},{1,1,1},4,1})); /// Cone ray intersection not working correctly
     //shapes[shapes.size()-1]->set_material(white);
 
 
-    shapes.push_back(std::make_shared<Sphere>(Sphere{{2,0,0}, 1}));
-    shapes[shapes.size()-1]->set_material(white);
+    //shapes.push_back(std::make_shared<Sphere>(Sphere{{2,0,0}, 1}));
+    //shapes[shapes.size()-1]->set_material(white);
 
     //shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, -8},{0, 0, 1}}));
 

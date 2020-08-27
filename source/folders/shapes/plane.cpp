@@ -25,12 +25,12 @@ plane::Plane(Vector const& position, Vector const& normal, Material *material) :
  * @return true, if intersected in front of the ray, false otherwise
  */
 bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
-    float t = glm::dot(position_ - ray.position, normal_) / glm::dot(ray.direction, normal_);
+    float t = glm::dot(position_ - ray.position_, normal_) / glm::dot(ray.direction_, normal_);
 
     if (0 <= t && t < distance) {
         distance = t;
-        hit_point = ray.position + ray.direction * t;
-        hit_normal = get_normal(ray.position);
+        hit_point = ray.position_ + ray.direction_ * t;
+        hit_normal = get_normal(ray.position_);
         return true;
     }
     return false;

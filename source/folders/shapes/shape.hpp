@@ -38,14 +38,17 @@ public:
 
     void set_angle(float angle);
 
-    void set_rotation_axis(glm::vec3 axis);
+    void set_rotation_axis(const glm::vec3& axis);
 
 protected:
-    glm::vec3 rotation_axis_;
-    float angle_;
-    glm::vec3 position_;
+    //glm::mat3x3 rotation_matrix_ = {};
+    //glm::mat3x3 rotation_matrix_inverse = {};
+    glm::vec3 rotation_axis_ = glm::vec3 {};
+    float angle_ = 0.0f;
+    glm::vec3 position_ = glm::vec3 {};
 
     std::shared_ptr<Material> material_;
+
 };
 
 

@@ -22,8 +22,8 @@ Sphere::Sphere(const glm::vec3 &position, float radius) :
  */
 bool Sphere::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
-    float t = glm::dot(position_ - ray.position, ray.direction);
-    float x = glm::length(position_ - ray.position - (ray.direction * t));
+    float t = glm::dot(position_ - ray.position_, ray.direction_);
+    float x = glm::length(position_ - ray.position_ - (ray.direction_ * t));
 
     if (x < radius_) {
 
@@ -33,14 +33,14 @@ bool Sphere::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &
 
         if (0 < (t - x) && (t - x) < distance) {
             distance = (t - x);
-            hit_point = ray.position + (ray.direction * (t - x));
+            hit_point = ray.position_ + (ray.direction_ * (t - x));
             hit_normal = get_normal(hit_point);
             return true;
         }
 
         if ((t - x) < 0 && 0 < (t + x) && (t + x) < distance) {
             distance = (t + x);
-            hit_point = ray.position + (ray.direction * (t + x));
+            hit_point = ray.position_ + (ray.direction_ * (t + x));
             hit_normal = get_normal(hit_point);
             return true;
         }

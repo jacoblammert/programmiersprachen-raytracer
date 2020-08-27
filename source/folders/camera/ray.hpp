@@ -6,8 +6,8 @@
 
 struct Ray {
     //TODO put in math folder direction
-    glm::vec3 position;
-    glm::vec3 direction;
+    glm::vec3 position_;
+    glm::vec3 direction_;
     Ray(const glm::vec3& position,const glm::vec3& direction);
 };
 
