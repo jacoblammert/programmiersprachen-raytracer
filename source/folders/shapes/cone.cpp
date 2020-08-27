@@ -16,12 +16,12 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
     glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, rotation_axis_));
 
 
-    glm::vec3 ray_position = ray.position - position_;                                                               /// first translation
+    glm::vec3 ray_position = ray.position_ - position_;                                                               /// first translation
     ray_position = get_rotated_vec3(ray_position, rotation_axis, angle_new);                                         /// second rotation
     ray_position = get_scaled_vec3(ray_position,  1.0f / width_,  1.0f / width_, 1.0f / height_);/// third scaling
 
 
-    glm::vec3 ray_direction = ray.direction;
+    glm::vec3 ray_direction = ray.direction_;
     ray_direction = get_rotated_vec3(ray_direction, rotation_axis, angle_new);                                        /// first rotation
     ray_direction = get_scaled_vec3(ray_direction, 1.0f / width_,  1.0f / width_, 1.0f / height_);/// second scaling
     ray_direction = glm::normalize(ray_direction);                                                                    /// third normalize
@@ -66,7 +66,7 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
 
                 hit_point_1 = hit_point_1 + position_;                                 /// third translation
 
-                c = glm::length(hit_point_1 - ray.position);
+                c = glm::length(hit_point_1 - ray.position_);
 
                 distance_1 = (float) c;
 
@@ -89,18 +89,18 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
         }
     }
 
-    float distance_2 = glm::dot(position_ - ray.position, rotation_axis_) / glm::dot(ray.direction, rotation_axis_);
+    float distance_2 = glm::dot(position_ - ray.position_, rotation_axis_) / glm::dot(ray.direction_, rotation_axis_);
 
     /// either the cone or the bottom plate has been hit
 
 
-    float length = glm::length(ray.position - position_ + ray.direction * distance_2);
+    float length = glm::length(ray.position_ - position_ + ray.direction_ * distance_2);
 
 
         if (0 < distance_2 && distance_2 < distance && distance_2 < distance_1 && length < (width_ / 2)) {
 
             distance = distance_2;
-            hit_point = ray.position + ray.direction * distance_2;
+            hit_point = ray.position_ + ray.direction_ * distance_2;
             hit_normal = -rotation_axis_;
             return true;
         }

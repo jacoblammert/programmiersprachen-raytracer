@@ -63,17 +63,17 @@ Box::Box(Vector const& Pos, float xScale, float yScale, float zScale, Color cons
 bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal,
                             float &distance) const {
 
-    glm::vec3 ray_direction = {1.0f / ray.direction[0], 1.0f / ray.direction[1], 1.0f / ray.direction[2]};
+    glm::vec3 ray_direction = {1.0f / ray.direction_[0], 1.0f / ray.direction_[1], 1.0f / ray.direction_[2]};
 
     float t_min, t_max, t_y_min, t_y_max;
 
     /// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
 
-    t_min = (bounds_[sign(ray_direction, 0)][0] - ray.position[0]) * ray_direction[0]; //txmin?
-    t_max = (bounds_[1 - sign(ray_direction, 0)][0] - ray.position[0]) * ray_direction[0]; //tymin?
+    t_min = (bounds_[sign(ray_direction, 0)][0] - ray.position_[0]) * ray_direction[0]; //txmin?
+    t_max = (bounds_[1 - sign(ray_direction, 0)][0] - ray.position_[0]) * ray_direction[0]; //tymin?
 
-    t_y_min = (bounds_[sign(ray_direction, 1)][1] - ray.position[1]) * ray_direction[1];
-    t_y_max = (bounds_[1 - sign(ray_direction, 1)][1] - ray.position[1]) * ray_direction[1];
+    t_y_min = (bounds_[sign(ray_direction, 1)][1] - ray.position_[1]) * ray_direction[1];
+    t_y_max = (bounds_[1 - sign(ray_direction, 1)][1] - ray.position_[1]) * ray_direction[1];
 
     if ((t_min > t_y_max) || (t_y_min > t_max))
         return false;
@@ -82,8 +82,8 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit
     if (t_y_max < t_max)
         t_max = t_y_max;
 
-    float t_z_min = (bounds_[sign(ray_direction, 2)][2] - ray.position[2]) * ray_direction[2];
-    float t_z_max = (bounds_[1 - sign(ray_direction, 2)][2] - ray.position[2]) * ray_direction[2];
+    float t_z_min = (bounds_[sign(ray_direction, 2)][2] - ray.position_[2]) * ray_direction[2];
+    float t_z_max = (bounds_[1 - sign(ray_direction, 2)][2] - ray.position_[2]) * ray_direction[2];
 
     if ((t_min > t_z_max) || (t_z_min > t_max))
         return false;
@@ -94,20 +94,20 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit
 
 
     if (0 < t_min && t_min < distance) {
-        ray_direction = ray.direction;
+        ray_direction = ray.direction_;
         ray_direction *= t_min;
 
         distance = t_min;
-        hit_point = ray.position + ray_direction;
+        hit_point = ray.position_ + ray_direction;
         hit_normal = get_normal(hit_point - position_);
         return true;
     }
     if (t_min < 0 && 0 < t_max && t_max < distance) {
-        ray_direction = ray.direction;
+        ray_direction = ray.direction_;
         ray_direction *= t_max;
 
         distance = t_max;
-        hit_point = ray.position + ray_direction;
+        hit_point = ray.position_ + ray_direction;
         hit_normal = get_normal(hit_point - position_);
         return true;
     }
@@ -124,23 +124,23 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit
 bool Box::get_intersect(const Ray &ray) const {
 
 
-    if (bounds_[0][0] < ray.position[0] && ray.position[0] < bounds_[1][0] &&
-        bounds_[0][1] < ray.position[1] && ray.position[1] < bounds_[1][1] &&
-        bounds_[0][2] < ray.position[2] && ray.position[2] < bounds_[1][2]) {
+    if (bounds_[0][0] < ray.position_[0] && ray.position_[0] < bounds_[1][0] &&
+        bounds_[0][1] < ray.position_[1] && ray.position_[1] < bounds_[1][1] &&
+        bounds_[0][2] < ray.position_[2] && ray.position_[2] < bounds_[1][2]) {
         /// The position of the ray is inside of the box, therefore it intersects the box
         return true;
     }
 
-    glm::vec3 ray_direction = {1 / ray.direction[0], 1 / ray.direction[1], 1 / ray.direction[2]};
+    glm::vec3 ray_direction = {1 / ray.direction_[0], 1 / ray.direction_[1], 1 / ray.direction_[2]};
 
 
     float t_min, t_max, t_y_min, t_y_max, t_z_min, t_z_max;
 
-    t_min = (bounds_[sign(ray_direction, 0)][0] - ray.position[0]) * ray_direction[0];
-    t_max = (bounds_[1 - sign(ray_direction, 0)][0] - ray.position[0]) * ray_direction[0];
+    t_min = (bounds_[sign(ray_direction, 0)][0] - ray.position_[0]) * ray_direction[0];
+    t_max = (bounds_[1 - sign(ray_direction, 0)][0] - ray.position_[0]) * ray_direction[0];
 
-    t_y_min = (bounds_[sign(ray_direction, 1)][1] - ray.position[1]) * ray_direction[1];
-    t_y_max = (bounds_[1 - sign(ray_direction, 1)][1] - ray.position[1]) * ray_direction[1];
+    t_y_min = (bounds_[sign(ray_direction, 1)][1] - ray.position_[1]) * ray_direction[1];
+    t_y_max = (bounds_[1 - sign(ray_direction, 1)][1] - ray.position_[1]) * ray_direction[1];
 
     if ((t_min > t_y_max) || (t_y_min > t_max))
         return false;
@@ -154,8 +154,8 @@ bool Box::get_intersect(const Ray &ray) const {
         t_max = t_y_max;
 
 
-    t_z_min = (bounds_[sign(ray_direction, 2)][2] - ray.position[2]) * ray_direction[2];
-    t_z_max = (bounds_[1 - sign(ray_direction, 2)][2] - ray.position[2]) * ray_direction[2];
+    t_z_min = (bounds_[sign(ray_direction, 2)][2] - ray.position_[2]) * ray_direction[2];
+    t_z_max = (bounds_[1 - sign(ray_direction, 2)][2] - ray.position_[2]) * ray_direction[2];
 
     return !((t_min > t_z_max) || (t_z_min > t_max));
 }

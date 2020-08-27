@@ -188,7 +188,7 @@ glm::vec3
 Render::get_reflected_color(Ray const &ray, glm::vec3 const &hit_point, glm::vec3 const &hit_normal, int depth,
                             std::shared_ptr<Shape> const &shape) const {
 
-    glm::vec3 reflected_vector = get_reflected(ray.direction, hit_normal);
+    glm::vec3 reflected_vector = get_reflected(ray.direction_, hit_normal);
 
     if (shape->get_material()->roughness_ != 0.0) { // no roughness = no multiple rays to get a mat material effect
         glm::vec3 offset = {0, 0, 0};
@@ -246,14 +246,14 @@ Render::get_refracted_color(Ray const &ray, glm::vec3 const &hit_point, glm::vec
         if (depth % 2 == 0) { // Camera is in air // Normal is ok
             position = hit_point - hit_normal * 0.0001f; // small offset to not intersect the last shape
 
-            refracted_vector = get_refracted(ray.direction, hit_normal,
+            refracted_vector = get_refracted(ray.direction_, hit_normal,
                                              (1 /(
                                               shape->get_material()->refractive_index_ + aberration))); // the 1 is the refractive index of air (could be changed to any medium if we wanted)
         } else {
 
             position = hit_point + hit_normal * 0.0001f; // small offset to not intersect the last shape
 
-            refracted_vector = get_refracted(ray.direction, -hit_normal,
+            refracted_vector = get_refracted(ray.direction_, -hit_normal,
                                              ((shape->get_material()->refractive_index_ + aberration) /
                                               1)); // the 1 is the refractive index of air (could be changed to any medium if we wanted)
         }

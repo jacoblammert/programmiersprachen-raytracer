@@ -6,5 +6,5 @@
  * @param direction of the ray (will be normalized)
  */
 Ray::Ray(const glm::vec3& position, const glm::vec3& direction):
-position{position},direction{glm::normalize(direction)}
+        position_{position}, direction_{glm::normalize(direction)}
 {}
