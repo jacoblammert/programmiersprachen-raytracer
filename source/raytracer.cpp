@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-//#include <omp.h>
+#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 0; ++i) {
+    for (int i = 0; i < 20; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
@@ -147,8 +147,8 @@ int main(int argc, char *argv[]) {
 
 
 
-//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-//#pragma omp parallel for
+        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
