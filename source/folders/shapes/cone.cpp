@@ -1,29 +1,55 @@
 #include "cone.hpp"
-#include "plane.hpp"
 
 bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
 /// only for "normalized cone in origin with diameter 1 and height 1
 
+
+
+
     glm::vec3 up_vec = glm::vec3{0, 0, 1}; // random vector used for rotation
 
-    float angle_new = (float) (1-glm::dot(rotation_axis_, up_vec)) * 3.14159265359f/2.0f;
+
+    glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, rotation_axis_)); // this is a new axis we need to rotate the vector to counter the rotation axis
+    //glm::vec3 perpendicular = glm::normalize(glm::cross(rotation_axis,up_vec));
+
+    float angle_new = (float)acos(glm::dot(up_vec,rotation_axis_));// = glm::dot(rotation_axis_,up_vec);
+
+    //if (glm::dot(rotation_axis_,perpendicular) < 0){
+    //    angle_new *= -1;
+    //}
+
+    //angle_new -= 1;
+
+    //angle_new *= 3.14159265359f;
 
 
+
+    //angle_new = 3.14159265359f;
+
+
+    //float angle_new = (float) (-glm::dot(rotation_axis_, up_vec)-1);// * 3.14159265359f;
+
+    //angle_new = sin(rotation_axis_[2] * 3.14159265359f);
+
+
+    //angle_new = (float) sin(angle_new);
 
     //std::cout<< "angle in radians: " << angle_new<<std::endl;
-
-    glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, rotation_axis_));
 
 
     glm::vec3 ray_position = ray.position_ - position_;                                                               /// first translation
     ray_position = get_rotated_vec3(ray_position, rotation_axis, angle_new);                                         /// second rotation
-    ray_position = get_scaled_vec3(ray_position,  1.0f / width_,  1.0f / width_, 1.0f / height_);/// third scaling
+
+    float inverse_width = 1.0f / width_;
+    float inverse_height =  1.0f / height_;
+
+    ray_position = get_scaled_vec3(ray_position, inverse_width ,  inverse_width,inverse_height);/// third scaling
 
 
     glm::vec3 ray_direction = ray.direction_;
     ray_direction = get_rotated_vec3(ray_direction, rotation_axis, angle_new);                                        /// first rotation
-    ray_direction = get_scaled_vec3(ray_direction, 1.0f / width_,  1.0f / width_, 1.0f / height_);/// second scaling
+    ray_direction = get_scaled_vec3(ray_direction, inverse_width,  inverse_width, inverse_height);/// second scaling
     ray_direction = glm::normalize(ray_direction);                                                                    /// third normalize
 
 
@@ -72,13 +98,13 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
 
                 //hit_normal_1 = glm::normalize(cp * (glm::dot(glm::vec3 {0,0,1}, cp) / glm::dot(cp, cp)) - glm::vec3 {0,0,1});
 
-                //hit_normal_1 = cp * (cp[2] / glm::dot(cp, cp)) - glm::vec3{0, 0, 1};
+                hit_normal_1 = cp * (cp[2] / glm::dot(cp, cp));// - glm::vec3{0, 0, 1};
 
-                cp[2] = 0;
-                cp = glm::normalize(cp);
-                cp[2] = 2;
+                //cp[2] = 0;
+                //cp = glm::normalize(cp);
+                //cp[2] = 2;
 
-                hit_normal_1 = glm::normalize(cp);//glm::vec3 {0.5 * sin(cp[0]),0.5 *  cos(cp[0]),1});
+                //hit_normal_1 = glm::normalize(cp);//glm::vec3 {0.5 * sin(cp[0]),0.5 *  cos(cp[0]),1});
 
                 hit_normal_1 = get_scaled_vec3(hit_normal_1,width_, width_, height_);    /// first scaling
 

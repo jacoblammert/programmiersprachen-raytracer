@@ -17,6 +17,7 @@
 #include "folders/shapes/composite.hpp"
 #include "folders/renderer/render.hpp"
 #include "folders/shapes/cone.hpp"
+#include "folders/shapes/cylinder.hpp"
 
 //TODO add folders for saving,...
 
@@ -57,9 +58,11 @@ int main(int argc, char *argv[]) {
     }
 
 
-    //shapes.push_back(std::make_shared<Cone>(Cone{{2,0,0},{1,1,1},4,1})); /// Cone ray intersection not working correctly
+    //shapes.push_back(std::make_shared<Cone>(Cone{{2,0,-2},{1,0,0},5,1})); /// Cone ray intersection not working correctly
     //shapes[shapes.size()-1]->set_material(white);
 
+    shapes.push_back(std::make_shared<Cylinder>(Cylinder{{2,0,-2},{1,0,0},5,5})); /// Cone ray intersection not working correctly
+    shapes[shapes.size()-1]->set_material(white);
 
     //shapes.push_back(std::make_shared<Sphere>(Sphere{{2,0,0}, 1}));
     //shapes[shapes.size()-1]->set_material(white);
@@ -95,7 +98,7 @@ int main(int argc, char *argv[]) {
     Renderer renderer {image_width, image_height, filename};
 
 
-    Camera camera{{5, 5, 5}, {0, 0, -1}, image_width, image_height, 1}; // old, no fov
+    Camera camera{{-5, -5, -5}, {0, 0, -1}, image_width, image_height, 1}; // old, no fov
     //Camera camera{{5, 5, 5}, image_width, image_height, 60}; // new, with fov
 
     bool pause = false;
@@ -117,6 +120,8 @@ int main(int argc, char *argv[]) {
 
         if (!pause) {
             step += step_size;
+
+            shapes[shapes.size()-4]->set_rotation_axis({cos(step),cos(step),sin(step)});
         }
 
         //step = window.get_time() * 0.3;
@@ -135,6 +140,11 @@ int main(int argc, char *argv[]) {
         //lights[1]->color = {lights[0]->color[2],1-lights[0]->color[0],1-lights[0]->color[1]};
 
         /// The color of the light ranges from 0 to 1
+
+
+
+
+
 
 
 //        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt

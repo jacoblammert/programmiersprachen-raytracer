@@ -21,6 +21,7 @@ folders/shapes/box.cpp
 folders/shapes/triangle.cpp 
 folders/shapes/composite.cpp
 folders/shapes/cone.cpp
+folders/shapes/cylinder.cpp
 
 folders/camera/camera.cpp 
 folders/camera/ray.cpp 

@@ -1,4 +1,4 @@
-#include <cmath>
+
 #include <glm-0.9.5.3/glm/detail/type_mat3x3.hpp>
 #include <glm-0.9.5.3/glm/detail/func_matrix.inl>
 #include <iostream>
@@ -23,7 +23,7 @@ glm::vec3 Shape::get_rotated_vec3(const glm::vec3 &vec3, glm::vec3 axis, float a
     float sin_angle = std::sin(angle);
     float cos_angle = std::cos(angle);
 
-    //axis = glm::normalize(axis);
+    axis = glm::normalize(axis);
 
     glm::mat3x3 rotation_matrix = glm::mat3x3{
             axis[0] * axis[0] * (1 - cos_angle) + cos_angle           ,axis[1] * axis[0] * (1 - cos_angle) - sin_angle * axis[2] ,axis[2] * axis[0] * (1 - cos_angle) + sin_angle * axis[1],
