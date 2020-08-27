@@ -36,7 +36,7 @@ glm::vec3 Render::get_color(Ray const &ray, int depth) const {
 
     if (dist == INFINITY) { // shape has not been hit
         //TODO implement skybox or background
-        return {}; // returns black, if no shape has been hit
+        return glm::vec3 {1,1,1}; // returns black, if no shape has been hit
     }
 
 

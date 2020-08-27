@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-//#include <omp.h>
+#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 0; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
@@ -57,12 +57,12 @@ int main(int argc, char *argv[]) {
     }
 
 
-    //shapes.push_back(std::make_shared<Cone>(Cone{{1.2,0,0},{0,0,1},1,1})); /// Cone ray intersection not working correctly
-    //shapes[shapes.size()-1]->set_material(white);
-
-
-    shapes.push_back(std::make_shared<Sphere>(Sphere{{2,0,0}, 1}));
+    shapes.push_back(std::make_shared<Cone>(Cone{{2,0,0},{1,1,1},4,1})); /// Cone ray intersection not working correctly
     shapes[shapes.size()-1]->set_material(white);
+
+
+    //shapes.push_back(std::make_shared<Sphere>(Sphere{{2,0,0}, 1}));
+    //shapes[shapes.size()-1]->set_material(white);
 
     //shapes.push_back(std::make_shared<Plane>(Plane{{0, 0, -8},{0, 0, 1}}));
 
@@ -137,8 +137,8 @@ int main(int argc, char *argv[]) {
         /// The color of the light ranges from 0 to 1
 
 
-//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-//#pragma omp parallel for
+        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
