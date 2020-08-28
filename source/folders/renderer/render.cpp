@@ -13,7 +13,7 @@ Render::Render() = default;
  * @param boundingBox to get intersections with other shapes from the ray to go to all the lightsources
  * @return color consisting of brightness for that point and each light and color of the shape blended together
  */
-glm::vec3 Render::get_color(Ray const &ray, int depth) const {
+glm::vec3 Render::get_color(Ray ray, int depth) const {
 
 
 
@@ -77,15 +77,17 @@ glm::vec3 Render::get_color(Ray const &ray, int depth) const {
                     glm::vec3 newpos = hit_point + hit_normal * 0.0001f; // new position to shoot a ray from to not hit the last shape hit instantly
 
                     int samples = 1;
-                    int count = 01;
+                    int count = 1;
 
                     for (int j = 0; j < samples; ++j) {
 
-                        offset = {random_float(), random_float(), random_float()};
+                        if (lights_[i]->hardness_ < 1.0f) {
+                            offset = glm::normalize(glm::vec3{random_float(), random_float(), random_float()}) * (1.0f - lights_[i]->hardness_);
+                        }
                         if (depth < 1) {
-                            offset = glm::normalize(offset) * (1 - lights_[i]->hardness_) + hit_to_light;
+                            offset += hit_to_light;
                         } else {
-                            offset = glm::normalize(offset) * (1 - lights_[i]->hardness_) + hit_normal;
+                            offset += hit_normal;
                         }
                         /// offset is now a vec3 with a random direction and the length of roughness
 

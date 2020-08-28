@@ -98,7 +98,7 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
 
                 //hit_normal_1 = glm::normalize(cp * (glm::dot(glm::vec3 {0,0,1}, cp) / glm::dot(cp, cp)) - glm::vec3 {0,0,1});
 
-                hit_normal_1 = cp * (cp[2] / glm::dot(cp, cp));// - glm::vec3{0, 0, 1};
+                ///hit_normal_1 = cp * (cp[2] / glm::dot(cp, cp));// - glm::vec3{0, 0, 1};
 
                 //cp[2] = 0;
                 //cp = glm::normalize(cp);
@@ -106,11 +106,12 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
 
                 //hit_normal_1 = glm::normalize(cp);//glm::vec3 {0.5 * sin(cp[0]),0.5 *  cos(cp[0]),1});
 
-                hit_normal_1 = get_scaled_vec3(hit_normal_1,width_, width_, height_);    /// first scaling
+                ///hit_normal_1 = get_scaled_vec3(hit_normal_1,width_, width_, height_);    /// first scaling
 
-                hit_normal_1 = get_rotated_vec3(hit_normal_1, rotation_axis, -angle_new);/// second rotation
+                ///hit_normal_1 = get_rotated_vec3(hit_normal_1, rotation_axis, -angle_new);/// second rotation
 
-                hit_normal_1 = glm::normalize(hit_normal_1);                             /// third normalize
+                ///hit_normal_1 = glm::normalize(hit_normal_1);                             /// third normalize
+                hit_normal_1 = get_normal(hit_point_1);
             }
         }
     }
@@ -140,6 +141,24 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
 }
 
 glm::vec3 Cone::get_normal(const glm::vec3 &pos) const {
+
+
+    glm::vec3 c0 {position_[0],pos[1],position_[2]};
+    glm::vec3 c1 {position_[0], position_[1] + height_, position_[2]};
+
+    glm::vec3 v = pos - position_;
+    v.y = 0;
+    v = glm::normalize(v);
+
+    glm::vec3 n;
+    n.x = v.x * height_/(width_/2);
+    n.z = v.z * height_/(width_/2);
+    n.y = (width_/2)/height_;
+
+    return n;
+
+
+
     return glm::normalize(pos - position_);
 }
 

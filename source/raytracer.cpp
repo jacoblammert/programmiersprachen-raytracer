@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-#include <omp.h>
+//#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 0; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
@@ -58,11 +58,11 @@ int main(int argc, char *argv[]) {
     }
 
 
-    //shapes.push_back(std::make_shared<Cone>(Cone{{2,0,-2},{1,0,0},5,1})); /// Cone ray intersection not working correctly
-    //shapes[shapes.size()-1]->set_material(white);
+    //shapes.push_back(std::make_shared<Cone>(Cone{{2,0,-2},{0,0,1},5,1})); /// Cone ray intersection not working correctly
+    //shapes[shapes.size()-1]->set_material(transparent);
 
-    shapes.push_back(std::make_shared<Cylinder>(Cylinder{{2,0,-2},{1,0,0},5,5})); /// Cone ray intersection not working correctly
-    shapes[shapes.size()-1]->set_material(white);
+    //shapes.push_back(std::make_shared<Cylinder>(Cylinder{{2,0,-2},{1,0,0},5,5})); /// Cone ray intersection looking  good
+    //shapes[shapes.size()-1]->set_material(mirror);
 
     //shapes.push_back(std::make_shared<Sphere>(Sphere{{2,0,0}, 1}));
     //shapes[shapes.size()-1]->set_material(white);
@@ -140,15 +140,21 @@ int main(int argc, char *argv[]) {
         //lights[1]->color = {lights[0]->color[2],1-lights[0]->color[0],1-lights[0]->color[1]};
 
         /// The color of the light ranges from 0 to 1
+/*/
+        float dist = INFINITY;
+        glm::vec3 hit;
 
+        camera.set_depth_of_Field(0,1);
 
+        float x = image_width * 0.5f;
+        float y = image_height * 0.5f;
+        composite->get_intersect_vec(camera.generate_ray(x,y),hit,hit,dist);
 
-
-
-
-
-        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-#pragma omp parallel for
+        camera.set_depth_of_Field(0.05f,dist);
+        std::cout<<"X: " << x << " Y: "<< y << "                          Dist: " << dist<<std::endl;
+/**/
+//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+//#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
@@ -199,18 +205,20 @@ int main(int argc, char *argv[]) {
  - Composite Pattern hinzufügen, Parser erweitern
  - Kameramodell aus der Vorlesung mit fov
  - Dreieck
+ - Kegel und Zylinder hinzufügen (optional) /// funktionieren zwar, können aber nicht gedreht werden (Transparenz/ Reflektion für Kegel ist sehr langsam & nicht korrekt)
+ - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov
+
 
  nicht fertig:
  - einlesen einer Szene im SDF-Format und rendern der Szene
  - Szene hat beliebig viele Punktlichtquellen -> ja (in der Vorlesung vorgestelltes Beleuchtungsmodell) - phong shading-> fehlt noch
- - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov
  - finaler Farbwert wird berechnet und im Window angezeigt/ in der Ausgabedatei gespeichert -> framework sollte das schon können. Falls nicht, habe ich auch noch eine alte Klasse um .ppm Dateien zu speichern
- - Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions)
+ - Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions für Box (8 Punkte locRotScale -> min bzw max bekommen))
  - Kameramodell im Parser erweitern
- - Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert online suchen)
- - Kegel und Zylinder hinzufügen (optional)
-    -> Zylinder + Kegel (intersections with ray * inverted translations/ scalations/ rotations) + min max mid functions
- - Anti-Aliasing, Interpolation (optional)
+ - Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert online suchen) // ganz zum Schluss vielleicht mit chromatic aberration, depth of field, ... und Kamerafahrt, vielleicht auch ein Model von häusern oder Kunstwerken ...
+
+    -> Zylinder + Kegel (inverted translations/ rotations)
+ - Anti-Aliasing, Interpolation (optional) (mehrere Strahlen oder Interpolation der Pixel nach Berechnung der Farbwerte?)
  
 
  

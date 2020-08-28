@@ -27,15 +27,21 @@ public:
     void move(Window const& window);
     void set_direction(Window const& window);
 
+    void set_depth_of_Field(float doF_strength, float focal_length);
+
     //void translate(glm::vec3 const& position);
 
 private:
-    glm::vec3 position_;  /// could be put together with direction to generate a ray with pos/ direction
-    glm::vec3 direction_; // normalized
+    float random_float() const;
+
+    glm::vec3 position_ = glm::vec3{0,0,0};  /// could be put together with direction to generate a ray with pos/ direction
+    glm::vec3 direction_ = glm::vec3{0,0,-1}; // normalized
     int width_;  // of image
     int height_; // of image
     float distance_; // distance from cameraposition to cameraplane
     glm::vec3 up_vector_ {0, 0, 1};
+    float doF_strength_ = 0;
+    float focal_length_ = 1;
 };
 
 

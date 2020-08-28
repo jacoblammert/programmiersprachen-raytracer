@@ -14,7 +14,7 @@ class Render {
 public:
     Render();
 
-    glm::vec3 get_color(Ray const& ray, int depth) const;
+    glm::vec3 get_color(Ray ray, int depth) const;
 
     void set_composite(std::shared_ptr<Composite> const& composite1);
 
