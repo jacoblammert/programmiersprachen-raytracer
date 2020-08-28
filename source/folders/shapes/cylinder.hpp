@@ -1,13 +1,17 @@
-#ifndef RAYTRACER_CONE_HPP
-#define RAYTRACER_CONE_HPP
+//
+// Created by Jacob Lammert on 27.08.2020.
+//
+
+#ifndef RAYTRACER_CYLINDER_HPP
+#define RAYTRACER_CYLINDER_HPP
 
 
 #include "shape.hpp"
 #include <cmath>
 
-class Cone: public Shape {
+class Cylinder: public Shape {
 public:
-    Cone(const glm::vec3& position,const glm::vec3& axis,float width, float height);
+    Cylinder(const glm::vec3& position,const glm::vec3& axis,float width, float height);
 
     bool get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const override;
 
@@ -32,4 +36,6 @@ private:
     float width_;
 
 };
-#endif //RAYTRACER_CONE_HPP
+
+
+#endif //RAYTRACER_CYLINDER_HPP

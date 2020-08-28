@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-//#include <omp.h>
+#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -17,6 +17,7 @@
 #include "folders/shapes/composite.hpp"
 #include "folders/renderer/render.hpp"
 #include "folders/shapes/cone.hpp"
+#include "folders/shapes/cylinder.hpp"
 
 //TODO add folders for saving,...
 
@@ -41,7 +42,7 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
-    for (int i = 0; i < 0; ++i) {
+    for (int i = 0; i < 20; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
         float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
@@ -57,9 +58,11 @@ int main(int argc, char *argv[]) {
     }
 
 
-    //shapes.push_back(std::make_shared<Cone>(Cone{{2,0,0},{1,1,1},4,1})); /// Cone ray intersection not working correctly
+    //shapes.push_back(std::make_shared<Cone>(Cone{{2,0,-2},{1,0,0},5,1})); /// Cone ray intersection not working correctly
     //shapes[shapes.size()-1]->set_material(white);
 
+    shapes.push_back(std::make_shared<Cylinder>(Cylinder{{2,0,-2},{1,0,0},5,5})); /// Cone ray intersection not working correctly
+    shapes[shapes.size()-1]->set_material(white);
 
     //shapes.push_back(std::make_shared<Sphere>(Sphere{{2,0,0}, 1}));
     //shapes[shapes.size()-1]->set_material(white);
@@ -95,7 +98,7 @@ int main(int argc, char *argv[]) {
     Renderer renderer {image_width, image_height, filename};
 
 
-    Camera camera{{5, 5, 5}, {0, 0, -1}, image_width, image_height, 1}; // old, no fov
+    Camera camera{{-5, -5, -5}, {0, 0, -1}, image_width, image_height, 1}; // old, no fov
     //Camera camera{{5, 5, 5}, image_width, image_height, 60}; // new, with fov
 
     bool pause = false;
@@ -117,6 +120,8 @@ int main(int argc, char *argv[]) {
 
         if (!pause) {
             step += step_size;
+
+            shapes[shapes.size()-4]->set_rotation_axis({cos(step),cos(step),sin(step)});
         }
 
         //step = window.get_time() * 0.3;
@@ -137,8 +142,13 @@ int main(int argc, char *argv[]) {
         /// The color of the light ranges from 0 to 1
 
 
-//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-//#pragma omp parallel for
+
+
+
+
+
+        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
