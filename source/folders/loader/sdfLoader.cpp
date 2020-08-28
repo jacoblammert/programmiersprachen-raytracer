@@ -26,6 +26,11 @@ void SdfLoader::load_file() const { //const correctness valid?
     std::map<std::string,std::shared_ptr<Material>> material_map;
     std::map<std::string,std::shared_ptr<Light>> light_map;
     std::map<std::string,std::shared_ptr<Camera>> camera_map;
+    glm::vec3 ambient;
+    
+    std::string name_camera_render, filename;
+    int x_res, y_res;
+    
 
     while (std::getline(in_file, line_buffer)) {
         std::cout << ++line_count << line_buffer << std::endl;
@@ -67,7 +72,14 @@ void SdfLoader::load_file() const { //const correctness valid?
                     p2[2] = p2_z;
 
                     // add a box and access it later with its name from the map
+                    // set material to sphere (if its defined)
                     auto box = std::make_shared<Box>(Box{p1, p2});
+                    auto i = material_map.find(mat_name_box);
+                    if (i != material_map.end()) {
+                        box->set_material(material_map[mat_name_box]);
+                    } else {
+                        std::cout << "Please only use defined materials!" << std::endl;
+                    }
                     shape_map.emplace(std::make_pair(name_box, box));
 
                 } else if (shape_type == "sphere") {
@@ -88,6 +100,14 @@ void SdfLoader::load_file() const { //const correctness valid?
 
                     // add a sphere and access it later with its name from the map
                     auto sphere = std::make_shared<Sphere>(Sphere{center, radius});
+                    
+                    auto i = material_map.find(mat_name_sphere);
+                    if (i != material_map.end()) {
+                        sphere->set_material(material_map[mat_name_sphere]);
+                    } else {
+                        std::cout << "Please only use defined materials!" << std::endl;
+                    }
+                    
                     shape_map.emplace(std::make_pair(name_sphere, sphere));
 
                 } else if (shape_type == "composite") {
@@ -227,15 +247,8 @@ void SdfLoader::load_file() const { //const correctness valid?
             } else {
                 std::cout << "Line was not valid!" << std::endl;
             }
-        } else if ("render" == identifier) {
-            std::string name_camera, filename;
-            int x_res, y_res;
-            
-            in_sstream >> name_camera >> filename >> x_res >> y_res;
-            
         } else if ("ambient" == identifier) {
             //parse ambient attributes
-            glm::vec3 ambient;
             float ambient_x, ambient_y, ambient_z;
 
             in_sstream >> ambient_x >> ambient_y >> ambient_z;
@@ -244,6 +257,20 @@ void SdfLoader::load_file() const { //const correctness valid?
             ambient[1] = ambient_y;
             ambient[2] = ambient_z;
 
+        } else if ("render" == identifier) {
+            
+            in_sstream >> name_camera_render >> filename >> x_res >> y_res;
+            
+            Scene scene (material_map, shape_map, light_map, camera_map, ambient);
+            
+            auto i = camera_map.find(name_camera_render);
+            if (i != camera_map.end()) {
+                 scene.draw_scene(*camera_map[name_camera_render], filename, x_res, y_res);
+            } else {
+                std::cout << "Please only render scene with defined camera!" << std::endl;
+            }
+            
+            
         } else if ("#" == identifier) {
             //commentary - do nothing
         } else {

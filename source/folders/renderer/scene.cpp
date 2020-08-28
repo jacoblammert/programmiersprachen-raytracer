@@ -14,7 +14,7 @@ Scene::Scene(std::map<std::string,std::shared_ptr<Material>> material_map,
     ambient {ambient}
 {}
 
-Scene::drawScene(Camera camera, /* filename, */ int x_res, int y_res) const {
+void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res) const {
     
     //TODO calculate with given resulution
     unsigned const image_width = 1920  /* 2 */ /  2; //640
@@ -22,5 +22,5 @@ Scene::drawScene(Camera camera, /* filename, */ int x_res, int y_res) const {
     Window window{{image_width, image_height}};
     
     
-    
+    Renderer renderer {image_width, image_height, filename};
 }
