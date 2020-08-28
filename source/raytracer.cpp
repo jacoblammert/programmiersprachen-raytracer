@@ -201,9 +201,12 @@ int main(int argc, char *argv[]) {
  - Kegel und Zylinder hinzufügen (optional)
     -> Zylinder + Kegel (intersections with ray * inverted translations/ scalations/ rotations) + min max mid functions
  - Anti-Aliasing, Interpolation (optional)
+ - Material Werte/Typen anpassen auf Vorgaben
  
 
  
  Anmerkungen:
  - eventuell shared pointer als const möglich? z.B. std::shared_ptr <Shape const>
+ - const correctness der Methoden
+ - default initialisierung structs
  */
