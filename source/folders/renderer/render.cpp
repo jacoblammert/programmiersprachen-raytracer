@@ -27,7 +27,7 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
     glm::vec3 hit_point;
     glm::vec3 hit_normal;
     float dist = INFINITY;
-    std::shared_ptr<Shape> shape;
+    std::shared_ptr<Shape> shape;// = nullptr;
 
     composite_->get_intersected_shape(ray, shape, hit_point, hit_normal,
                                       dist); // TODO pass pointer instead of all the parameters

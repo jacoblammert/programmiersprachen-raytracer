@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-#include <omp.h>
+//#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -61,8 +61,8 @@ int main(int argc, char *argv[]) {
     //shapes.push_back(std::make_shared<Cone>(Cone{{2,0,-2},{1,0,0},5,1})); /// Cone ray intersection not working correctly
     //shapes[shapes.size()-1]->set_material(white);
 
-    shapes.push_back(std::make_shared<Cylinder>(Cylinder{{2,0,-2},{1,0,0},5,5})); /// Cone ray intersection not working correctly
-    shapes[shapes.size()-1]->set_material(white);
+    //shapes.push_back(std::make_shared<Cylinder>(Cylinder{{2,0,-2},{1,0,0},5,5})); /// Cone ray intersection not working correctly
+    //shapes[shapes.size()-1]->set_material(white);
 
     //shapes.push_back(std::make_shared<Sphere>(Sphere{{2,0,0}, 1}));
     //shapes[shapes.size()-1]->set_material(white);
@@ -141,24 +141,30 @@ int main(int argc, char *argv[]) {
 
         /// The color of the light ranges from 0 to 1
 /*/
-        float dist = INFINITY;
-        glm::vec3 hit;
 
+        /// Depth of field effect:
+        /// The focal point is the middle of the screen (white dot)
+
+        /// Does not work to well with close points
+
+        float dist = INFINITY;
+        glm::vec3 hit_point;
+        glm::vec3 hit_normal;
+        std::shared_ptr<Shape> shape = nullptr;
         camera.set_depth_of_Field(0,1);
 
         float x = image_width * 0.5f;
         float y = image_height * 0.5f;
-        composite->get_intersect_vec(camera.generate_ray(x,y),hit,hit,dist);
+        composite->get_intersected_shape(camera.generate_ray(x,y),shape,hit_point,hit_normal,dist);
 
-        camera.set_depth_of_Field(0.05f,dist);
-        std::cout<<"X: " << x << " Y: "<< y << "                          Dist: " << dist<<std::endl;
+        camera.set_depth_of_Field(dist,dist);
 /**/
 
 
 
 
-        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-#pragma omp parallel for
+//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+//#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
@@ -178,6 +184,14 @@ int main(int argc, char *argv[]) {
                 renderer.write(color);
             }
         }
+
+        /// Point in the middle of the screen
+        Pixel color{(unsigned int) image_width/2, (unsigned int) image_height/2};
+        color.color = {1,1,1};
+        renderer.write(color);
+
+
+
         window.show(renderer.color_buffer());
 
         std::cout << "Time: " << round((window.get_time() - start_time) * 100)/100 << " Fps: " << round(100/(window.get_time() - start_time))/100<< std::endl;

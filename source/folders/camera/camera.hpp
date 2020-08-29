@@ -28,6 +28,7 @@ public:
     void set_direction(Window const& window);
 
     void set_depth_of_Field(float doF_strength, float focal_length);
+    glm::vec3 get_position()const;
 
     //void translate(glm::vec3 const& position);
 

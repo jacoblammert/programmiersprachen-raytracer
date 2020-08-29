@@ -197,8 +197,13 @@ float Camera::random_float() const {
 
 void Camera::set_depth_of_Field(float doF_strength, float focal_length) {
 
-    doF_strength_ = doF_strength;
 
-    focal_length_ = focal_length < INFINITY? focal_length : 2;
+    doF_strength_ = focal_length < INFINITY? focal_length/1000 : 0.05f;
 
+    focal_length_ = focal_length < INFINITY? focal_length : 4;
+
+}
+
+glm::vec3 Camera::get_position()const {
+    return position_;
 }
