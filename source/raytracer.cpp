@@ -44,7 +44,9 @@ int main(int argc, char *argv[]) {
     white = std::make_shared<Material>(Material{{1,1,1},{0,1,0},{1,1,1},10.0f});
     transparent = std::make_shared<Material>(Material{{1,1,1},{1,0,0},{1,1,1},10.0f});
     mirror = std::make_shared<Material>(Material{{1,1,1},{0,0,1},{1,1,1},10.0f});
-
+    mirror->glossy_ = 1;
+    transparent->refractive_index_ = 1.36;
+    transparent->opacity_ = 1.0f;
 
     std::vector<std::shared_ptr<Shape>> shapes;
     for (int i = 0; i < 20; ++i) {
@@ -92,7 +94,7 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::shared_ptr<Light>> lights;
 
-    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, {2.0f, 2.0f, 2.0f}, 1})); //brightness vec3
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, {20.0f, 20.0f, 20.0f},1})); //brightness vec3
     //lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 11}));
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
@@ -135,8 +137,8 @@ int main(int argc, char *argv[]) {
 
         lights[0]->position_ = {0.5*std::cos(step/3), 0.25*std::sin(step/3), -3.5 + std::sin(step/3)};
         lights[0]->position_ = {3 * std::cos(3 * step), 3 * std::sin(2 * step), 7 * std::cos( 0.75 * step)};
-        lights[0]->color_ = {1 + std::cos(3 * step), 1 + std::sin(2 * step), 1 + std::cos(0.75 * step)};
-        lights[0]->color_ = lights[0]->color_ * 0.5f;
+        lights[0]->brightness_ = {1 + std::cos(3 * step), 1 + std::sin(2 * step), 1 + std::cos(0.75 * step)};
+        lights[0]->brightness_ = lights[0]->brightness_ * 10.0f;
 
         //lights[0]->color = {1,1,1};
 
@@ -234,18 +236,18 @@ int main(int argc, char *argv[]) {
  - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov
  - Material Werte/Typen anpassen auf Vorgaben
  - Szene hat beliebig viele Punktlichtquellen -> ja (in der Vorlesung vorgestelltes Beleuchtungsmodell) - phong shading-> fehlt noch
+ - finaler Farbwert wird berechnet und im Window angezeigt/ in der Ausgabedatei gespeichert -> framework sollte das schon können. Falls nicht, habe ich auch noch eine alte Klasse um .ppm Dateien zu speichern
 
  nicht fertig:
+ - Ambiente der Szene einlesen
  - einlesen einer Szene im SDF-Format und rendern der Szene
- - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov
- - finaler Farbwert wird berechnet und im Window angezeigt/ in der Ausgabedatei gespeichert -> framework sollte das schon können. Falls nicht, habe ich auch noch eine alte Klasse um .ppm Dateien zu speichern
+ - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov   (y muss oben sein)
  - Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions)
  - Kameramodell im Parser erweitern
  - Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert online suchen)
- - Kegel und Zylinder hinzufügen (optional) // nur die Standart Kegel/ Zylinder in Ursprung mit Größe 1 funktionieren
-    -> Zylinder + Kegel (inverted translations/ rotations)
+ - .ppm Dateien in Ordner speichern -> zu Animation verarbeiten
+ - Kegel und Zylinder hinzufügen (optional) // nur die Standart Kegel/ Zylinder in Ursprung mit Größe 1 funktionieren -> Zylinder + Kegel (inverted translations/ rotations)
  - Anti-Aliasing, Interpolation (optional) (mehrere Strahlen oder Interpolation der Pixel nach Berechnung der Farbwerte?)
- - Ambiente der Szene einlesen
 
  
  Anmerkungen:

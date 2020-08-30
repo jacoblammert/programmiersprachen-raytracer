@@ -42,7 +42,7 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
 
 
     float glossy = shape->get_material()->glossy_;
-    float transparency = shape->get_material()->opacity_;
+    float opacity = shape->get_material()->opacity_;
     float roughness = shape->get_material()->roughness_;
 
     glm::vec3 color_final;//{shape->get_material()->color_};
@@ -56,7 +56,7 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
     glm::vec3 reflection_color;
     glm::vec3 refraction_color;
 
-    if (depth < 3 && false) { // calculates a maximum of n reflections because depth < n
+    if (depth < 10) { // calculates a maximum of n reflections because depth < n
 
         /*** Color calculations reflection: //TODO clean up in different function ***/
         if (glossy > 0) {
@@ -73,7 +73,7 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
 
 
         /*** Colorcalculations refractions: //TODO clean up in different function ***/
-        if (transparency > 0) {
+        if (opacity > 0) {
             int refraction_samples = roughness == 0.0f ? 1 : 1 * (depth == 0) + 1;
             // max number of rays is 4, if the depth (iteration) is greater than 1, we do only have one new ray
             // 4 rays in the first iteration, only 1 in each following iteration. If the roughness is 0.0f, we do always have one new ray only
@@ -82,17 +82,18 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
                 refraction_color += get_refracted_color(ray, hit_point, hit_normal, depth,
                                                         shape);// increasing the depth is not really necessary
             }
-            refraction_color *= transparency / (float) refraction_samples;
+            refraction_color *= opacity / (float) refraction_samples;
         }
     }
 
 
     /*** Color mixing: //TODO clean up in different function (Optional) ***/
-    //color_final *= (1.0f - transparency);
+    color_final *= (1.0f - opacity);
+    color_final *= (1.0f - glossy);
 
-    //color_final += (reflection_color + refraction_color);
+    color_final += reflection_color + refraction_color;
 
-    return color_final / glm::length(glm::vec3{1 - transparency, transparency, glossy});
+    return color_final / glm::length(glm::vec3{1 - opacity, opacity, glossy});
 }
 
 /**
@@ -247,11 +248,19 @@ glm::vec3 Render::get_reflected_vec3(const glm::vec3 &vector, glm::vec3 const &n
     return normal * (float) (2.0f * fmax(glm::dot(normal, -vector), 0)) + vector;
 }
 
+/**
+ * Correct calculation for the brightness from the presentation
+ * @param ray which was tested
+ * @param hit_point of the hit
+ * @param hit_normal of the hit
+ * @param depth of the hit
+ * @param shape hit (to get the material)
+ * @return color
+ */
 glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm::vec3 hit_normal, int depth,
                                        std::shared_ptr<Shape> const &shape) const {
 
-    glm::vec3 intensity_color = //shape->get_material()->color_ambient_ *
-                                glm::vec3{0.2f, 0.2f, 0.2f}; // color_ambient * ambient color of scene
+    glm::vec3 intensity_color = shape->get_material()->color_ambient_ * glm::vec3{0.05f, 0.05f, 0.05f}; // color_ambient * ambient color of scene
     glm::vec3 specular;
     glm::vec3 diffuse;
 
@@ -271,7 +280,7 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
 
         angle = glm::dot(hit_normal, hit_to_light);
 
-        if (0 < angle && depth < 2) { // normal facing in direction of light
+        if (0 < angle && depth < 20) { // normal facing in direction of light
 
             ///Specular:
             glm::vec3 mirror_to_light = glm::normalize(get_reflected_vec3(-hit_to_light, hit_normal));
@@ -284,20 +293,19 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
             /// Diffuse:
             diffuse = shape->get_material()->color_diffuse_ * angle + specular;
 
-            intensity_color += lights_[i]->brightness_ * diffuse;
+            diffuse = lights_[i]->brightness_ * diffuse;
 
 
 
-            /*/
-            glm::vec3 light_color = (lights_[i]->color_ * (angle * lights_[i]->brightness_)) /
-                                    (light_distance * light_distance); // brightness
+            /**/
+            //glm::vec3 light_color = (diffuse * lights_[i]->color_) / (light_distance * light_distance); // brightness
 
 
             /// New Shadow calculations
             /// No. of samples = important if range != 0
 
-            glm::vec3 color;
-            glm::vec3 offset;
+            //glm::vec3 color;
+            glm::vec3 offset = glm::vec3{0,0,0};
             glm::vec3 newpos = hit_point + hit_normal * 0.0001f; // new position to shoot a ray from to not hit the last shape hit instantly
 
             int samples = 1;
@@ -308,11 +316,11 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
                 if (lights_[i]->hardness_ < 1.0f) {
                     offset = glm::normalize(glm::vec3{random_float(), random_float(), random_float()}) * (1.0f - lights_[i]->hardness_);
                 }
-                if (depth < 1) {
-                    offset += hit_to_light;
-                } else {
-                    offset += hit_normal;
-                }
+                //if (depth < 10) {
+                    offset += glm::normalize(hit_to_light) * 0.001f;
+                //} else {
+                //    offset += hit_normal;
+                //}
                 /// offset is now a vec3 with a random direction and the length of roughness
 
 
@@ -321,22 +329,28 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
                 float new_dist = INFINITY;
                 std::shared_ptr<Shape> new_shape;
 
-                composite_->get_intersected_shape({newpos, offset}, new_shape, new_hit_point,
-                                                  new_hit_normal, new_dist);
+                composite_->get_intersected_shape({newpos, offset}, new_shape, new_hit_point,new_hit_normal, new_dist);
 
-                if (INFINITY == new_dist || light_strength < new_dist) { // light is closer than anything hit
-                    count++;
-                    color += light_color;
+                if (INFINITY == new_dist || light_distance < new_dist) { // light is closer than anything hit
+                    //count++;
+                    //color += light_color;
+
+                    ///The original hit_point is in the light
+
+                    intensity_color += diffuse/(light_distance * light_distance);
+
                 }
-                if (new_dist < light_distance && depth < 4 && roughness == 0.0f) { // something in the way
-                    count++;
-                    //// newpos has changed, but we want to intersect the next object to get refraction
-                    color += get_color({newpos + new_hit_normal * 0.001f , offset}, 1 + depth);
-                }
+                //if (new_dist < light_distance && depth < 4/* && roughness == 0.0f*/) { // something in the way
+                //    count++;
+                //    //// newpos has changed, but we want to intersect the next object to get refraction
+                //    color += get_color({newpos + new_hit_normal * 0.001f , offset}, 1 + depth);
+                //}
+
+                //intensity_color += ;
             }
 
-            color /= count;
-            color_final += color;
+            //color /= count;
+            //intensity_color += color;
 
             /**/
             //}

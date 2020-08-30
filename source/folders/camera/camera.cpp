@@ -198,7 +198,7 @@ float Camera::random_float() const {
 void Camera::set_depth_of_Field(float doF_strength, float focal_length) {
 
 
-    doF_strength_ = focal_length < INFINITY? focal_length/1000 : 0.05f;
+    doF_strength_ = focal_length < INFINITY? focal_length/250 : 0.1f;
 
     focal_length_ = focal_length < INFINITY? focal_length : 4;
 
