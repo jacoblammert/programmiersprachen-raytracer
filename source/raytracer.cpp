@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-#include <omp.h>
+//#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -168,8 +168,8 @@ int main(int argc, char *argv[]) {
 
 
 
-        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-#pragma omp parallel for
+//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+//#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
@@ -232,10 +232,11 @@ int main(int argc, char *argv[]) {
  - Dreieck
  - Kegel und Zylinder hinzufügen (optional) /// funktionieren zwar, können aber nicht gedreht werden (Transparenz/ Reflektion für Kegel ist sehr langsam & nicht korrekt)
  - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov
+ - Material Werte/Typen anpassen auf Vorgaben
+ - Szene hat beliebig viele Punktlichtquellen -> ja (in der Vorlesung vorgestelltes Beleuchtungsmodell) - phong shading-> fehlt noch
 
  nicht fertig:
  - einlesen einer Szene im SDF-Format und rendern der Szene
- - Szene hat beliebig viele Punktlichtquellen -> ja (in der Vorlesung vorgestelltes Beleuchtungsmodell) - phong shading-> fehlt noch
  - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov
  - finaler Farbwert wird berechnet und im Window angezeigt/ in der Ausgabedatei gespeichert -> framework sollte das schon können. Falls nicht, habe ich auch noch eine alte Klasse um .ppm Dateien zu speichern
  - Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions)
@@ -244,7 +245,7 @@ int main(int argc, char *argv[]) {
  - Kegel und Zylinder hinzufügen (optional) // nur die Standart Kegel/ Zylinder in Ursprung mit Größe 1 funktionieren
     -> Zylinder + Kegel (inverted translations/ rotations)
  - Anti-Aliasing, Interpolation (optional) (mehrere Strahlen oder Interpolation der Pixel nach Berechnung der Farbwerte?)
- - Material Werte/Typen anpassen auf Vorgaben
+ - Ambiente der Szene einlesen
 
  
  Anmerkungen:
