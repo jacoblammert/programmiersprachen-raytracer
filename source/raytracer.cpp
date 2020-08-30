@@ -7,7 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <memory>
-//#include <omp.h>
+#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/camera/camera.hpp"
 #include "folders/shapes/sphere.hpp"
@@ -35,10 +35,15 @@ int main(int argc, char *argv[]) {
 
     Window window{{image_width, image_height}};
 
+    ///old materials:
+    std::shared_ptr<Material> white;// = std::make_shared<Material>(Material{0,0,0,1,{1,1,1}});
+    std::shared_ptr<Material> transparent;// = std::make_shared<Material>(Material{0,0,1,1.36f,{1,1,1}});
+    std::shared_ptr<Material> mirror;// = std::make_shared<Material>(Material{0,1,0,1,{1,1,1}});
 
-    std::shared_ptr<Material> white = std::make_shared<Material>(Material{0,0,0,1,{1,1,1}});
-    std::shared_ptr<Material> transparent = std::make_shared<Material>(Material{0,0,1,1.36f,{1,1,1}});
-    std::shared_ptr<Material> mirror = std::make_shared<Material>(Material{0,1,0,1,{1,1,1}});
+    ///new materials:
+    white = std::make_shared<Material>(Material{{1,1,1},{0,1,0},{1,1,1},10.0f});
+    transparent = std::make_shared<Material>(Material{{1,1,1},{1,0,0},{1,1,1},10.0f});
+    mirror = std::make_shared<Material>(Material{{1,1,1},{0,0,1},{1,1,1},10.0f});
 
 
     std::vector<std::shared_ptr<Shape>> shapes;
@@ -87,7 +92,7 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::shared_ptr<Light>> lights;
 
-    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, {20.0f, 20.0f, 20.0f}, 1})); //brightness vec3
+    lights.push_back(std::make_shared<Light>(Light{{0, 0, -5}, {1, 1, 1}, {2.0f, 2.0f, 2.0f}, 1})); //brightness vec3
     //lights.push_back(std::make_shared<Light>(Light{{0, 0, 5}, {1, 1, 1}, 11}));
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
@@ -163,8 +168,8 @@ int main(int argc, char *argv[]) {
 
 
 
-//        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
-//#pragma omp parallel for
+        omp_set_num_threads(128); //TODO falls das nicht gehen sollte, einfach diese beiden Zeilen auskommentieren + das in CMake.txt
+#pragma omp parallel for
 
         for (int i = 0; i < image_width; ++i) {
             // kein Code hier, sonnst kann es nicht parallel arbeiten
@@ -178,6 +183,8 @@ int main(int argc, char *argv[]) {
                 Pixel color{(unsigned int) i, (unsigned int) j};
 
                 glm::vec3 color_vec = render.get_color(camera.generate_ray(i, j), 0);
+
+                color_vec = color_vec/ (color_vec + glm::vec3{1,1,1});
 
                 color.color = {color_vec[0], color_vec[1], color_vec[2]};
 

@@ -1,5 +1,6 @@
 #include "render.hpp"
 
+#include <cmath>
 #include <utility>
 
 Render::Render() = default;
@@ -36,93 +37,26 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
 
     if (dist == INFINITY) { // shape has not been hit
         //TODO implement skybox or background
-        return glm::vec3 {0,0,0}; // returns black, if no shape has been hit
+        return glm::vec3{0, 0, 0}; // returns black, if no shape has been hit
     }
 
 
-    float glossy =       shape->get_material()->glossy_;
-    float transparency = shape->get_material()->transparency_;
-    float roughness =    shape->get_material()->roughness_;
+    float glossy = shape->get_material()->glossy_;
+    float transparency = shape->get_material()->opacity_;
+    float roughness = shape->get_material()->roughness_;
 
-    glm::vec3 color_final{shape->get_material()->color_};
+    glm::vec3 color_final;//{shape->get_material()->color_};
 
-    color_final = color_final * (0.03f * (1 - transparency));// ?
-
-
-    /*** Colorcalculations: //TODO clean up in different function ***/
-    if (!(transparency == 1.0f || glossy == 1.0f)) {
-        float light_strength;
-        float angle;
-        glm::vec3 hit_to_light;
-
-        for (int i = 0; i < lights_.size(); ++i) {
-            if (lights_[i]->brightness_.x > 0) { //brightness vec3!
-
-                hit_to_light = (lights_[i]->position_ - hit_point/* - hit_normal * 0.001f*/);
-                light_strength = glm::length(hit_to_light);
-                hit_to_light = glm::normalize(hit_to_light);
-
-                angle = glm::dot(hit_normal, hit_to_light);
-
-                if (0 < angle && depth < 20) { // normal facing in direction of light
-                    glm::vec3 light_color = (lights_[i]->color_ * (angle * lights_[i]->brightness_)) /
-                                            (light_strength * light_strength); // brightness
+    //color_final = color_final * (0.03f * (1 - transparency));// ?
 
 
-                    /// New Shadow calculations
-                    /// No. of samples = important if range != 0
-
-                    glm::vec3 color;
-                    glm::vec3 offset;
-                    glm::vec3 newpos = hit_point + hit_normal * 0.0001f; // new position to shoot a ray from to not hit the last shape hit instantly
-
-                    int samples = 1;
-                    int count = 1;
-
-                    for (int j = 0; j < samples; ++j) {
-
-                        if (lights_[i]->hardness_ < 1.0f) {
-                            offset = glm::normalize(glm::vec3{random_float(), random_float(), random_float()}) * (1.0f - lights_[i]->hardness_);
-                        }
-                        if (depth < 1) {
-                            offset += hit_to_light;
-                        } else {
-                            offset += hit_normal;
-                        }
-                        /// offset is now a vec3 with a random direction and the length of roughness
-
-
-                        glm::vec3 new_hit_point;
-                        glm::vec3 new_hit_normal;
-                        float new_dist = INFINITY;
-                        std::shared_ptr<Shape> new_shape;
-
-                        composite_->get_intersected_shape({newpos, offset}, new_shape, new_hit_point,
-                                                          new_hit_normal, new_dist);
-
-                        if (INFINITY == new_dist || light_strength < new_dist) { // light is closer than anything hit
-                            count++;
-                            color += light_color;
-                        }
-                        if (new_dist < light_strength/**/ && depth < 4/**/ && roughness == 0.0f) { // something in the way
-                            count++;
-                            //// newpos has changed, but we want to intersect the next object to get refraction
-                            color += get_color({newpos + new_hit_normal * 0.001f , offset}, 1 + depth);
-                        }
-                    }
-
-                    color /= count;
-                    color_final += color;
-                }
-            }
-        }
-    }
+    color_final = get_brightness_color(ray, hit_point, hit_normal, depth, shape);
 
 
     glm::vec3 reflection_color;
     glm::vec3 refraction_color;
 
-    if (depth < 3) { // calculates a maximum of n reflections because depth < n
+    if (depth < 3 && false) { // calculates a maximum of n reflections because depth < n
 
         /*** Color calculations reflection: //TODO clean up in different function ***/
         if (glossy > 0) {
@@ -154,9 +88,9 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
 
 
     /*** Color mixing: //TODO clean up in different function (Optional) ***/
-    color_final *= (1.0f - transparency);
+    //color_final *= (1.0f - transparency);
 
-    color_final += (reflection_color + refraction_color);
+    //color_final += (reflection_color + refraction_color);
 
     return color_final / glm::length(glm::vec3{1 - transparency, transparency, glossy});
 }
@@ -175,8 +109,6 @@ void Render::set_lights(std::vector<std::shared_ptr<Light>> const &lights_1) {
 }
 
 
-
-
 /**
  * Function to calculate the color of the reflected ray
  * @param ray will be reflected and sent away
@@ -190,7 +122,7 @@ glm::vec3
 Render::get_reflected_color(Ray const &ray, glm::vec3 const &hit_point, glm::vec3 const &hit_normal, int depth,
                             std::shared_ptr<Shape> const &shape) const {
 
-    glm::vec3 reflected_vector = get_reflected(ray.direction_, hit_normal);
+    glm::vec3 reflected_vector = get_reflected_vec3(ray.direction_, hit_normal);
 
     if (shape->get_material()->roughness_ != 0.0) { // no roughness = no multiple rays to get a mat material effect
         glm::vec3 offset = {0, 0, 0};
@@ -231,14 +163,14 @@ Render::get_refracted_color(Ray const &ray, glm::vec3 const &hit_point, glm::vec
     int max = 3; // for red, green and blue
     int min = 0; // start
 
-    if (depth > 1 || shape->get_material()->aberration_strength_ <= 0){
+    if (depth > 1 || shape->get_material()->aberration_strength_ <= 0) {
         min = 1; // only one color value will be calculated
         max = 2; // only one color value will be calculated
     }
 
     for (int i = min; i < max; ++i) {
 
-        float aberration = (float)i-1;
+        float aberration = (float) i - 1;
         aberration *= -shape->get_material()->aberration_strength_; // scale of the aberration
 
 
@@ -248,16 +180,17 @@ Render::get_refracted_color(Ray const &ray, glm::vec3 const &hit_point, glm::vec
         if (depth % 2 == 0) { // Camera is in air // Normal is ok
             position = hit_point - hit_normal * 0.0001f; // small offset to not intersect the last shape
 
-            refracted_vector = get_refracted(ray.direction_, hit_normal,
-                                             (1 /(
-                                              shape->get_material()->refractive_index_ + aberration))); // the 1 is the refractive index of air (could be changed to any medium if we wanted)
+            refracted_vector = get_refracted_vec3(ray.direction_, hit_normal,
+                                                  (1 / (
+                                                          shape->get_material()->refractive_index_ +
+                                                          aberration))); // the 1 is the refractive index of air (could be changed to any medium if we wanted)
         } else {
 
             position = hit_point + hit_normal * 0.0001f; // small offset to not intersect the last shape
 
-            refracted_vector = get_refracted(ray.direction_, -hit_normal,
-                                             ((shape->get_material()->refractive_index_ + aberration) /
-                                              1)); // the 1 is the refractive index of air (could be changed to any medium if we wanted)
+            refracted_vector = get_refracted_vec3(ray.direction_, -hit_normal,
+                                                  ((shape->get_material()->refractive_index_ + aberration) /
+                                                   1)); // the 1 is the refractive index of air (could be changed to any medium if we wanted)
         }
 
 
@@ -271,7 +204,7 @@ Render::get_refracted_color(Ray const &ray, glm::vec3 const &hit_point, glm::vec
 
         total_color[i] = color[i];
 
-        if (depth > 1 || shape->get_material()->aberration_strength_ == 0.0f){
+        if (depth > 1 || shape->get_material()->aberration_strength_ == 0.0f) {
             /// no chromatic aberation at all
             total_color = color;
         }
@@ -296,12 +229,12 @@ float Render::random_float() const {
  * @param n n of Material1/ n of Material2
  * @return new refracted vector
  */
-glm::vec3 Render::get_refracted(const glm::vec3 &vector, glm::vec3 const &normal, float n) const {
+glm::vec3 Render::get_refracted_vec3(const glm::vec3 &vector, glm::vec3 const &normal, float n) const {
 
-    float cos_i = -glm::dot(normal,vector);
+    float cos_i = -glm::dot(normal, vector);
     float sin_t2 = (n * n * (1.0f - (float) (cos_i * cos_i)));
-    if (sin_t2 > 1.0) return get_reflected(vector, normal);
-    return vector * n + (normal * (float)(n * cos_i - sqrt(1.0 - sin_t2)));
+    if (sin_t2 > 1.0) return get_reflected_vec3(vector, normal);
+    return vector * n + (normal * (float) (n * cos_i - sqrt(1.0 - sin_t2)));
 }
 
 /**
@@ -310,7 +243,106 @@ glm::vec3 Render::get_refracted(const glm::vec3 &vector, glm::vec3 const &normal
  * @param normal vector to be reflected of
  * @return reflected vector (not normalized)
  */
-glm::vec3 Render::get_reflected(const glm::vec3 &vector, glm::vec3 const &normal) const {
-    return normal * (float)(2.0f * fmax(glm::dot(normal, -vector), 0)) + vector;
+glm::vec3 Render::get_reflected_vec3(const glm::vec3 &vector, glm::vec3 const &normal) const {
+    return normal * (float) (2.0f * fmax(glm::dot(normal, -vector), 0)) + vector;
+}
+
+glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm::vec3 hit_normal, int depth,
+                                       std::shared_ptr<Shape> const &shape) const {
+
+    glm::vec3 intensity_color = //shape->get_material()->color_ambient_ *
+                                glm::vec3{0.2f, 0.2f, 0.2f}; // color_ambient * ambient color of scene
+    glm::vec3 specular;
+    glm::vec3 diffuse;
+
+
+    //if (!(transparency == 1.0f || glossy == 1.0f)) {
+    float light_distance;
+    float angle;
+    glm::vec3 hit_to_light;
+
+    for (int i = 0; i < lights_.size(); ++i) {
+        //if (lights_[i]->brightness_.x > 0) { //brightness vec3!
+
+        hit_to_light = (lights_[i]->position_ - hit_point);
+
+        light_distance = glm::length(hit_to_light);
+        hit_to_light = glm::normalize(hit_to_light);
+
+        angle = glm::dot(hit_normal, hit_to_light);
+
+        if (0 < angle && depth < 2) { // normal facing in direction of light
+
+            ///Specular:
+            glm::vec3 mirror_to_light = glm::normalize(get_reflected_vec3(-hit_to_light, hit_normal));
+            float stength_specular = glm::dot(-ray.direction_, mirror_to_light);
+            stength_specular = (float) std::pow(stength_specular, shape->get_material()->reflective_exponent_);
+
+            specular = shape->get_material()->color_specular_ * stength_specular;
+
+
+            /// Diffuse:
+            diffuse = shape->get_material()->color_diffuse_ * angle + specular;
+
+            intensity_color += lights_[i]->brightness_ * diffuse;
+
+
+
+            /*/
+            glm::vec3 light_color = (lights_[i]->color_ * (angle * lights_[i]->brightness_)) /
+                                    (light_distance * light_distance); // brightness
+
+
+            /// New Shadow calculations
+            /// No. of samples = important if range != 0
+
+            glm::vec3 color;
+            glm::vec3 offset;
+            glm::vec3 newpos = hit_point + hit_normal * 0.0001f; // new position to shoot a ray from to not hit the last shape hit instantly
+
+            int samples = 1;
+            int count = 1;
+
+            for (int j = 0; j < samples; ++j) {
+
+                if (lights_[i]->hardness_ < 1.0f) {
+                    offset = glm::normalize(glm::vec3{random_float(), random_float(), random_float()}) * (1.0f - lights_[i]->hardness_);
+                }
+                if (depth < 1) {
+                    offset += hit_to_light;
+                } else {
+                    offset += hit_normal;
+                }
+                /// offset is now a vec3 with a random direction and the length of roughness
+
+
+                glm::vec3 new_hit_point;
+                glm::vec3 new_hit_normal;
+                float new_dist = INFINITY;
+                std::shared_ptr<Shape> new_shape;
+
+                composite_->get_intersected_shape({newpos, offset}, new_shape, new_hit_point,
+                                                  new_hit_normal, new_dist);
+
+                if (INFINITY == new_dist || light_strength < new_dist) { // light is closer than anything hit
+                    count++;
+                    color += light_color;
+                }
+                if (new_dist < light_distance && depth < 4 && roughness == 0.0f) { // something in the way
+                    count++;
+                    //// newpos has changed, but we want to intersect the next object to get refraction
+                    color += get_color({newpos + new_hit_normal * 0.001f , offset}, 1 + depth);
+                }
+            }
+
+            color /= count;
+            color_final += color;
+
+            /**/
+            //}
+        }
+        //}
+    }
+    return intensity_color;
 }
 

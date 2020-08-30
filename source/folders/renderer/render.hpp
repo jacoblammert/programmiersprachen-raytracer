@@ -23,15 +23,17 @@ public:
 
 private:
 
-    glm::vec3 get_refracted_color(Ray const& ray, glm::vec3 const& HitPoint, glm::vec3 const& hit_normal, int depth, std::shared_ptr<Shape> const& shape) const;
+    glm::vec3 get_brightness_color(Ray const& ray,glm::vec3 hit_point, glm::vec3 hit_normal, int depth,std::shared_ptr<Shape> const& shape)const;
+
+    glm::vec3 get_refracted_color(Ray const& ray, glm::vec3 const& hit_point, glm::vec3 const& hit_normal, int depth, std::shared_ptr<Shape> const& shape) const;
 
     glm::vec3 get_reflected_color(Ray const& ray, glm::vec3 const& hit_point, glm::vec3 const& hit_normal, int depth, std::shared_ptr<Shape> const& shape) const;
 
     float random_float() const;
 
-    glm::vec3 get_refracted(const glm::vec3& vector, glm::vec3 const& normal, float n) const;
+    glm::vec3 get_refracted_vec3(const glm::vec3& vector, glm::vec3 const& normal, float n) const;
 
-    glm::vec3 get_reflected(const glm::vec3& vector, glm::vec3 const& normal) const;
+    glm::vec3 get_reflected_vec3(const glm::vec3& vector, glm::vec3 const& normal) const;
 
     std::shared_ptr<Composite> composite_;
     std::vector<std::shared_ptr<Light>> lights_;
