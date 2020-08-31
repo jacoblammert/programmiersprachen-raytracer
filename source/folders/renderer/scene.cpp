@@ -20,19 +20,19 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
 
     unsigned const image_width = x_res;
     unsigned const image_height = y_res;
-    
+
     Window window {{image_width, image_height}};
-    
+
     PpmWriter ppm_writer (x_res, y_res, filename);
-    
+
     //TODO use given composite - besserer Weg möglich als maps zu vector? -> composite aus sdfLoader übernehmen
-    
+
     std::vector<std::shared_ptr<Shape>> shapes;
 
     for (auto it = shape_map.begin(); it != shape_map.end(); it++) {
-        //shapes.push_back(it->second);
+        shapes.push_back(it->second);
     }
-/**/
+/*/
 ///Zufällige shapes funktionieren, die Eingelesenen sind viel größer!! (100 mal ca.)und haben bei mir zumindest noch nicht ganz funktioniert
     for (int i = 0; i < 30; ++i) {
         float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
@@ -50,15 +50,15 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
             shapes[i]->set_material(white);
         }
     }/**/
-    
+
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
-    
+
     std::vector<std::shared_ptr<Light>> lights;
-    
+
     for (auto it = light_map.begin(); it != light_map.end(); it++) {
          lights.push_back(it->second);
      }
-    
+
     Renderer renderer {image_width, image_height, filename};
     camera.set_width_hight((int)image_width,(int)image_height);
 
@@ -72,7 +72,6 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
             if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
                 window.close();
             }
-
             camera.set_direction(window);
          camera.move(window);
 
@@ -97,7 +96,7 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
                     color.color = {color_vec[0], color_vec[1], color_vec[2]};
 
                     renderer.write(color);
-                
+
                     ppm_writer.write (color);
                 }
             }
