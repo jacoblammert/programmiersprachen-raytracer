@@ -1,6 +1,3 @@
-#include <omp.h>
-
-#include <utility>
 #include "scene.hpp"
 
 Scene::Scene(std::shared_ptr<Composite> composite,
@@ -47,7 +44,7 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
 
         float start_time = window.get_time();
 
-//        omp_set_num_threads(128);//ich brauche das, damit es für mich schneller ist, schade, dass es bei dir nicht geht
+//        omp_set_num_threads(128);
 //#pragma omp parallel for
         for (int i = 0; i < image_width; ++i) {
             for (int j = 0; j < image_height; ++j) {
