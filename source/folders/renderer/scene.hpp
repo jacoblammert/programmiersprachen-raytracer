@@ -20,7 +20,7 @@ public:
     Scene(std::shared_ptr<Composite> composite,
           std::map<std::string,std::shared_ptr<Light>> light_map,
           std::map<std::string,std::shared_ptr<Camera>> camera_map,
-          glm::vec3 ambient);
+          const glm::vec3& ambient);
     
     void draw_scene(Camera camera, std::string filename, unsigned int x_res, unsigned int y_res) const;
     

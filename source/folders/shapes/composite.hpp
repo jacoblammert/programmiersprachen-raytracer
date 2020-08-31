@@ -63,7 +63,7 @@ private:
     glm::vec3 max_x_y_z_;
     int depth_;
     Box box_;
-    std::vector<Composite> boxes_; // TODO change from vector to two seperate objects
+    std::vector<Composite> boxes_;
     std::vector<std::shared_ptr<Shape>> shapes_;
 };
 

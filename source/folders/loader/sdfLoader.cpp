@@ -19,7 +19,7 @@ void SdfLoader::load_file() const { //const correctness valid?
     std::string identifier;
 
 
-    std::shared_ptr<Composite> composite; /// all possiblt compositepointer  TODO turn to smartpointer
+    std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{0}); /// all possiblt compositepointer  TODO turn to smartpointer
     std::map<std::string,std::shared_ptr<Shape>> shape_map; /// map with all the shapes accessible with their names
     
     
@@ -120,24 +120,22 @@ void SdfLoader::load_file() const { //const correctness valid?
 
                     std::cout << "Composite: " << composite_name<< std::endl;
 
-                    // new composite to be added
-                    //auto composite = std::make_shared<Composite>(Composite{});
+                    std::vector<std::shared_ptr<Shape>> composite_shapes;
 
                     while (!in_sstream.eof()) {
                         in_sstream >> param;
-                        std::cout<<"Param: " <<param<< std::endl;
-                        //composites.push_back(param);
-                        //count++;
-                        if (shape_map.find(param) == shape_map.end()) {
-                            std::cout<< "Outside: " << param<< std::endl;
-                        } else{
-                            std::cout<< "Inside: " << param<< std::endl;
-                            composite->add_shape(shape_map[param]); //TODO find error right here
+                        //std::cout<<"Param: " <<param<< std::endl;
+                        if (shape_map.find(param) != shape_map.end()) {
+                            composite_shapes.push_back(shape_map[param]);
                         }
                     }
 
+                    composite->add_shapes(composite_shapes);
+                    //std::cout<< "Shapes loaded"<< std::endl;
+
                     // all the shapes have now been added to this single composite object, therefore we can build it now
                     composite->build();
+                        //std::cout<< "composite build"<< std::endl;
 
                     // we will later test every ray against every composite object inside of this single vector
                     //composite->add_shape()push_back(composite);

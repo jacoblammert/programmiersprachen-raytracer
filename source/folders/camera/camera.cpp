@@ -4,7 +4,7 @@
 
 Camera::Camera(float fov_x) :
         position_{0.0f, 0.0f, 0.0f},
-        direction_{glm::vec3{0, 0, -1}},
+        direction_{glm::vec3{0.0000001, 0.00000001, -1}},
         width_{1},
         height_{1}, //TODO Berechnen durch fov in y Richtung
         distance_{fov_x}// from presentation
@@ -183,7 +183,8 @@ void Camera::set_direction(Window const &window) {
         x *= (1 - abs(z));
         y *= (1 - abs(z));
 
-        this->direction_ = glm::normalize(glm::vec3{x, y, z});
+        this->direction_ = glm::normalize(glm::vec3{x, z, -y});
+        std::cout<<direction_[0]<< " " <<direction_[1]<< " " <<direction_[2]<<std::endl;
     }
 }
 

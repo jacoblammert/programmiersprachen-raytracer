@@ -37,11 +37,11 @@ private:
     float random_float() const;
 
     glm::vec3 position_ = glm::vec3{0,0,0};  /// could be put together with direction to generate a ray with pos/ direction
-    glm::vec3 direction_ = glm::vec3{0,0,-1}; // normalized
+    glm::vec3 direction_ = glm::vec3{0,0,-1}; // normalized  // change upvec then change 0.000001, 0.000001 back to 0,0 because cross does not work, if the area is zero
     int width_;  // of image
     int height_; // of image
     float distance_; // distance from cameraposition to cameraplane
-    glm::vec3 up_vector_ {0, 0, 1};
+    glm::vec3 up_vector_ {0,1, 0};
     float doF_strength_ = 0;
     float focal_length_ = 1;
 };

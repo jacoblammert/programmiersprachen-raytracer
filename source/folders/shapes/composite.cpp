@@ -12,8 +12,7 @@ Composite::Composite() {
  * @param depth must be incremented, shapes will most likely be added after this constructor is called
  */
 Composite::Composite(int depth) :
-    depth_ {++depth}
-{}
+        depth_{++depth} {}
 
 
 /**
@@ -21,15 +20,15 @@ Composite::Composite(int depth) :
  * @param shapes
  * @param depth
  */
-Composite::Composite(std::vector<std::shared_ptr<Shape>> const& shapes) :
+Composite::Composite(std::vector<std::shared_ptr<Shape>> const &shapes) :
 
-    shapes_ {std::move(shapes)} {
-        set_min_max_mid();
+        shapes_{std::move(shapes)} {
+    set_min_max_mid();
 
-        if (!this->shapes_.empty()) {
-            split(); // it is not an endless loop
-        }
-            
+    if (!this->shapes_.empty()) {
+        split(); // it is not an endless loop
+    }
+
 }
 
 
@@ -60,7 +59,8 @@ bool Composite::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec
  * @param hit boolean, false, if no shape has been intersected
  */
 void
-Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> & shape, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) {
+Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> &shape, glm::vec3 &hit_point,
+                                 glm::vec3 &hit_normal, float &distance) {
 
     for (auto &box : boxes_) {
         if (box.box_.get_intersect(ray)) {
@@ -126,15 +126,15 @@ void Composite::translate(const glm::vec3 &position) {
 * @return material of the box
 */
 std::shared_ptr<Material> Composite::get_material() {
-    std::shared_ptr <Material> material_;
+    std::shared_ptr<Material> material_;
     return material_;
 }
 
 /**
 * @param material is given to box
 */
-void Composite::set_material(std::shared_ptr<Material> const& material) {
-   //
+void Composite::set_material(std::shared_ptr<Material> const &material) {
+    //
 }
 
 
@@ -143,22 +143,12 @@ void Composite::set_material(std::shared_ptr<Material> const& material) {
  * comments
  */
 void Composite::print() const {
-/*
-       std::cout << std::endl << "Depth: " << this->depth << std::endl;
-    std::cout << "Size: " << shapes.size() << std::endl;
-    std::cout << "MinX: " << minXminYminZ.get(0) << " MinY: " << minXminYminZ.get(1) << " MinZ: " << minXminYminZ.get(2)
-              << std::endl;
-    std::cout << "MaxX: " << maxXmaxYmaxZ.get(0) << " MaxY: " << maxXmaxYmaxZ.get(1) << " MaxZ: " << maxXmaxYmaxZ.get(2)
-              << std::endl;
-    std::cout << "MidX: " << median.get(0) << " MidY: " << median.get(1) << " MidZ: " << median.get(2) << std::endl
-              << std::endl;
-    if (depthToPrint > 0) {
-        depthToPrint--;
-        for (auto &boxe : boxes) {
-            boxe.print(depthToPrint);
-        }
+    std::cout << std::endl << "Depth: " << depth_ << std::endl;
+    std::cout << "Size: " << shapes_.size() << std::endl;
+
+    for (auto &boxe : boxes_) {
+        boxe.print();
     }
-  */
 }
 
 /**
@@ -178,15 +168,22 @@ void Composite::build() {
  * Adds a Shape pointer to the Compositeobject usefull, if the object has not been build yet
  * @param shape pointer
  */
-void Composite::add_shape(const std::shared_ptr<Shape>& shape) {
+void Composite::add_shape(const std::shared_ptr<Shape> &shape) {
+    std::cout << "hi" << std::endl;
+    //auto pointer =
+    if (shapes_.empty()) {
+        //shapes_ =
+    }
     shapes_.push_back(shape);
+    std::cout << "NANA" << std::endl;
 }
+
 /**
  * Adds a vector with Shape pointers to the Compositeobject usefull, if the object has not been build yet
  * @param shapes  = vector with Shape pointers
  */
-void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> const& new_shapes) {
-    this->shapes_.insert(this->shapes_.end(),new_shapes.begin(),new_shapes.end());
+void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> const &new_shapes) {
+    this->shapes_.insert(this->shapes_.end(), new_shapes.begin(), new_shapes.end());
 }
 
 /**
@@ -194,9 +191,9 @@ void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> const& new_shapes
  */
 void Composite::set_min_max_mid() {
     min_x_y_z_ = glm::vec3(INFINITY, INFINITY,
-                             INFINITY); // need to be set to opposite values to get the correct ones for all the shapes inside this box
+                           INFINITY); // need to be set to opposite values to get the correct ones for all the shapes inside this box
     max_x_y_z_ = glm::vec3(-INFINITY, -INFINITY,
-                             -INFINITY); // need to be set to opposite values to get the correct ones for all the shapes inside this box
+                           -INFINITY); // need to be set to opposite values to get the correct ones for all the shapes inside this box
 
     position_ = glm::vec3();
 
@@ -270,7 +267,7 @@ void Composite::split() {
  * and sets the corresponding value to the newer, smaller one
  * @param shapemin vec3
  */
-void Composite::get_min(glm::vec3 const& shape_min) {
+void Composite::get_min(glm::vec3 const &shape_min) {
     for (int i = 0; i < 3; ++i) {
         if (min_x_y_z_[i] > shape_min[i]) {
             min_x_y_z_[i] = shape_min[i];
@@ -283,7 +280,7 @@ void Composite::get_min(glm::vec3 const& shape_min) {
  * and sets the corresponding value to the newer, larger one
  * @param shapemax vec3
  */
-void Composite::get_max(glm::vec3 const& shape_max) {
+void Composite::get_max(glm::vec3 const &shape_max) {
     for (int i = 0; i < 3; ++i) {
         if (max_x_y_z_[i] < shape_max[i]) {
             max_x_y_z_[i] = shape_max[i];
