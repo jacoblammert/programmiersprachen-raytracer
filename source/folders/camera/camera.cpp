@@ -207,3 +207,8 @@ void Camera::set_depth_of_Field(float doF_strength, float focal_length) {
 glm::vec3 Camera::get_position()const {
     return position_;
 }
+
+void Camera::set_width_hight(int width, int height) {
+    width_ = width;
+    height_ = height;
+}

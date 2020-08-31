@@ -1,6 +1,7 @@
 #include "scene.hpp"
-
+#include <omp.h>
 #include <iostream>
+#include "../shapes/sphere.hpp"
 
 Scene::Scene(//std::map<std::string,std::shared_ptr<Material>> material_map,
              std::map<std::string,std::shared_ptr<Shape>> shape_map,
@@ -16,10 +17,7 @@ Scene::Scene(//std::map<std::string,std::shared_ptr<Material>> material_map,
 {}
 
 void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res) const {
-    
-    //TODO calculate with given resulution
-    //unsigned const image_width = 1920  /* 2 */ /  2; //640
-    //unsigned const image_height = 1080 /* 2 */ / 2; //360
+
     unsigned const image_width = x_res;
     unsigned const image_height = y_res;
     
@@ -27,13 +25,31 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
     
     PpmWriter ppm_writer (x_res, y_res, filename);
     
-    //TODO use given composite - besserer Weg möglich als maps zu vector?
+    //TODO use given composite - besserer Weg möglich als maps zu vector? -> composite aus sdfLoader übernehmen
     
     std::vector<std::shared_ptr<Shape>> shapes;
-    
+
     for (auto it = shape_map.begin(); it != shape_map.end(); it++) {
-        shapes.push_back(it->second);
+        //shapes.push_back(it->second);
     }
+/**/
+///Zufällige shapes funktionieren, die Eingelesenen sind viel größer!! (100 mal ca.)und haben bei mir zumindest noch nicht ganz funktioniert
+    for (int i = 0; i < 30; ++i) {
+        float x = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
+        float y = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
+        float z = ((float) (rand() % 10000) / 5000) - 1; // number between -1 and 1
+        glm::vec3 position{x, y, z};
+        position *= 50;
+
+        auto white = std::make_shared<Material>(Material{{1,1,1},{0,1,0},{1,1,1},10.0f});
+        if (i % 2 == 1) {
+            shapes.push_back(std::make_shared<Sphere>(Sphere{position, 5.12636125}));
+            shapes[i]->set_material(white);
+        } else {
+            shapes.push_back(std::make_shared<Box>( Box{position, 2.5f, 2.5f, 2.5f}));
+            shapes[i]->set_material(white);
+        }
+    }/**/
     
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
     
@@ -44,21 +60,31 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
      }
     
     Renderer renderer {image_width, image_height, filename};
-    
-    
+    camera.set_width_hight((int)image_width,(int)image_height);
+
+
+    Render render;
+    render.set_composite(composite);
+    render.set_lights(lights);
+
+
      while (!window.should_close()) {
             if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
                 window.close();
             }
 
             camera.set_direction(window);
+         camera.move(window);
+
+         float start_time = window.get_time();
+
+
+//        omp_set_num_threads(128); //TODO versuch bitte nochmal omp zum laufen zu bringen, damit kann es viel schneller die Bilder anzeigen und es ist weniger frustrierend auf die neuen Ergebnisse zu warten
+//#pragma omp parallel for
 
             for (int i = 0; i < image_width; ++i) {
                 // kein Code hier, sonnst kann es nicht parallel arbeiten
 
-                Render render;
-                render.set_composite(composite);
-                render.set_lights(lights);
 
             for (int j = 0; j < image_height; ++j) {
 
@@ -77,6 +103,7 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
             }
 
             window.show(renderer.color_buffer());
+         std::cout << "Time: " << round((window.get_time() - start_time) * 100)/100 << " Fps: " << round(100/(window.get_time() - start_time))/100<< std::endl;
     }
     ppm_writer.save(filename);
 }

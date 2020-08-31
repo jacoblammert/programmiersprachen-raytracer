@@ -20,6 +20,7 @@ public:
 
     Ray generate_ray(int x, int y) const;
     void set_position(glm::vec3 const& pos);
+    void set_width_hight(int width, int height);
     void translate(glm::vec3 const& pos);
     void look_at(glm::vec3 const& pos);
     void print() const;
