@@ -19,7 +19,7 @@ void SdfLoader::load_file() const { //const correctness valid?
     std::string identifier;
 
 
-    std::vector<std::shared_ptr<Composite>> composite_vec; /// all possiblt compositepointer  TODO turn to smartpointer
+    std::shared_ptr<Composite> composite; /// all possiblt compositepointer  TODO turn to smartpointer
     std::map<std::string,std::shared_ptr<Shape>> shape_map; /// map with all the shapes accessible with their names
     
     
@@ -112,30 +112,35 @@ void SdfLoader::load_file() const { //const correctness valid?
 
                 } else if (shape_type == "composite") {
                     //parse composite attributes
-                    int count = 0;
+                    //int count = 0;
                     std::string composite_name, param;
-                    std::vector <std::string> composites; //notwendig?
+                    //std::vector <std::string> composites; //notwendig?
 
                     in_sstream >> composite_name;
 
-                    std::cout << "Composite: " << std::endl;
+                    std::cout << "Composite: " << composite_name<< std::endl;
 
                     // new composite to be added
-                    auto composite = std::make_shared<Composite>(Composite{});
+                    //auto composite = std::make_shared<Composite>(Composite{});
 
                     while (!in_sstream.eof()) {
                         in_sstream >> param;
-                        composites.push_back(param);
-                        count++;
-
-                        composite->add_shape(shape_map[param]);
+                        std::cout<<"Param: " <<param<< std::endl;
+                        //composites.push_back(param);
+                        //count++;
+                        if (shape_map.find(param) == shape_map.end()) {
+                            std::cout<< "Outside: " << param<< std::endl;
+                        } else{
+                            std::cout<< "Inside: " << param<< std::endl;
+                            composite->add_shape(shape_map[param]); //TODO find error right here
+                        }
                     }
 
                     // all the shapes have now been added to this single composite object, therefore we can build it now
                     composite->build();
 
                     // we will later test every ray against every composite object inside of this single vector
-                    composite_vec.push_back(composite);
+                    //composite->add_shape()push_back(composite);
 
                     // even shapes which are not inside a composite object might later be added to a new composite object to make the intersection tests faster
                 }
@@ -265,7 +270,7 @@ void SdfLoader::load_file() const { //const correctness valid?
             in_sstream >> name_camera_render >> filename >> x_res >> y_res;
             
             //create scene with root of composite tree
-            Scene scene (composite_vec[0], light_map, camera_map, ambient);
+            Scene scene (composite, light_map, camera_map, ambient);
             
             auto i = camera_map.find(name_camera_render);
             if (i != camera_map.end()) {
