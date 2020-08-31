@@ -14,13 +14,13 @@
 class Scene {
     
 public:
-    Scene(std::map<std::string,std::shared_ptr<Material>> material_map,          std::map<std::string,std::shared_ptr<Shape>> shape_map, std::map<std::string,std::shared_ptr<Light>> light_map, std::map<std::string,std::shared_ptr<Camera>> camera_map,
+    Scene(/*std::map<std::string,std::shared_ptr<Material>> material_map,*/          std::map<std::string,std::shared_ptr<Shape>> shape_map, std::map<std::string,std::shared_ptr<Light>> light_map, std::map<std::string,std::shared_ptr<Camera>> camera_map,
         glm::vec3 ambient);
     
     void draw_scene(Camera camera, std::string filename, int x_res, int y_res) const;
     
 private:
-    std::map<std::string,std::shared_ptr<Material>> material_map;
+    //std::map<std::string,std::shared_ptr<Material>> material_map;
     std::map<std::string,std::shared_ptr<Shape>> shape_map;
     std::map<std::string,std::shared_ptr<Light>> light_map;
     std::map<std::string,std::shared_ptr<Camera>> camera_map;

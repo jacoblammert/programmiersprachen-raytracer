@@ -33,7 +33,7 @@ void SdfLoader::load_file() const { //const correctness valid?
     
 
     while (std::getline(in_file, line_buffer)) {
-        std::cout << ++line_count << line_buffer << std::endl;
+        std::cout /*<< ++line_count*/ << line_buffer << std::endl;
 
         //construct stringstream using line_buffer string
         std::istringstream in_sstream(line_buffer);
@@ -147,9 +147,9 @@ void SdfLoader::load_file() const { //const correctness valid?
                 float ks_red, ks_green, ks_blue;
                 float m;
                 
-                std::vector <float> ka;
-                std::vector <float> kd;
-                std::vector <float> ks;
+                glm::vec3 ka;
+                glm::vec3 kd;
+                glm::vec3 ks;
 
                 in_sstream >> material_name;
                 in_sstream >> ka_red >> ka_green >> ka_blue; //abmient reflection
@@ -157,18 +157,21 @@ void SdfLoader::load_file() const { //const correctness valid?
                 in_sstream >> ks_red >> ks_green >> ks_blue; //reflecting reflection
                 in_sstream >> m; //exponent for reflecting reflection
                 
+                
                 ka[0] = ka_red;
                 ka[1] = ka_green;
                 ka[2] = ka_blue;
                 
-                kd[0] = ka_red;
-                kd[1] = ka_green;
-                kd[2] = ka_blue;
+                kd[0] = kd_red;
+                kd[1] = kd_green;
+                kd[2] = kd_blue;
                 
-                kd[0] = ka_red;
-                kd[1] = ka_green;
-                kd[2] = ka_blue;
+                ks[0] = ks_red;
+                ks[1] = ks_green;
+                ks[2] = ks_blue;
 
+                
+                
                 auto material = std::make_shared<Material> (Material{0,0,0,1,{1,1,1}}); //TODO Werte übernehmen
                 material_map.emplace(std::make_pair(material_name, material));
                 
@@ -261,7 +264,7 @@ void SdfLoader::load_file() const { //const correctness valid?
             
             in_sstream >> name_camera_render >> filename >> x_res >> y_res;
             
-            Scene scene (material_map, shape_map, light_map, camera_map, ambient);
+            Scene scene (shape_map, light_map, camera_map, ambient);
             
             auto i = camera_map.find(name_camera_render);
             if (i != camera_map.end()) {

@@ -25,14 +25,13 @@
 int main(int argc, char *argv[]) {
 
     SdfLoader loader{"../../source/folders/sdfFiles/start.sdf"};
-    //loader.load_file();
+    loader.load_file();
 
-
-    unsigned const image_width = 1920  /* 2 */ /  2; //640
-    unsigned const image_height = 1080 /* 2 */ / 2;//360
-    std::string const filename = "./checkerboard.ppm";
-
-
+    
+    //unsigned const image_width = 1920  /* 2 */ /  2; //640
+    //unsigned const image_height = 1080 /* 2 */ / 2;//360
+    //std::string const filename = "./checkerboard.ppm";
+/*
     Window window{{image_width, image_height}};
 
     ///old materials:
@@ -147,7 +146,7 @@ int main(int argc, char *argv[]) {
         //lights[1]->color = {lights[0]->color[2],1-lights[0]->color[0],1-lights[0]->color[1]};
 
         /// The color of the light ranges from 0 to 1
-/*/
+/
 
         /// Depth of field effect:
         /// The focal point is the middle of the screen (white dot)
@@ -165,7 +164,7 @@ int main(int argc, char *argv[]) {
         composite->get_intersected_shape(camera.generate_ray(x,y),shape,hit_point,hit_normal,dist);
 
         camera.set_depth_of_Field(dist,dist);
-/**/
+/*
 
 
 
@@ -204,7 +203,7 @@ int main(int argc, char *argv[]) {
         window.show(renderer.color_buffer());
 
         std::cout << "Time: " << round((window.get_time() - start_time) * 100)/100 << " Fps: " << round(100/(window.get_time() - start_time))/100<< std::endl;
-    }
+    }*/
 
     return 0;
 }
