@@ -4,6 +4,7 @@
 #include <map>
 
 #include <renderer.hpp>
+#include <ppmwriter.hpp>
 #include <window.hpp>
 #include "../shapes/shape.hpp"
 #include "../shapes/material.hpp"

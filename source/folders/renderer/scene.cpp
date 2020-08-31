@@ -1,5 +1,6 @@
 #include "scene.hpp"
 
+#include <iostream>
 
 Scene::Scene(//std::map<std::string,std::shared_ptr<Material>> material_map,
              std::map<std::string,std::shared_ptr<Shape>> shape_map,
@@ -17,9 +18,14 @@ Scene::Scene(//std::map<std::string,std::shared_ptr<Material>> material_map,
 void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res) const {
     
     //TODO calculate with given resulution
-    unsigned const image_width = 1920  /* 2 */ /  2; //640
-    unsigned const image_height = 1080 /* 2 */ / 2; //360
+    //unsigned const image_width = 1920  /* 2 */ /  2; //640
+    //unsigned const image_height = 1080 /* 2 */ / 2; //360
+    unsigned const image_width = x_res;
+    unsigned const image_height = y_res;
+    
     Window window {{image_width, image_height}};
+    
+    PpmWriter ppm_writer (x_res, y_res, filename);
     
     //TODO use given composite - besserer Weg möglich als maps zu vector?
     
@@ -65,17 +71,12 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
                     color.color = {color_vec[0], color_vec[1], color_vec[2]};
 
                     renderer.write(color);
+                
+                    ppm_writer.write (color);
                 }
             }
 
-            /// Point in the middle of the screen
-            Pixel color{(unsigned int) image_width/2, (unsigned int) image_height/2};
-            color.color = {1,1,1};
-            renderer.write(color);
-
-
-
             window.show(renderer.color_buffer());
-
     }
+    ppm_writer.save(filename);
 }

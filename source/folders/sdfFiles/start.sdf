@@ -21,4 +21,4 @@ define camera eye 60.0
 transform eye rotate -45 0 1 0
 transform eye translate 100 0 100
 # ... and go
-render eye image .ppm 480 320
+render eye image.ppm 480 320
