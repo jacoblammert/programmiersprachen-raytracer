@@ -109,6 +109,10 @@ void Render::set_lights(std::vector<std::shared_ptr<Light>> const &lights_1) {
     this->lights_ = lights_1;
 }
 
+void Render::set_ambient_scene (glm::vec3 const& ambient) {
+    this->ambient_scene_ = ambient;
+}
+
 
 /**
  * Function to calculate the color of the reflected ray
@@ -260,7 +264,8 @@ glm::vec3 Render::get_reflected_vec3(const glm::vec3 &vector, glm::vec3 const &n
 glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm::vec3 hit_normal, int depth,
                                        std::shared_ptr<Shape> const &shape) const {
 
-    glm::vec3 intensity_color = /*shape->get_material()->color_ambient_ * */glm::vec3{0.1f, 0.1f, 0.1f}; // color_ambient * ambient color of scene
+    glm::vec3 intensity_color = shape->get_material()->color_ambient_ * ambient_scene_;
+    //glm::vec3{0.1f, 0.1f, 0.1f};
     glm::vec3 specular;
     glm::vec3 diffuse;
 

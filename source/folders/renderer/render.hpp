@@ -19,6 +19,8 @@ public:
     void set_composite(std::shared_ptr<Composite> const& composite1);
 
     void set_lights(std::vector<std::shared_ptr<Light>> const& lights1);
+    
+    void set_ambient_scene (glm::vec3 const& ambient);
 
 
 private:
@@ -37,6 +39,7 @@ private:
 
     std::shared_ptr<Composite> composite_;
     std::vector<std::shared_ptr<Light>> lights_;
+    glm::vec3 ambient_scene_;
 };
 
 

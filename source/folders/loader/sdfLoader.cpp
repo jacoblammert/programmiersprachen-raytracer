@@ -29,7 +29,7 @@ void SdfLoader::load_file() const { //const correctness valid?
     glm::vec3 ambient;
     
     std::string name_camera_render, filename;
-    int x_res, y_res;
+    unsigned int x_res, y_res;
     
 
     while (std::getline(in_file, line_buffer)) {
@@ -172,7 +172,7 @@ void SdfLoader::load_file() const { //const correctness valid?
 
                 
                 
-                auto material = std::make_shared<Material> (Material{0,0,0,1,{1,1,1}}); //TODO Werte übernehmen
+                auto material = std::make_shared<Material> (Material{ka, kd, ks, m});
                 material_map.emplace(std::make_pair(material_name, material));
                 
             } else if ("light" == class_name) {
@@ -264,7 +264,8 @@ void SdfLoader::load_file() const { //const correctness valid?
             
             in_sstream >> name_camera_render >> filename >> x_res >> y_res;
             
-            Scene scene (shape_map, light_map, camera_map, ambient);
+            //create scene with root of composite tree
+            Scene scene (composite_vec[0], light_map, camera_map, ambient);
             
             auto i = camera_map.find(name_camera_render);
             if (i != camera_map.end()) {

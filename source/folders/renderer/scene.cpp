@@ -1,37 +1,24 @@
 #include "scene.hpp"
-#include <omp.h>
-#include <iostream>
-#include "../shapes/sphere.hpp"
 
-Scene::Scene(//std::map<std::string,std::shared_ptr<Material>> material_map,
-             std::map<std::string,std::shared_ptr<Shape>> shape_map,
+Scene::Scene(std::shared_ptr<Composite> composite,
              std::map<std::string,std::shared_ptr<Light>> light_map,
              std::map<std::string,std::shared_ptr<Camera>> camera_map,
              glm::vec3 ambient):
-
-    //material_map {material_map},
-    shape_map {shape_map},
-    light_map {light_map},
-    camera_map {camera_map},
-    ambient {ambient}
+    composite_ {composite},
+    light_map_ {light_map},
+    camera_map_ {camera_map},
+    ambient_ {ambient}
 {}
 
-void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res) const {
+void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, unsigned int y_res) const {
 
     unsigned const image_width = x_res;
     unsigned const image_height = y_res;
 
-    Window window {{image_width, image_height}};
+    Window window {{x_res, y_res}};
 
     PpmWriter ppm_writer (x_res, y_res, filename);
 
-    //TODO use given composite - besserer Weg möglich als maps zu vector? -> composite aus sdfLoader übernehmen
-
-    std::vector<std::shared_ptr<Shape>> shapes;
-
-    for (auto it = shape_map.begin(); it != shape_map.end(); it++) {
-        shapes.push_back(it->second);
-    }
 /*/
 ///Zufällige shapes funktionieren, die Eingelesenen sind viel größer!! (100 mal ca.)und haben bei mir zumindest noch nicht ganz funktioniert
     for (int i = 0; i < 30; ++i) {
@@ -51,20 +38,18 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
         }
     }/**/
 
-    std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{shapes});
-
     std::vector<std::shared_ptr<Light>> lights;
 
-    for (auto it = light_map.begin(); it != light_map.end(); it++) {
+    for (auto it = light_map_.begin(); it != light_map_.end(); it++) {
          lights.push_back(it->second);
      }
 
-    Renderer renderer {image_width, image_height, filename};
+    Renderer renderer {x_res, y_res, filename};
     camera.set_width_hight((int)image_width,(int)image_height);
 
 
     Render render;
-    render.set_composite(composite);
+    render.set_composite(composite_);
     render.set_lights(lights);
 
 
@@ -77,9 +62,6 @@ void Scene::draw_scene(Camera camera, std::string filename, int x_res, int y_res
 
          float start_time = window.get_time();
 
-
-//        omp_set_num_threads(128); //TODO versuch bitte nochmal omp zum laufen zu bringen, damit kann es viel schneller die Bilder anzeigen und es ist weniger frustrierend auf die neuen Ergebnisse zu warten
-//#pragma omp parallel for
 
             for (int i = 0; i < image_width; ++i) {
                 // kein Code hier, sonnst kann es nicht parallel arbeiten
