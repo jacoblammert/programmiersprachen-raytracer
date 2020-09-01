@@ -1,3 +1,4 @@
+#include <omp.h>
 #include "scene.hpp"
 
 Scene::Scene(std::shared_ptr<Composite> composite,
@@ -58,14 +59,18 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
                 color.color = {color_vec[0], color_vec[1], color_vec[2]};
 
                 renderer.write(color);
-
                 ppm_writer.write(color);
+
+
             }
         }
+
 
         window.show(renderer.color_buffer());
         std::cout << "Time: " << round((window.get_time() - start_time) * 100) / 100 << " Fps: "
                   << round(100 / (window.get_time() - start_time)) / 100 << std::endl;
     }
     ppm_writer.save(filename);
+
+
 }

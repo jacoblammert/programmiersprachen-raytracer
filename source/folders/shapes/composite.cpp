@@ -169,13 +169,7 @@ void Composite::build() {
  * @param shape pointer
  */
 void Composite::add_shape(const std::shared_ptr<Shape> &shape) {
-    std::cout << "hi" << std::endl;
-    //auto pointer =
-    if (shapes_.empty()) {
-        //shapes_ =
-    }
     shapes_.push_back(shape);
-    std::cout << "NANA" << std::endl;
 }
 
 /**

@@ -236,17 +236,18 @@ int main(int argc, char *argv[]) {
  - Material Werte/Typen anpassen auf Vorgaben
  - Szene hat beliebig viele Punktlichtquellen -> ja (in der Vorlesung vorgestelltes Beleuchtungsmodell) - phong shading-> fehlt noch
  - finaler Farbwert wird berechnet und im Window angezeigt/ in der Ausgabedatei gespeichert -> framework sollte das schon können. Falls nicht, habe ich auch noch eine alte Klasse um .ppm Dateien zu speichern
+ - Ambiente der Szene einlesen
+ - Beobachter ist im Ursprung und blickt entlang negativer z-Achse
+ - Kegel und Zylinder hinzufügen (optional) // nur die Standart Kegel/ Zylinder in Ursprung mit Größe 1 funktionieren -> Zylinder + Kegel (inverted translations/ rotations)
+ - einlesen einer Szene im SDF-Format und rendern der Szene
 
  nicht fertig:
- - Ambiente der Szene einlesen
- - einlesen einer Szene im SDF-Format und rendern der Szene
- - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov   (y muss oben sein)
- - Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions)
- - Kameramodell im Parser erweitern
- - Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert online suchen)
- - .ppm Dateien in Ordner speichern -> zu Animation verarbeiten
- - Kegel und Zylinder hinzufügen (optional) // nur die Standart Kegel/ Zylinder in Ursprung mit Größe 1 funktionieren -> Zylinder + Kegel (inverted translations/ rotations)
- - Anti-Aliasing, Interpolation (optional) (mehrere Strahlen oder Interpolation der Pixel nach Berechnung der Farbwerte?)
+ - (etwas schwerer) andere Objekte (Triangle, Plane, Cone, Cylinder) einlesen (wichtig!)
+ - (etwas schwerer) Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions)
+ - (machbar) Kameramodell im Parser erweitern nur fov - brauchen wir noch mehr?
+ - (machbar) Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert online suchen)
+ - (machbar) .ppm Dateien in Ordner speichern -> zu Animation verarbeiten
+ - (machbar) Anti-Aliasing, Interpolation (optional) 4 mal so großes Bild berechnen + kleiner machen und Durchschnitt der 4 Farbwerte pro Pixel berechnen
 
  
  Anmerkungen:

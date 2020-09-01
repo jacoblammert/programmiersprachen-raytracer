@@ -9,6 +9,7 @@
 #include "../shapes/shape.hpp"
 #include "../shapes/composite.hpp"
 #include "light.hpp"
+#include "../skybox/skybox.hpp"
 
 class Render {
 public:
@@ -40,6 +41,8 @@ private:
     std::shared_ptr<Composite> composite_;
     std::vector<std::shared_ptr<Light>> lights_;
     glm::vec3 ambient_scene_;
+
+    Skybox skybox_ = Skybox();
 };
 
 

@@ -136,13 +136,6 @@ void Camera::translate(glm::vec3 const &pos) {
 
 void Camera::move(Window const &window) {
 
-    //std::cout<< "W: " <<window.get_key(87)<< std::endl; // W
-    //std::cout<< "S: " <<window.get_key(83)<< std::endl; // S
-    //std::cout<< "A: " <<window.get_key(65)<< std::endl; // A
-    //std::cout<< "D: " <<window.get_key(68)<< std::endl; // D
-    //std::cout<< "Space: " <<window.get_key(32)<< std::endl; // Space
-    //std::cout<< "Shift: " <<window.get_key(340)<< std::endl; // Shift
-
     int w = window.get_key(87);
     int s = window.get_key(83);
     int a = window.get_key(65);
@@ -152,17 +145,17 @@ void Camera::move(Window const &window) {
 
 
     float x = w - s;
-    float y = a - d;
-    float z = space - shift;
+    float z = a - d;
+    float y = space - shift;
 
 
-    glm::vec3 dir = glm::normalize(glm::vec3{direction_[0], direction_[1], 0});
+    glm::vec3 dir = glm::normalize(glm::vec3{direction_[0], 0,direction_[2]});
     glm::vec3 dir_orthogonal = glm::normalize(glm::cross(dir, this->up_vector_));
 
     dir *= x;
-    dir_orthogonal *= y;
+    dir_orthogonal *= z;
 
-    position_ += glm::vec3{0, 0, z} + dir + dir_orthogonal;
+    position_ += glm::vec3{0, y, 0} + dir + dir_orthogonal;
 
 
 }

@@ -37,9 +37,15 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
 
     if (dist == INFINITY) { // shape has not been hit
         //TODO implement skybox or background
-        return glm::vec3{0, 0, 0}; // returns black, if no shape has been hit
-    } else if (0 < dist){
-        //return {1,1,1};
+
+        glm::vec3 color = skybox_.get_color(ray.direction_);
+
+        //std::cout<<"Red: " << color[0] <<" Green: " << color[1]<<" Blue: " << color[2]<< std::endl;
+
+        return /*/glm::vec3{1,1,1} * 10.0f;/*/color;/**/
+
+
+        return (hit_normal + glm::vec3 {1,1,1}) * 0.5f; // returns black, if no shape has been hit
     }
 
 
@@ -267,7 +273,6 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
                                        std::shared_ptr<Shape> const &shape) const {
 
     glm::vec3 intensity_color = shape->get_material()->color_ambient_ * ambient_scene_; /// Kein ambientes Licht zu sehen, da es nichts trifft
-    //glm::vec3{0.1f, 0.1f, 0.1f};
     glm::vec3 specular;
     glm::vec3 diffuse;
 
@@ -278,7 +283,6 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
     glm::vec3 hit_to_light;
 
     for (int i = 0; i < lights_.size(); ++i) {
-        //if (lights_[i]->brightness_.x > 0) { //brightness vec3!
 
         hit_to_light = (lights_[i]->position_ - hit_point);
 
@@ -315,12 +319,12 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
             glm::vec3 offset = glm::vec3{0,0,0};
             glm::vec3 newpos = hit_point + hit_normal * 0.0001f; // new position to shoot a ray from to not hit the last shape hit instantly
 
-            int samples = 1;
-            int count = 1;
+            //int samples = 1;
 
-            for (int j = 0; j < samples; ++j) {
+            //for (int j = 0; j < samples; ++j) {
 
                 if (lights_[i]->hardness_ < 1.0f) {
+                    /// for soft shadows
                     offset = glm::normalize(glm::vec3{random_float(), random_float(), random_float()}) * (1.0f - lights_[i]->hardness_);
                 }
                 //if (depth < 10) {
@@ -354,7 +358,7 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
                 //}
 
                 //intensity_color += ;
-            }
+            //}
 
             //color /= count;
             //intensity_color += color;
