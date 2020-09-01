@@ -85,7 +85,7 @@ glm::vec3 Skybox::get_color(glm::vec3 direction) const {
  */
 glm::vec3 Skybox::get_pixel_interpolated(float x, float y,Ppm const & image) const{
 
-    if (0 < x && 0 < y) {
+    if (0 <= x && 0 <= y) {
         x = x * (float) image.width_;
         y = y * (float) image.height_;
 

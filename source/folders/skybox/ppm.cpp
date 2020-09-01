@@ -89,7 +89,14 @@ void Ppm::load(const std::string& filename) {
 }
 
 glm::vec3 Ppm::get_pixel(glm::vec2 position) const {
-    if (0 < position[0] && position[0] < width_ && 0 < position[1] && position[1] < height_) {
+    if (width_ < position[0]){
+        position[0] = width_;
+    }
+    if (height_ < position[1]){
+        position[0] = height_;
+    }
+
+    if (0 <= position[0] && position[0] < width_ && 0 <= position[1] && position[1] < height_) {
         return image_[position[1]][position[0]];
     } else{
         return {};
