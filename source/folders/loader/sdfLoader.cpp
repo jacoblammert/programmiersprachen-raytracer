@@ -1,4 +1,5 @@
 #include "sdfLoader.hpp"
+#include "../shapes/triangle.hpp"
 
 SdfLoader::SdfLoader(std::string filepath) :
         filepath_ {std::move(filepath)}
@@ -21,16 +22,16 @@ void SdfLoader::load_file() const { //const correctness valid?
 
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{0}); /// all possiblt compositepointer  TODO turn to smartpointer
     std::map<std::string,std::shared_ptr<Shape>> shape_map; /// map with all the shapes accessible with their names
-    
-    
+
+
     std::map<std::string,std::shared_ptr<Material>> material_map;
     std::map<std::string,std::shared_ptr<Light>> light_map;
     std::map<std::string,std::shared_ptr<Camera>> camera_map;
     glm::vec3 ambient;
-    
+
     std::string name_camera_render, filename;
     unsigned int x_res, y_res;
-    
+
 
     while (std::getline(in_file, line_buffer)) {
         std::cout /*<< ++line_count*/ << line_buffer << std::endl;
@@ -100,17 +101,68 @@ void SdfLoader::load_file() const { //const correctness valid?
 
                     // add a sphere and access it later with its name from the map
                     auto sphere = std::make_shared<Sphere>(Sphere{center, radius});
-                    
+
                     auto i = material_map.find(mat_name_sphere);
                     if (i != material_map.end()) {
                         sphere->set_material(material_map[mat_name_sphere]);
-                    } else {
+                    }
+                    else {
                         std::cout << "Please only use defined materials!" << std::endl;
                     }
-                    
+
                     shape_map.emplace(std::make_pair(name_sphere, sphere));
 
-                } else if (shape_type == "composite") {
+                } else if (shape_type == "triangle") {
+                    //parse sphere attributes
+                    std::string name_triangle, mat_name_triangle;
+                    float x_1, y_1, z_1;
+                    glm::vec3 vector_1;
+                    float x_2, y_2, z_2;
+                    glm::vec3 vector_2;
+                    float x_3, y_3, z_3;
+                    glm::vec3 vector_3;
+
+                    in_sstream >> name_triangle;
+                    in_sstream >> x_1 >> y_1 >> z_1;
+                    in_sstream >> x_2 >> y_2 >> z_2;
+                    in_sstream >> x_3 >> y_3 >> z_3;
+                    in_sstream >> mat_name_triangle;
+
+                    vector_1[0] = x_1;
+                    vector_1[1] = y_1;
+                    vector_1[2] = z_1;
+
+                    vector_2[0] = x_2;
+                    vector_2[1] = y_2;
+                    vector_2[2] = z_2;
+
+                    vector_3[0] = x_3;
+                    vector_3[1] = y_3;
+                    vector_3[2] = z_3;
+
+                    // add a sphere and access it later with its name from the map
+                    auto triangle = std::make_shared<Triangle>(Triangle{vector_1,vector_2,vector_3});
+
+                    auto i = material_map.find(mat_name_triangle);
+                    if (i != material_map.end()) {
+                        triangle->set_material(material_map[mat_name_triangle]);
+                    }
+                    else {
+                        std::cout << "Please only use defined materials!" << std::endl;
+                    }
+
+                    shape_map.emplace(std::make_pair(name_triangle, triangle));
+
+                }
+
+
+
+
+
+
+
+
+                else if (shape_type == "composite") {
                     //parse composite attributes
                     //int count = 0;
                     std::string composite_name, param;
@@ -149,7 +201,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                 float kd_red, kd_green, kd_blue;
                 float ks_red, ks_green, ks_blue;
                 float m;
-                
+
                 glm::vec3 ka;
                 glm::vec3 kd;
                 glm::vec3 ks;
@@ -159,25 +211,25 @@ void SdfLoader::load_file() const { //const correctness valid?
                 in_sstream >> kd_red >> kd_green >> kd_blue; //diffuse reflection
                 in_sstream >> ks_red >> ks_green >> ks_blue; //reflecting reflection
                 in_sstream >> m; //exponent for reflecting reflection
-                
-                
+
+
                 ka[0] = ka_red;
                 ka[1] = ka_green;
                 ka[2] = ka_blue;
-                
+
                 kd[0] = kd_red;
                 kd[1] = kd_green;
                 kd[2] = kd_blue;
-                
+
                 ks[0] = ks_red;
                 ks[1] = ks_green;
                 ks[2] = ks_blue;
 
-                
-                
+
+
                 auto material = std::make_shared<Material> (Material{ka, kd, ks, m});
                 material_map.emplace(std::make_pair(material_name, material));
-                
+
             } else if ("light" == class_name) {
                 //parse light attributes
                 std::string name_light;
@@ -200,7 +252,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                 brightness[0] = brightness_x;
                 brightness[1] = brightness_y;
                 brightness[2] = brightness_z;
-                
+
                 auto light = std::make_shared<Light> (Light(pos, color, brightness));
                 light_map.emplace(std::make_pair(name_light, light));
 
@@ -211,7 +263,7 @@ void SdfLoader::load_file() const { //const correctness valid?
 
                 in_sstream >> name_camera;
                 in_sstream >> fov_x;
-                
+
                 auto camera = std::make_shared<Camera> (Camera(fov_x));
                 camera_map.emplace(std::make_pair(name_camera, camera));
 
@@ -264,20 +316,20 @@ void SdfLoader::load_file() const { //const correctness valid?
             ambient[2] = ambient_z;
 
         } else if ("render" == identifier) {
-            
+
             in_sstream >> name_camera_render >> filename >> x_res >> y_res;
-            
+
             //create scene with root of composite tree
             Scene scene (composite, light_map, camera_map, ambient);
-            
+
             auto i = camera_map.find(name_camera_render);
             if (i != camera_map.end()) {
                  scene.draw_scene(*camera_map[name_camera_render], filename, x_res, y_res);
             } else {
                 std::cout << "Please only render scene with defined camera!" << std::endl;
             }
-            
-            
+
+
         } else if ("#" == identifier) {
             //commentary - do nothing
         } else {

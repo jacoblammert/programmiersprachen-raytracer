@@ -16,8 +16,6 @@ public:
     Skybox();
     glm::vec3 get_color(glm::vec3 direction) const;
 
-    void set_images(Renderer renderer);
-
 private:
 
     Ppm top_;

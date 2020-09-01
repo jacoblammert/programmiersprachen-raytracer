@@ -123,13 +123,3 @@ glm::vec3 Skybox::get_pixel_interpolated(float x, float y,Ppm const & image) con
 glm::vec3 Skybox::interpolate(const glm::vec3& A,const glm::vec3&  B, float value) const{
     return (B-A) * value + A;
 }
-
-void Skybox::set_images(Renderer renderer) {
-
-    //top_=    renderer; // "../../source/folders/sdfFiles/start.sdf"
-    //bottom_= renderer; // "../../source/folders/skybox/"
-    //left_=   renderer;
-    //right_=  renderer;
-    //front_=  renderer;
-    //back_=   renderer;
-}
