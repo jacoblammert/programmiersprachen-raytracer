@@ -15,16 +15,17 @@ public:
     Skybox();
     glm::vec3 get_color(glm::vec3 direction) const;
 
+    void set_images(Renderer renderer);
+    unsigned int width_ = 410;
+    unsigned int height_ = 410;
 private:
-    unsigned int width = 410;
-    unsigned int height = 410;
 
-    Renderer top_=    Renderer{width,height,"../../source/folders/skybox/posy.ppm"}; // "../../source/folders/sdfFiles/start.sdf"
-    Renderer bottom_= Renderer{width,height,"../../source/folders/skybox/negy.ppm"}; // "../../source/folders/skybox/"
-    Renderer left_=   Renderer{width,height,"../../source/folders/skybox/negx.ppm"};
-    Renderer right_=  Renderer{width,height,"../../source/folders/skybox/posx.ppm"};
-    Renderer front_=  Renderer{width,height,"../../source/folders/skybox/negz.ppm"};
-    Renderer back_=   Renderer{width,height,"../../source/folders/skybox/posz.ppm"};
+    Renderer top_=    Renderer{width_,height_,"../../source/folders/skybox/posy.ppm"}; // "../../source/folders/sdfFiles/start.sdf"
+    Renderer bottom_= Renderer{width_,height_,"../../source/folders/skybox/negy.ppm"}; // "../../source/folders/skybox/"
+    Renderer left_=   Renderer{width_,height_,"../../source/folders/skybox/negx.ppm"};
+    Renderer right_=  Renderer{width_,height_,"../../source/folders/skybox/posx.ppm"};
+    Renderer front_=  Renderer{width_,height_,"../../source/folders/skybox/negz.ppm"};
+    Renderer back_=   Renderer{width_,height_,"../../source/folders/skybox/posz.ppm"};
 
     Box skybox_ = {{0, 0, 0}, 2, 2, 2};
 

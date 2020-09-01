@@ -177,7 +177,6 @@ void Camera::set_direction(Window const &window) {
         y *= (1 - abs(z));
 
         this->direction_ = glm::normalize(glm::vec3{x, z, -y});
-        std::cout<<direction_[0]<< " " <<direction_[1]<< " " <<direction_[2]<<std::endl;
     }
 }
 

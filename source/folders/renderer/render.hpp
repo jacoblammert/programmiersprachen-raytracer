@@ -24,6 +24,7 @@ public:
     void set_ambient_scene (glm::vec3 const& ambient);
 
 
+    Skybox skybox_ = Skybox();
 private:
 
     glm::vec3 get_brightness_color(Ray const& ray,glm::vec3 hit_point, glm::vec3 hit_normal, int depth,std::shared_ptr<Shape> const& shape)const;
@@ -42,7 +43,6 @@ private:
     std::vector<std::shared_ptr<Light>> lights_;
     glm::vec3 ambient_scene_;
 
-    Skybox skybox_ = Skybox();
 };
 
 
