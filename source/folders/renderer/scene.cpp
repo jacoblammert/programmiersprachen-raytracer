@@ -25,7 +25,7 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
         lights.push_back(it->second);
     }
 
-    Renderer renderer{x_res, y_res, filename};
+    Renderer renderer{x_res, y_res,filename};
     camera.set_width_hight((int) image_width, (int) image_height);
 
 
@@ -40,8 +40,8 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
         if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             window.close();
         }
-        //camera.set_direction(window);
-        //camera.move(window);
+        camera.set_direction(window);
+        camera.move(window);
 
         float start_time = window.get_time();
 
@@ -64,8 +64,6 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
 
                 renderer.write(color);
                 ppm_writer.write(color);
-
-
             }
         }
 

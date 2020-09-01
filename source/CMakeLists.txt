@@ -29,7 +29,8 @@ folders/camera/ray.cpp
 folders/renderer/render.cpp
 folders/renderer/light.cpp
 folders/renderer/scene.cpp
-folders/skybox/skybox.cpp)
+folders/skybox/skybox.cpp
+folders/skybox/ppm.cpp)
 
 #set(CMAKE_EXE_LINKER_FLAGS "-static")#remove if it does not work
 #set(CMAKE_CXX_STANDARD 14)#remove for non omp
