@@ -35,7 +35,7 @@ glm::vec3 Skybox::get_color(glm::vec3 direction) const {
     direction *= dist;
 
     if (hit_normal[0] == 1) { // left
-        x = (1 - direction[2]) * 0.5f;
+        x = (1 + direction[2]) * 0.5f;
         y = (1 - direction[1]) * 0.5f;
         color = get_pixel_interpolated(x, y,left_);
 
