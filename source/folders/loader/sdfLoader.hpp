@@ -14,6 +14,7 @@
 #include "../shapes/composite.hpp"
 #include "../shapes/sphere.hpp"
 #include "../renderer/scene.hpp"
+#include "../shapes/triangle.hpp"
 
 class SdfLoader {
 public:

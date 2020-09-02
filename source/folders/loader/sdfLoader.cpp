@@ -110,6 +110,47 @@ void SdfLoader::load_file() const { //const correctness valid?
                     
                     shape_map.emplace(std::make_pair(name_sphere, sphere));
 
+                } else if (shape_type == "triangle") {
+                    //parse sphere attributes
+                    std::string name_triangle, mat_name_triangle;
+                    float x_1, y_1, z_1;
+                    glm::vec3 vector_1;
+                    float x_2, y_2, z_2;
+                    glm::vec3 vector_2;
+                    float x_3, y_3, z_3;
+                    glm::vec3 vector_3;
+
+                    in_sstream >> name_triangle;
+                    in_sstream >> x_1 >> y_1 >> z_1;
+                    in_sstream >> x_2 >> y_2 >> z_2;
+                    in_sstream >> x_3 >> y_3 >> z_3;
+                    in_sstream >> mat_name_triangle;
+
+                    vector_1[0] = x_1;
+                    vector_1[1] = y_1;
+                    vector_1[2] = z_1;
+
+                    vector_2[0] = x_2;
+                    vector_2[1] = y_2;
+                    vector_2[2] = z_2;
+
+                    vector_3[0] = x_3;
+                    vector_3[1] = y_3;
+                    vector_3[2] = z_3;
+
+                    // add a sphere and access it later with its name from the map
+                    auto triangle = std::make_shared<Triangle>(Triangle{vector_1,vector_2,vector_3});
+
+                    auto i = material_map.find(mat_name_triangle);
+                    if (i != material_map.end()) {
+                        triangle->set_material(material_map[mat_name_triangle]);
+                    }
+                    else {
+                        std::cout << "Please only use defined materials!" << std::endl;
+                    }
+
+                    shape_map.emplace(std::make_pair(name_triangle, triangle));
+
                 } else if (shape_type == "composite") {
                     //parse composite attributes
                     //int count = 0;
@@ -208,12 +249,39 @@ void SdfLoader::load_file() const { //const correctness valid?
                 //parse camera attributes
                 std::string name_camera;
                 float fov_x;
-
+                glm::vec3 eye, direction, up;
+                char eye_x_test = '\0';
+                float eye_x, eye_y, eye_z, direction_x, direction_y, direction_z, up_x, up_y, up_z;
+                
                 in_sstream >> name_camera;
                 in_sstream >> fov_x;
+                in_sstream >> eye_x_test;
                 
-                auto camera = std::make_shared<Camera> (Camera(fov_x));
-                camera_map.emplace(std::make_pair(name_camera, camera));
+                if (eye_x_test != '\0') {
+                    in_sstream >> eye_x >> eye_y >> eye_z >> direction_x >> direction_y >> direction_z >> up_x >> up_y >> up_z;
+                    
+                    eye[0] = eye_x;
+                    eye[1] = eye_y;
+                    eye[2] = eye_z;
+                    
+                    direction[0] = direction_x;
+                    direction[1] = direction_y;
+                    direction[2] = direction_z;
+                    
+                    up[0] = up_x;
+                    up[1] = up_y;
+                    up[2] = up_z;
+
+                    std::cout << eye[0] << eye[1] << eye[2] << std::endl;
+                    std::cout << direction[0] << direction[1] << direction[2] << std::endl;
+                    std::cout << up[0] << up[1] << up[2] << std::endl;
+                    
+                    auto camera = std::make_shared<Camera> (Camera(fov_x, eye, direction, up));
+                    camera_map.emplace(std::make_pair(name_camera, camera));
+                } else {
+                    auto camera = std::make_shared<Camera> (Camera(fov_x));
+                    camera_map.emplace(std::make_pair(name_camera, camera));
+                }
 
             } else {
                 std::cout << "Line was not valid!" << std::endl;

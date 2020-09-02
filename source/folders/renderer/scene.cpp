@@ -1,4 +1,4 @@
-#include <omp.h>
+//#include <omp.h>
 #include "scene.hpp"
 
 Scene::Scene(std::shared_ptr<Composite> composite,
@@ -45,9 +45,6 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
 
         float start_time = window.get_time();
 
-        //render.skybox_.set_images(renderer); /// Setzt als Skyboxtexturen das letzte gerenderete Bild (Sieht verrückt aus, sollte aber mit einer funktionierenden Skybox ersetzt werden)
-        //render.skybox_.width_ = x_res;       /// Breite
-        //render.skybox_.height_ = y_res;      /// Höhe
 
 //        omp_set_num_threads(128);
 //#pragma omp parallel for

@@ -6,13 +6,27 @@ Camera::Camera(float fov_x) :
         position_{0.0f, 0.0f, 0.0f},
         direction_{glm::vec3{0.0000001, 0.00000001, -1}},
         width_{1},
-        height_{1}, //TODO Berechnen durch fov in y Richtung
+        height_{1}, //TODO Berechnen durch fov in y Richtung?
         distance_{fov_x}// from presentation
 
 {
     distance_ *= MATH_PI / 360.0f;
     distance_ = (float) (0.5f / std::tan(distance_)); // from presentation
 }
+
+Camera::Camera (float fov_x, glm::vec3 const& eye, glm::vec3 const& direction, glm::vec3 const& up) :
+    position_ {eye}, //correct value?
+    direction_ {direction},
+    width_{1},
+    height_{1}, //TODO Berechnen durch fov in y Richtung?
+    distance_{fov_x}, // from presentation
+    up_vector_ {up}
+
+{
+    distance_ *= MATH_PI / 360.0f;
+    distance_ = (float) (0.5f / std::tan(distance_)); // from presentation
+}
+
 
 
 /**
@@ -58,7 +72,6 @@ Camera::Camera(glm::vec3 const &position, int width, int height, float fov) :
  * Generates a ray from the cameras position onto the camera plane. If the fov should be changed, the distance of the Camera plane needs to change.
  * The x and y positions are in pixelspace, like the width and the height of the camera
  *
- * //TODO this function does only work, if a distance from the cameraplane is given. If we want to use the angle, we need to use the angle to calculate the distance first
  *
  * @param x pos of the Pixel on the screen 0 to width
  * @param y pos of the Pixel on the screen 0 to height
@@ -71,8 +84,6 @@ Ray Camera::generate_ray(int x, int y) const {
             glm::cross(this->direction_, up_vector_));// from the left of the camera plane to the right (normalized)
     glm::vec3 top = glm::normalize(
             glm::cross(this->direction_, right)); // from bottom of the camera plane to the top (normalized)
-
-    //float wToH = ((float) this->width / (float) this->height);  // width to height ratio
 
     float x_percentage = (float) x / (float) this->width_; // could be simplified to save two variables
     float y_percentage = (float) y / (float) this->height_;// could be simplified to save two variables

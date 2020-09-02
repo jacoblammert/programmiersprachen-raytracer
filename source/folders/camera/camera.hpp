@@ -14,6 +14,7 @@
 class Camera {
 public:
     Camera (float fov_x);
+    Camera (float fov_x, glm::vec3 const& eye, glm::vec3 const& direction, glm::vec3 const& up);
     Camera(glm::vec3 const& position, glm::vec3 const& direction, int width, int height, float distance);
 
     Camera(glm::vec3 const& position, int width, int height, float fov);
