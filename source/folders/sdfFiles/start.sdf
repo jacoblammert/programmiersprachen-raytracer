@@ -8,6 +8,7 @@ define shape sphere csphere 0 0 -8 5 blue
 # define shape plane bplane 0 0 -8 0 0 1 blue
 # define shape triangle btriangle 10 -10 -8 10 -10 -8 10 10 -8 blue
 # define shape cone bcone 2 0 -2 1 0 0 5 1 blue
+# define shape cylinder bcylinder 2 0 -2 1 0 0 5 5 blue
 # composite
 define shape composite root rbottom bsphere csphere
 # scene xform

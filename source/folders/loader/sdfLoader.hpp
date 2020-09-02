@@ -17,6 +17,7 @@
 #include "../shapes/triangle.hpp"
 #include "../shapes/cone.hpp"
 #include "../shapes/triangle.hpp"
+#include "../shapes/cylinder.hpp"
 
 class SdfLoader {
 public:

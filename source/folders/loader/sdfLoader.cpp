@@ -151,19 +151,19 @@ void SdfLoader::load_file() const { //const correctness valid?
 
                     shape_map.emplace(std::make_pair(name_triangle, triangle));
 
-                } else if (shape_type == "cone") {
-                     //parse cone attributes - define shape cone [pos] [axis] <width> <height> <mat-name>
-                    std::string name_cone, mat_name_cone;
+                } else if (shape_type == "cone" || shape_type == "cylinder") {
+                     //parse cone/cylinder attributes - define shape cone/cylinder [pos] [axis] <width> <height> <mat-name>
+                    std::string name_cone_cylinder, mat_name_cone_cylinder;
                     float position_x = 0.0f, position_y = 0.0f, position_z = 0.0f;
                     float axis_x = 0.0f, axis_y = 0.0f, axis_z = 0.0f;
                     float width = 0.0f, height = 0.0f;
                     glm::vec3 position, axis;
                     
-                    in_sstream >> name_cone;
+                    in_sstream >> name_cone_cylinder;
                     in_sstream >> position_x >> position_y >> position_z;
                     in_sstream >> axis_x >> axis_y >> axis_z;
                     in_sstream >> width >> height;
-                    in_sstream >> mat_name_cone;
+                    in_sstream >> mat_name_cone_cylinder;
                     
                     position[0] = position_x;
                     position[1] = position_y;
@@ -173,17 +173,32 @@ void SdfLoader::load_file() const { //const correctness valid?
                     axis[1] = axis_y;
                     axis[2] = axis_z;
                     
-                    // add a cone and access it later with its name from the map
-                    auto cone = std::make_shared<Cone>(Cone{position, axis, width, height});
+                    if (shape_type == "cone") {
+                        // add a cone and access it later with its name from the map
+                        auto cone = std::make_shared<Cone>(Cone{position, axis, width, height});
 
-                    auto i = material_map.find(mat_name_cone);
-                    if (i != material_map.end()) {
-                        cone->set_material(material_map[mat_name_cone]);
+                        auto i = material_map.find(mat_name_cone_cylinder);
+                        if (i != material_map.end()) {
+                            cone->set_material(material_map[mat_name_cone_cylinder]);
+                        } else {
+                            std::cout << "Please only use defined materials!" << std::endl;
+                        }
+                        shape_map.emplace(std::make_pair(name_cone_cylinder, cone));
+                        
                     } else {
-                        std::cout << "Please only use defined materials!" << std::endl;
-                    }
+                        // add a cylinder and access it later with its name from the map
+                        auto cylinder = std::make_shared<Cylinder>(Cylinder{position, axis, width, height});
 
-                    shape_map.emplace(std::make_pair(name_cone, cone));
+                        auto i = material_map.find(mat_name_cone_cylinder);
+                        if (i != material_map.end()) {
+                            cylinder->set_material(material_map[mat_name_cone_cylinder]);
+                        } else {
+                            std::cout << "Please only use defined materials!" << std::endl;
+                        }
+                        shape_map.emplace(std::make_pair(name_cone_cylinder, cylinder));
+                    }
+                    
+                    
                     
                 } else if (shape_type == "plane") {
                      //parse plane attributes - define shape plane [pos] [normal] <mat-name>
