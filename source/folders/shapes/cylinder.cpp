@@ -4,27 +4,51 @@
 Cylinder::Cylinder(const glm::vec3 &position, const glm::vec3 &axis, float width, float height) :
         width_{width}, height_{height} {
     position_ = position;
-    rotation_axis_ = axis;
+    rotation_axis_ = glm::normalize(axis);
 }
 
 bool Cylinder::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
-    //TODO translate, rotate & scale ray
 
-
-
-    glm::vec3 axis = glm::vec3{0,0,1};
-
-    float distance_0 = glm::dot(position_ - ray.position_, axis) / glm::dot(ray.direction_, axis);
+    float distance_0 = glm::dot(position_ - ray.position_, rotation_axis_) / glm::dot(ray.direction_, rotation_axis_);
     float length_0 = glm::length(ray.position_ - position_ + ray.direction_ * distance_0);
 
     bool hit_0 = length_0 < width_ / 2 && distance_0 < distance && 0 < distance_0;
 
 
-    float distance_1 = glm::dot(position_ - ray.position_ + axis * height_, axis) /glm::dot(ray.direction_, axis);
-    float length_1 = glm::length(ray.position_ - position_ - axis * height_ + ray.direction_ * distance_1);
+    float distance_1 = glm::dot(position_ - ray.position_ + rotation_axis_ * height_, rotation_axis_) /glm::dot(ray.direction_, rotation_axis_);
+    float length_1 = glm::length(ray.position_ - position_ - rotation_axis_ * height_ + ray.direction_ * distance_1);
 
     bool hit_1 = length_1 < width_ / 2 && distance_1 < distance && 0 < distance_1;
+
+
+
+    glm::vec3 ray_position = ray.position_;
+    glm::vec3 ray_direction = ray.direction_;
+
+
+    /// Translation
+    ray_position = ray_position - position_;
+
+
+    /// Rotation
+    glm::vec3 up_vec = glm::vec3{0, 0, 1};
+    glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, rotation_axis_));
+    float angle_new = (float)acos(glm::dot(up_vec,rotation_axis_));
+    ray_position = get_rotated_vec3(ray_position, rotation_axis, angle_new);
+
+    ray_direction = get_rotated_vec3(ray_direction, rotation_axis, angle_new);
+
+
+    /// Scalierung
+    float inverse_width = 1.0f / width_;
+    float inverse_height =  1.0f / height_;
+
+    ray_position = get_scaled_vec3(ray_position, inverse_width ,  inverse_width,inverse_height);
+
+    ray_direction = get_scaled_vec3(ray_direction, inverse_width,  inverse_width,inverse_height);
+    ray_direction = glm::normalize(ray_direction);
+
 
 
 
@@ -33,12 +57,11 @@ bool Cylinder::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3
     bool hit_2 = false;
 
 
-    glm::vec3 p0 = ray.position_ - position_;
 
 
-    double a = ray.direction_[0] * ray.direction_[0] + ray.direction_[1] * ray.direction_[1];
-    double b = ray.direction_[0] * p0[0] + ray.direction_[1] * p0[1];
-    double c = p0[0] * p0[0] + p0[1] * p0[1] - (width_ / 2) * (width_ / 2);
+    double a = ray_direction[0] * ray_direction[0] + ray_direction[1] * ray_direction[1];
+    double b = ray_direction[0] * ray_position[0] + ray_direction[1] * ray_position[1];
+    double c = ray_position[0] * ray_position[0] + ray_position[1] * ray_position[1] - (1.0f / 2) * (1.0f / 2);
 
     double delta = b * b - a * c;
 
@@ -56,10 +79,10 @@ bool Cylinder::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3
         if (distance_2 >= epsilon) {
 
 
-            float y = p0[2] + distance_2 * ray.direction_[2];
+            float y = ray_position[2] + distance_2 * ray_direction[2];
 
             // check if we intersect one of the bases
-            if (!(y > height_ + epsilon || y < -epsilon)) {
+            if (!(y > 1 + epsilon || y < -epsilon)) {
                 hit_2 = true;
             }
         }
@@ -72,44 +95,53 @@ bool Cylinder::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3
     }
     if (!hit_2){
         distance_2 = INFINITY;
+    } else{
+
+        hit_point = ray_position + ray_direction * distance_2;
+        hit_normal = get_normal(hit_point);//{hit_point[0],0,hit_point[2]};//glm::normalize(glm::vec3{hit_point[0],0,hit_point[2]});//get_normal(hit_point);
+
+
+        hit_point = get_scaled_vec3(hit_point, width_,  width_,height_);   /// first scaling
+        hit_point = get_rotated_vec3(hit_point, rotation_axis, -angle_new);/// second rotation
+        hit_point = hit_point + position_;                                 /// third translation
+
+
+        distance_2 = glm::length(ray.position_ - hit_point);
     }
+
+
 
     if (hit_0 || hit_1 || hit_2){
 
         if (hit_0 && distance_0 < distance_1 && distance_0 < distance_2 && distance_0 < distance){
-            //TODO reverse transformations
             hit_point = ray.position_ + ray.direction_ * distance_0;
             distance = distance_0;
-            hit_normal = glm::vec3 {0,0,-1};
+            hit_normal = glm::vec3 {0,-1,0};
         } else if (hit_1 &&  distance_1 < distance_0 && distance_1 < distance_2 && distance_1 < distance){
             hit_point = ray.position_ + ray.direction_ * distance_1;
             distance = distance_1;
-            hit_normal = glm::vec3 {0,0,1};
+            hit_normal = glm::vec3 {0,1,0};
         } else if (distance_2 < distance){
-            hit_point = ray.position_ + ray.direction_ * distance_2;
             distance = distance_2;
-            hit_normal = get_normal(hit_point);
         } else{
             return false;
         }
+        //TODO reverse transformations
+
+
+        hit_normal = get_scaled_vec3(hit_normal, width_,  width_,height_);   /// first scaling
+        hit_normal = get_rotated_vec3(hit_normal, rotation_axis, -angle_new);/// second rotation
+
         return true;
     }
     return false;
 }
 
 glm::vec3 Cylinder::get_normal(const glm::vec3 &pos) const {
-    // Point is on one of the bases
-    if (pos[0] < position_[0] + width_/2 && pos[0] > position_[0] - width_/2 && pos[1] < position_[1] + width_/2 && pos[1] > position_[1] - width_/2 ){
-        double epsilon = 0.00000001;
-        if (pos[2] < position_[2] + height_ + epsilon && pos[2] > position_[2] + height_-epsilon){
-            return glm::vec3{0,0,1};
-        }
-        if (pos[2] < position_[2] + epsilon && pos[2] > position_[2]-epsilon){
-            return glm::vec3 {0,0,-1};
-        }
-    }
 
     // Point is on lateral surface
+    //glm::vec3 c0 = glm::vec3 {position_[0],pos[1] ,position_[2]};
+    //return glm::normalize(pos - c0);
     glm::vec3 c0 = glm::vec3 {position_[0], position_[1], pos[2]};
     return glm::normalize(pos - c0);
 }
