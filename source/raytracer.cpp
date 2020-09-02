@@ -254,4 +254,5 @@ int main(int argc, char *argv[]) {
  - eventuell shared pointer als const möglich? z.B. std::shared_ptr <Shape const>
  - const correctness der Methoden
  - default initialisierung structs
+ - floats, ... initialisieren
  */

@@ -1,5 +1,4 @@
 #include "sdfLoader.hpp"
-#include "../shapes/triangle.hpp"
 
 SdfLoader::SdfLoader(std::string filepath) :
         filepath_ {std::move(filepath)}
@@ -56,8 +55,8 @@ void SdfLoader::load_file() const { //const correctness valid?
                     //parse box attributes
                     std::string name_box, mat_name_box;
                     glm::vec3 p1, p2;
-                    float p1_x, p1_y, p1_z;
-                    float p2_x, p2_y, p2_z;
+                    float p1_x = 0.0f, p1_y = 0.0f, p1_z = 0.0f;
+                    float p2_x = 0.0f, p2_y = 0.0f, p2_z = 0.0f;
 
                     in_sstream >> name_box;
                     in_sstream >> p1_x >> p1_y >> p1_z;
@@ -86,8 +85,8 @@ void SdfLoader::load_file() const { //const correctness valid?
                 } else if (shape_type == "sphere") {
                     //parse sphere attributes
                     std::string name_sphere, mat_name_sphere;
-                    float radius;
-                    float center_x, center_y, center_z;
+                    float radius = 0.0f;
+                    float center_x = 0.0f, center_y = 0.0f, center_z = 0.0f;
                     glm::vec3 center;
 
                     in_sstream >> name_sphere;
@@ -113,13 +112,13 @@ void SdfLoader::load_file() const { //const correctness valid?
                     shape_map.emplace(std::make_pair(name_sphere, sphere));
 
                 } else if (shape_type == "triangle") {
-                    //parse sphere attributes
+                    //parse triangle attributes - define shape triangle [vec1] [vec2] [vec3] <mat-name>
                     std::string name_triangle, mat_name_triangle;
-                    float x_1, y_1, z_1;
+                    float x_1 = 0.0f, y_1 = 0.0f, z_1 = 0.0f;
                     glm::vec3 vector_1;
-                    float x_2, y_2, z_2;
+                    float x_2 = 0.0f, y_2 = 0.0f, z_2 = 0.0f;
                     glm::vec3 vector_2;
-                    float x_3, y_3, z_3;
+                    float x_3 = 0.0f, y_3 = 0.0f, z_3 = 0.0f;
                     glm::vec3 vector_3;
 
                     in_sstream >> name_triangle;
@@ -140,7 +139,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                     vector_3[1] = y_3;
                     vector_3[2] = z_3;
 
-                    // add a sphere and access it later with its name from the map
+                    // add a triangle and access it later with its name from the map
                     auto triangle = std::make_shared<Triangle>(Triangle{vector_1,vector_2,vector_3});
 
                     auto i = material_map.find(mat_name_triangle);
@@ -152,7 +151,72 @@ void SdfLoader::load_file() const { //const correctness valid?
 
                     shape_map.emplace(std::make_pair(name_triangle, triangle));
 
+                } else if (shape_type == "cone") {
+                     //parse cone attributes - define shape cone [pos] [axis] <width> <height> <mat-name>
+                    std::string name_cone, mat_name_cone;
+                    float position_x = 0.0f, position_y = 0.0f, position_z = 0.0f;
+                    float axis_x = 0.0f, axis_y = 0.0f, axis_z = 0.0f;
+                    float width = 0.0f, height = 0.0f;
+                    glm::vec3 position, axis;
+                    
+                    in_sstream >> name_cone;
+                    in_sstream >> position_x >> position_y >> position_z;
+                    in_sstream >> axis_x >> axis_y >> axis_z;
+                    in_sstream >> width >> height;
+                    in_sstream >> mat_name_cone;
+                    
+                    position[0] = position_x;
+                    position[1] = position_y;
+                    position[2] = position_z;
+                    
+                    axis[0] = axis_x;
+                    axis[1] = axis_y;
+                    axis[2] = axis_z;
+                    
+                    // add a cone and access it later with its name from the map
+                    auto cone = std::make_shared<Cone>(Cone{position, axis, width, height});
 
+                    auto i = material_map.find(mat_name_cone);
+                    if (i != material_map.end()) {
+                        cone->set_material(material_map[mat_name_cone]);
+                    } else {
+                        std::cout << "Please only use defined materials!" << std::endl;
+                    }
+
+                    shape_map.emplace(std::make_pair(name_cone, cone));
+                    
+                } else if (shape_type == "plane") {
+                     //parse plane attributes - define shape plane [pos] [normal] <mat-name>
+                    std::string name_plane, mat_name_plane;
+                    float position_x = 0.0f, position_y = 0.0f, position_z = 0.0f;
+                    float normal_x = 0.0f, normal_y = 0.0f, normal_z = 0.0f;
+                    glm::vec3 position, normal;
+                    
+                    in_sstream >> name_plane;
+                    in_sstream >> position_x >> position_y >> position_z;
+                    in_sstream >> normal_x >> normal_y >> normal_z;
+                    in_sstream >> mat_name_plane;
+                    
+                    position[0] = position_x;
+                    position[1] = position_y;
+                    position[2] = position_z;
+                    
+                    normal[0] = normal_x;
+                    normal[1] = normal_y;
+                    normal[2] = normal_z;
+                    
+                    // add a cone and access it later with its name from the map
+                    auto plane = std::make_shared<Plane>(Plane{position, normal});
+
+                    auto i = material_map.find(mat_name_plane);
+                    if (i != material_map.end()) {
+                        plane->set_material(material_map[mat_name_plane]);
+                    } else {
+                        std::cout << "Please only use defined materials!" << std::endl;
+                    }
+
+                    shape_map.emplace(std::make_pair(name_plane, plane));
+                    
                 } else if (shape_type == "composite") {
                     //parse composite attributes
                     //int count = 0;
@@ -188,10 +252,10 @@ void SdfLoader::load_file() const { //const correctness valid?
             } else if ("material" == class_name) {
                 //parse material attributes
                 std::string material_name;
-                float ka_red, ka_green, ka_blue;
-                float kd_red, kd_green, kd_blue;
-                float ks_red, ks_green, ks_blue;
-                float m;
+                float ka_red = 0.0f, ka_green = 0.0f, ka_blue = 0.0f;
+                float kd_red = 0.0f, kd_green = 0.0f, kd_blue = 0.0f;
+                float ks_red = 0.0f, ks_green = 0.0f, ks_blue = 0.0f;
+                float m = 0.0f;
 
                 glm::vec3 ka;
                 glm::vec3 kd;
@@ -225,7 +289,9 @@ void SdfLoader::load_file() const { //const correctness valid?
                 //parse light attributes
                 std::string name_light;
                 glm::vec3 pos, color, brightness;
-                float pos_x, pos_y, pos_z, color_x, color_y, color_z, brightness_x, brightness_y, brightness_z;
+                float pos_x = 0.0f, pos_y = 0.0f, pos_z = 0.0f;
+                float color_x = 0.0f, color_y = 0.0f, color_z = 0.0f;
+                float brightness_x = 0.0f, brightness_y = 0.0f, brightness_z = 0.0f;
 
                 in_sstream >> name_light;
                 in_sstream >> pos_x >> pos_y >> pos_z;
@@ -250,10 +316,12 @@ void SdfLoader::load_file() const { //const correctness valid?
             } else if ("camera" == class_name) {
                 //parse camera attributes
                 std::string name_camera;
-                float fov_x;
+                float fov_x = 0.0f;
                 glm::vec3 eye, direction, up;
                 char eye_x_test = '\0';
-                float eye_x, eye_y, eye_z, direction_x, direction_y, direction_z, up_x, up_y, up_z;
+                float eye_x = 0.0f, eye_y = 0.0f, eye_z = 0.0f;
+                float direction_x = 0.0f, direction_y = 0.0f, direction_z = 0.0f;
+                float up_x = 0.0f, up_y = 0.0f, up_z = 0.0f;
                 
                 in_sstream >> name_camera;
                 in_sstream >> fov_x;
@@ -295,7 +363,7 @@ void SdfLoader::load_file() const { //const correctness valid?
             //check for transformation type and parse arguments
             if ("translate" == transfomation_type) {
                 glm::vec3 offset;
-                float offset_x, offset_y, offset_z;
+                float offset_x = 0.0f, offset_y = 0.0f, offset_z = 0.0f;
 
                 in_sstream >> offset_x >> offset_y >> offset_z;
 
@@ -305,8 +373,8 @@ void SdfLoader::load_file() const { //const correctness valid?
 
             } else if ("rotate" == transfomation_type) {
                 glm::vec3 vector;
-                float angle;
-                float vector_x, vector_y, vector_z;
+                float angle = 0.0f;
+                float vector_x = 0.0f, vector_y = 0.0f, vector_z = 0.0f;
 
                 in_sstream >> angle;
                 in_sstream >> vector_x >> vector_y >> vector_z;
@@ -316,7 +384,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                 vector[2] = vector_z;
 
             } else if ("scale" == transfomation_type) {
-                float value;
+                float value = 0.0f;
 
                 in_sstream >> value;
 
@@ -325,7 +393,7 @@ void SdfLoader::load_file() const { //const correctness valid?
             }
         } else if ("ambient" == identifier) {
             //parse ambient attributes
-            float ambient_x, ambient_y, ambient_z;
+            float ambient_x = 0.0f, ambient_y = 0.0f, ambient_z = 0.0f;
 
             in_sstream >> ambient_x >> ambient_y >> ambient_z;
 

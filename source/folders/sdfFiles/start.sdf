@@ -5,6 +5,9 @@ define material blue 0 0 1 0 0 1 0 0 1 10
 define shape box rbottom -100 -80 -200 100 80 -100 red
 define shape sphere bsphere 0 0 -10 5 blue
 define shape sphere csphere 0 0 -8 5 blue
+# define shape plane bplane 0 0 -8 0 0 1 blue
+# define shape triangle btriangle 10 -10 -8 10 -10 -8 10 10 -8 blue
+# define shape cone bcone 2 0 -2 1 0 0 5 1 blue
 # composite
 define shape composite root rbottom bsphere csphere
 # scene xform
