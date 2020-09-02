@@ -156,10 +156,6 @@ glm::vec3 Cone::get_normal(const glm::vec3 &pos) const {
     n.y = (width_/2)/height_;
 
     return n;
-
-
-
-    return glm::normalize(pos - position_);
 }
 
 glm::vec3 Cone::get_min() const {

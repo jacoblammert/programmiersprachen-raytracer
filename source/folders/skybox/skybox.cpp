@@ -6,12 +6,12 @@
 
 Skybox::Skybox() {
 
-    top_=    Renderer{width_,height_,"../../source/folders/skybox/posy.ppm"}; // "../../source/folders/sdfFiles/start.sdf"
-    bottom_= Renderer{width_,height_,"../../source/folders/skybox/negy.ppm"}; // "../../source/folders/skybox/"
-    left_=   Renderer{width_,height_,"../../source/folders/skybox/negx.ppm"};
-    right_=  Renderer{width_,height_,"../../source/folders/skybox/posx.ppm"};
-    front_=  Renderer{width_,height_,"../../source/folders/skybox/negz.ppm"};
-    back_=   Renderer{width_,height_,"../../source/folders/skybox/posz.ppm"};
+    top_.load("../../source/folders/skybox/posy.ppm"); // "../../source/folders/sdfFiles/start.sdf"
+    bottom_.load("../../source/folders/skybox/negy.ppm"); // "../../source/folders/skybox/"
+    left_.load("../../source/folders/skybox/negx.ppm");
+    right_.load("../../source/folders/skybox/posx.ppm");
+    front_.load("../../source/folders/skybox/negz.ppm");
+    back_.load("../../source/folders/skybox/posz.ppm");
 }
 
 /**
@@ -32,41 +32,43 @@ glm::vec3 Skybox::get_color(glm::vec3 direction) const {
 
     glm::vec3 color;
 
+    direction *= dist;
+
     if (hit_normal[0] == 1) { // left
-        x = (1 + direction[1]) * 0.5f;
-        y = (1 - direction[2]) * 0.5f;
+        x = (1 - direction[2]) * 0.5f;
+        y = (1 - direction[1]) * 0.5f;
         color = get_pixel_interpolated(x, y,left_);
 
 
     } else if (hit_normal[0] == -1) { // right
 
-        x = (1 - direction[1]) * 0.5f;
-        y = (1 - direction[2]) * 0.5f;
+        x = (1 - direction[2]) * 0.5f;
+        y = (1 - direction[1]) * 0.5f;
         color = get_pixel_interpolated(x, y,right_);
 
 
-    } else if (hit_normal[1] == 1) { // back
+    } else if (hit_normal[2] == 1) { // back
 
         x = (1 - direction[0]) * 0.5f;
-        y = (1 - direction[2]) * 0.5f;
+        y = (1 - direction[1]) * 0.5f;
         color = get_pixel_interpolated(x, y,back_);
 
-    } else if (hit_normal[1] == -1) { // front
+    } else if (hit_normal[2] == -1) { // front
 
         x = (1 + direction[0]) * 0.5f;
-        y = (1 - direction[2]) * 0.5f;
+        y = (1 - direction[1]) * 0.5f;
         color = get_pixel_interpolated(x, y,front_);
 
-    } else if (hit_normal[2] == 1) { // Top
+    } else if (hit_normal[1] == 1) { // Top
 
         x = (1 - direction[0]) * 0.5f;
-        y = (1 + direction[1]) * 0.5f;
+        y = (1 + direction[2]) * 0.5f;
         color = get_pixel_interpolated(x, y,top_);
 
     } else { // Bottom
 
-        x = (1 + -direction[0]) * 0.5f;
-        y = (1 + -direction[1]) * 0.5f;
+        x = (1 - direction[0]) * 0.5f;
+        y = (1 - direction[2]) * 0.5f;
         color = get_pixel_interpolated(x, y,bottom_);
     }
     //color = (hit_normal + glm::vec3 {1,1,1}) * 0.5f;
@@ -81,55 +83,36 @@ glm::vec3 Skybox::get_color(glm::vec3 direction) const {
  * @param renderer Image (top, bottom, left, right, front or back)
  * @return color
  */
-glm::vec3 Skybox::get_pixel_interpolated(float x, float y,Renderer const & renderer) const{
+glm::vec3 Skybox::get_pixel_interpolated(float x, float y,Ppm const & image) const{
 
-    if (0 < x && 0 < y) {
-        x = x * (float) width_;
-        y = y * (float) height_;
+    if (0 <= x && 0 <= y) {
+        x = x * (float) image.width_;
+        y = y * (float) image.height_;
 
         float percentageX = x-floor(x);
         float percentageY = y-floor(y);
 
 
-        x = ((int) floor(x)) % (int) width_;
-        y = ((int) floor(y)) % (int) height_;
+        x = ((int) floor(x)) % (int) image.width_;
+        y = ((int) floor(y)) % (int) image.height_;
 
 
-        int xMax = (x+1) < width_ ?  x+1 :x;
-        int yMax = (y+1) < height_ ? y+1 :y;
+        int xMax = (x+1) < image.width_ ?  x+1 :x;
+        int yMax = (y+1) < image.height_ ? y+1 :y;
 
-        glm::vec3 middle = get_pixel(x,y,renderer);//image[y][x];
-        glm::vec3 right = get_pixel(xMax,y,renderer);//image[y][xMax];
-        glm::vec3 bottom = get_pixel(x,yMax,renderer);//image[yMax][x];
-        glm::vec3 bottomright = get_pixel(xMax,yMax,renderer);//image[yMax][xMax];
+        glm::vec3 middle = image.get_pixel({x,y});
+        glm::vec3 right = image.get_pixel({xMax,y});
+        glm::vec3 bottom = image.get_pixel({x,yMax});
+        glm::vec3 bottomright = image.get_pixel({xMax,yMax});
 
-        //if (middle[0] != 0) {
-        //    std::cout << middle[0] << std::endl;
-        //}
 
         return interpolate(interpolate(interpolate(middle,right,percentageX),interpolate(bottom,bottomright,percentageX),percentageY),
                            interpolate(interpolate(middle,bottom,percentageY),interpolate(right,bottomright,percentageY),percentageX),0.5f);
     } else {
-        return {0, 0, 0};
+        return {};
     }
 }
 
-/**
- * get the Pixelcolor of a ppm at a given position
- * @param x position
- * @param y position
- * @param renderer Image (top, bottom, left, right, front or back)
- * @return Color
- */
-glm::vec3 Skybox::get_pixel(int x,int y, const Renderer &renderer) const{
-
-    int position = (int) (x + width_ * y);
-
-    Color color = renderer.color_buffer()[position]; /// ppm data
-    //std::cout<<"red: "<<color.r<<"green: "<<color.g<<"blue: "<<color.b<<std::endl;
-
-    return {color.r,color.g,color.b};
-}
 /**
  * Interpolates two vec3 by a given amount
  * @param A vec3 No.1
@@ -139,14 +122,4 @@ glm::vec3 Skybox::get_pixel(int x,int y, const Renderer &renderer) const{
  */
 glm::vec3 Skybox::interpolate(const glm::vec3& A,const glm::vec3&  B, float value) const{
     return (B-A) * value + A;
-}
-
-void Skybox::set_images(Renderer renderer) {
-
-    top_=    renderer; // "../../source/folders/sdfFiles/start.sdf"
-    bottom_= renderer; // "../../source/folders/skybox/"
-    left_=   renderer;
-    right_=  renderer;
-    front_=  renderer;
-    back_=   renderer;
 }

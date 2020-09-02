@@ -15,37 +15,19 @@ Render::Render() = default;
  * @return color consisting of brightness for that point and each light and color of the shape blended together
  */
 glm::vec3 Render::get_color(Ray ray, int depth) const {
-
-
-
-    //TODO split functions into different subfunctions to make visibility better
-
-
-
-
     /**Get Intersected Object here**/
 
     glm::vec3 hit_point;
     glm::vec3 hit_normal;
     float dist = INFINITY;
-    std::shared_ptr<Shape> shape;// = nullptr;
+    std::shared_ptr<Shape> shape;
 
-    composite_->get_intersected_shape(ray, shape, hit_point, hit_normal,
-                                      dist); // TODO pass pointer instead of all the parameters
+    composite_->get_intersected_shape(ray, shape, hit_point, hit_normal,dist);
 
 
 
     if (dist == INFINITY) { // shape has not been hit
-        //TODO implement skybox or background
-
-        glm::vec3 color = skybox_.get_color(ray.direction_);
-
-        //std::cout<<"Red: " << color[0] <<" Green: " << color[1]<<" Blue: " << color[2]<< std::endl;
-
-        return /*/glm::vec3{1,1,1} * 10.0f;/*/color;/**/
-
-
-        return (hit_normal + glm::vec3 {1,1,1}) * 0.5f; // returns black, if no shape has been hit
+        return skybox_.get_color(ray.direction_);
     }
 
 
@@ -53,13 +35,13 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
     float opacity = shape->get_material()->opacity_;
     float roughness = shape->get_material()->roughness_;
 
-    glm::vec3 color_final;//{shape->get_material()->color_};
+    glm::vec3 color_final;
 
-    //color_final = color_final * (0.03f * (1 - transparency));// ?
-
-
+    /// The color gets calculated according to the lecture
     color_final = get_brightness_color(ray, hit_point, hit_normal, depth, shape);
 
+
+    /// Now we can calculate the reflective and refractive color of the material
 
     glm::vec3 reflection_color;
     glm::vec3 refraction_color;
@@ -95,7 +77,7 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
     }
 
 
-    /*** Color mixing: //TODO clean up in different function (Optional) ***/
+    /*** Color mixing for different opacity and glossynes values */
     color_final *= (1.0f - opacity);
     color_final *= (1.0f - glossy);
 
@@ -173,7 +155,7 @@ Render::get_refracted_color(Ray const &ray, glm::vec3 const &hit_point, glm::vec
                             std::shared_ptr<Shape> const &shape) const {
     glm::vec3 total_color{};
 
-    int max = 3; // for red, green and blue
+    int max = 3; // for red, green and blue (for chromatic aberration)
     int min = 0; // start
 
     if (depth > 1 || shape->get_material()->aberration_strength_ <= 0) {

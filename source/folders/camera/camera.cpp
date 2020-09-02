@@ -8,7 +8,6 @@ Camera::Camera(float fov_x) :
         width_{1},
         height_{1}, //TODO Berechnen durch fov in y Richtung?
         distance_{fov_x}// from presentation
-
 {
     distance_ *= MATH_PI / 360.0f;
     distance_ = (float) (0.5f / std::tan(distance_)); // from presentation
@@ -71,7 +70,6 @@ Camera::Camera(glm::vec3 const &position, int width, int height, float fov) :
 /**
  * Generates a ray from the cameras position onto the camera plane. If the fov should be changed, the distance of the Camera plane needs to change.
  * The x and y positions are in pixelspace, like the width and the height of the camera
- *
  *
  * @param x pos of the Pixel on the screen 0 to width
  * @param y pos of the Pixel on the screen 0 to height
