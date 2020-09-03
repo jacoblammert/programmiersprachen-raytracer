@@ -5,6 +5,7 @@
 #include <glm-0.9.5.3/glm/vec3.hpp>
 #include <glm-0.9.5.3/glm/geometric.hpp>
 #include <memory>
+#include <glm-0.9.5.3/glm/detail/type_mat3x3.hpp>
 #include "../camera/ray.hpp"
 #include "material.hpp"
 
@@ -41,9 +42,9 @@ public:
     void set_rotation_axis(const glm::vec3& axis);
 
 protected:
-    //glm::mat3x3 rotation_matrix_ = {};
-    //glm::mat3x3 rotation_matrix_inverse = {};
-    glm::vec3 rotation_axis_ = glm::vec3 {};
+    glm::vec3 axis_ = glm::vec3 {};
+    glm::mat3x3 rotation_matrix_ = glm::mat3x3{1,0,0,0,1,0,0,0,1};
+    glm::mat3x3 rotation_matrix_inverse = glm::mat3x3{1,0,0,0,1,0,0,0,1};
     float angle_ = 0.0f;
     glm::vec3 position_ = glm::vec3 {};
 

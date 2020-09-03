@@ -32,7 +32,7 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
 
 
     float glossy = shape->get_material()->glossy_;
-    float opacity = shape->get_material()->opacity_;
+    float opacity = 1-shape->get_material()->opacity_;
     float roughness = shape->get_material()->roughness_;
 
     glm::vec3 color_final;

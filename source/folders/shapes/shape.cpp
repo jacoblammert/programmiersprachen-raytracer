@@ -15,11 +15,6 @@ glm::vec3 Shape::get_scaled_vec3(const glm::vec3 &vec3, float scale_x, float sca
 
 glm::vec3 Shape::get_rotated_vec3(const glm::vec3 &vec3, glm::vec3 axis, float angle)const {
 
-    //std::cout<<"Old vec3: \n";
-    //std::cout << "X: " << axis[0] << " Y: " << axis[1] << " Z: " << axis[2] << std::endl;
-
-    //float length = glm::length(vec3);
-
     float sin_angle = std::sin(angle);
     float cos_angle = std::cos(angle);
 
@@ -31,23 +26,7 @@ glm::vec3 Shape::get_rotated_vec3(const glm::vec3 &vec3, glm::vec3 axis, float a
             axis[0] * axis[2] * (1 - cos_angle) - sin_angle * axis[1] ,axis[1] * axis[2] * (1 - cos_angle) + sin_angle * axis[0] ,axis[2] * axis[2] * (1 - cos_angle) + cos_angle
     };
 
-
-    //std::cout << "Matrix: "<< std::endl;
-    //std::cout << "X0: " << rotation_matrix[0][0] << " Y0: " << rotation_matrix[1][0] << " Z0: " << rotation_matrix[2][0] << std::endl;
-    //std::cout << "X1: " << rotation_matrix[0][1] << " Y1: " << rotation_matrix[1][1] << " Z1: " << rotation_matrix[2][1] << std::endl;
-    //std::cout << "X2: " << rotation_matrix[0][2] << " Y2: " << rotation_matrix[1][2] << " Z2: " << rotation_matrix[2][2] << std::endl;
-
-
-    //float x = rotation_matrix[0][0] * axis[0] + rotation_matrix[1][0]  * axis[1] + rotation_matrix[2][0]  * axis[2];
-    //float y = rotation_matrix[0][1] * axis[0] + rotation_matrix[1][1]  * axis[1] + rotation_matrix[2][1]  * axis[2];
-    //float z = rotation_matrix[0][2] * axis[0] + rotation_matrix[1][2]  * axis[1] + rotation_matrix[2][2]  * axis[2];
-
-    //axis = glm::vec3 {x,y,z};
-    //std::cout<<"New vec3: \n";
-    //std::cout << "X: " << axis[0] << " Y: " << axis[1] << " Z: " << axis[2] << std::endl;
-    return rotation_matrix * vec3;//glm::vec3 {rotation_matrix[0][0] * axis[0] + rotation_matrix[1][0]  * axis[1] + rotation_matrix[2][0]  * axis[2],
-            //          rotation_matrix[0][1] * axis[0] + rotation_matrix[1][1]  * axis[1] + rotation_matrix[2][1]  * axis[2],
-            //          rotation_matrix[0][2] * axis[0] + rotation_matrix[1][2]  * axis[1] + rotation_matrix[2][2]  * axis[2]};
+    return rotation_matrix * vec3;
 }
 
 void Shape::set_angle(float angle) {
@@ -55,5 +34,30 @@ void Shape::set_angle(float angle) {
 }
 
 void Shape::set_rotation_axis(const glm::vec3& axis) {
-    rotation_axis_ = axis;
+    axis_ = glm::normalize(axis);
+
+    glm::vec3 up_vec = glm::normalize(glm::vec3{0, 0, 1}); // vector used for rotation
+    glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, axis_));
+    float angle = (float)acos(glm::dot(up_vec,axis_));
+
+
+
+
+    float sin_angle = std::sin(angle);
+    float cos_angle = std::cos(angle);
+
+
+    rotation_matrix_ = glm::mat3x3{
+            rotation_axis[0] * rotation_axis[0] * (1 - cos_angle) + cos_angle           ,rotation_axis[1] * rotation_axis[0] * (1 - cos_angle) - sin_angle * rotation_axis[2] ,rotation_axis[2] * rotation_axis[0] * (1 - cos_angle) + sin_angle * rotation_axis[1],
+            rotation_axis[0] * rotation_axis[1] * (1 - cos_angle) + sin_angle * rotation_axis[2] ,rotation_axis[1] * rotation_axis[1] * (1 - cos_angle) + cos_angle           ,rotation_axis[2] * rotation_axis[1] * (1 - cos_angle) - sin_angle * rotation_axis[0] ,
+            rotation_axis[0] * rotation_axis[2] * (1 - cos_angle) - sin_angle * rotation_axis[1] ,rotation_axis[1] * rotation_axis[2] * (1 - cos_angle) + sin_angle * rotation_axis[0] ,rotation_axis[2] * rotation_axis[2] * (1 - cos_angle) + cos_angle
+    };
+
+    sin_angle = std::sin(-angle);
+    cos_angle = std::cos(-angle);
+    rotation_matrix_inverse = glm::mat3x3{
+            rotation_axis[0] * rotation_axis[0] * (1 - cos_angle) + cos_angle           ,rotation_axis[1] * rotation_axis[0] * (1 - cos_angle) - sin_angle * rotation_axis[2] ,rotation_axis[2] * rotation_axis[0] * (1 - cos_angle) + sin_angle * rotation_axis[1],
+            rotation_axis[0] * rotation_axis[1] * (1 - cos_angle) + sin_angle * rotation_axis[2] ,rotation_axis[1] * rotation_axis[1] * (1 - cos_angle) + cos_angle           ,rotation_axis[2] * rotation_axis[1] * (1 - cos_angle) - sin_angle * rotation_axis[0] ,
+            rotation_axis[0] * rotation_axis[2] * (1 - cos_angle) - sin_angle * rotation_axis[1] ,rotation_axis[1] * rotation_axis[2] * (1 - cos_angle) + sin_angle * rotation_axis[0] ,rotation_axis[2] * rotation_axis[2] * (1 - cos_angle) + cos_angle
+    };
 }

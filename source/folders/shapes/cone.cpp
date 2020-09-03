@@ -8,23 +8,23 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
 
 
     glm::vec3 up_vec = glm::normalize(glm::vec3{0, 0, 1}); // random vector used for rotation
-    glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, rotation_axis_));
-    float angle_new = (float)acos(glm::dot(up_vec,rotation_axis_));// = glm::dot(rotation_axis_,up_vec);
+    //glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, axis_));
+    //float angle_new = (float)acos(glm::dot(up_vec,axis_));// = glm::dot(rotation_axis_,up_vec);
 
 
 
     glm::vec3 ray_position = ray.position_ - position_;                                                               /// first translation
-    ray_position = get_rotated_vec3(ray_position, rotation_axis, angle_new);                                         /// second rotation
+    ray_position = rotation_matrix_ * ray_position;//get_rotated_vec3(ray_position, rotation_axis, angle_new);                                         /// second rotation
 
     float inverse_width = 1.0f / width_;
     float inverse_height =  1.0f / height_;
 
-    ray_position = get_scaled_vec3(ray_position, inverse_width ,  inverse_width,inverse_height);/// third scaling
+    ray_position = ray_position * glm::vec3{ inverse_width ,  inverse_width,inverse_height};/// third scaling
 
 
     glm::vec3 ray_direction = ray.direction_;
-    ray_direction = get_rotated_vec3(ray_direction, rotation_axis, angle_new);                                        /// first rotation
-    ray_direction = get_scaled_vec3(ray_direction, inverse_width,  inverse_width, inverse_height);/// second scaling
+    ray_direction = rotation_matrix_ * ray_direction;//get_rotated_vec3(ray_direction, rotation_axis, angle_new);                                        /// first rotation
+    ray_direction = ray_direction * glm::vec3{ inverse_width ,  inverse_width,inverse_height};/// second scaling
     ray_direction = glm::normalize(ray_direction);                                                                    /// third normalize
 
 
@@ -63,7 +63,7 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
 
                 hit_point_1 = get_scaled_vec3(hit_point_1, width_,  width_,height_);   /// first scaling
 
-                hit_point_1 = get_rotated_vec3(hit_point_1, rotation_axis, -angle_new);/// second rotation
+                hit_point_1 = rotation_matrix_inverse * hit_point_1;
 
                 hit_point_1 = hit_point_1 + position_;                                 /// third translation
 
@@ -76,7 +76,7 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
         }
     }
 
-    float distance_2 = glm::dot(position_ - ray.position_, rotation_axis_) / glm::dot(ray.direction_, rotation_axis_);
+    float distance_2 = glm::dot(position_ - ray.position_, axis_) / glm::dot(ray.direction_, axis_);
 
     /// either the cone or the bottom plate has been hit
 
@@ -88,7 +88,7 @@ bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hi
 
             distance = distance_2;
             hit_point = ray.position_ + ray.direction_ * distance_2;
-            hit_normal = -rotation_axis_;
+            hit_normal = -axis_;
             return true;
         }
         if (0 < distance_1 && distance_1 < distance) {
@@ -145,8 +145,7 @@ void Cone::translate(const glm::vec3 &position) {
 Cone::Cone(const glm::vec3 &position, const glm::vec3 &axis, float width, float height) :
         width_{width}, height_{height} {
     position_ = position;
-    rotation_axis_ = glm::normalize(axis);
-
+    set_rotation_axis(axis);
 
     //double sin_angle = std::sin(angle);
     //double cos_angle = std::cos(angle);

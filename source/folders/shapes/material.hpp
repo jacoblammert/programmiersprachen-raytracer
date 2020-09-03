@@ -7,7 +7,7 @@
 struct Material {
     float roughness_ = 0.0f;
     float glossy_ = 0.0f;
-    float opacity_ = 0.0f; /// transparency
+    float opacity_ = 1.0f;
     float refractive_index_ = 1.0f;
     float aberration_strength_ = 0; // chromatic aberration on lenses (red, green, blue are refracted differently) (transparency > 0)
 
