@@ -242,12 +242,12 @@ int main(int argc, char *argv[]) {
  - einlesen einer Szene im SDF-Format und rendern der Szene
  - (etwas schwerer) andere Objekte (Triangle, Plane, Cone, Cylinder) einlesen (wichtig!)
  - (machbar) Kameramodell im Parser erweitern nur fov - brauchen wir noch mehr?
+ - (machbar) Anti-Aliasing, Interpolation (optional) 4 mal so großes Bild berechnen + kleiner machen und Durchschnitt der 4 Farbwerte pro Pixel berechnen
+ - (machbar) .ppm Dateien in Ordner speichern -> zu Animation verarbeiten
 
  nicht fertig:
  - (etwas schwerer) Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions)
  - (machbar) Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert online suchen)
- - (machbar) .ppm Dateien in Ordner speichern -> zu Animation verarbeiten
- - (machbar) Anti-Aliasing, Interpolation (optional) 4 mal so großes Bild berechnen + kleiner machen und Durchschnitt der 4 Farbwerte pro Pixel berechnen
 
  
  Anmerkungen:
