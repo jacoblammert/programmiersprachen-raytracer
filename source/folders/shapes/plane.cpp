@@ -5,8 +5,10 @@
  * @param position for the new plane
  * @param normal of the pane (will be normalized automatically)
  */
-Plane::Plane(glm::vec3 const &position, glm::vec3 const &normal) :
-normal_ {glm::normalize(normal)} {
+Plane::Plane(std::string const& name, glm::vec3 const &position, glm::vec3 const &normal) :
+    normal_ {glm::normalize(normal)}
+{
+    name_ = name;
     position_ = position;
 }
 /* //TODO add later (with materials)

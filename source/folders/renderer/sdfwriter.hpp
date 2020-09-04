@@ -15,20 +15,20 @@
 #include "../shapes/shape.hpp"
 #include "../shapes/material.hpp"
 
-class Scene {
+class SdfWriter {
     
 public:
-    Scene(std::shared_ptr<Composite> composite,
-          std::vector<std::shared_ptr<Light>> lights,
-          std::vector<std::shared_ptr<Camera>> cameras,
+    SdfWriter (std::shared_ptr<Composite> composite,
+          std::map<std::string,std::shared_ptr<Light>> light_map,
+          std::map<std::string,std::shared_ptr<Camera>> camera_map,
           const glm::vec3& ambient);
     
     void draw_scene(Camera camera, std::string filename, unsigned int x_res, unsigned int y_res) const;
     
 private:
     std::shared_ptr<Composite> composite_;
-    std::vector<std::shared_ptr<Light>> lights_;
-    std::vector<std::shared_ptr<Camera>> cameras_;
+    std::map<std::string,std::shared_ptr<Light>> light_map_;
+    std::map<std::string,std::shared_ptr<Camera>> camera_map_;
     glm::vec3 ambient_;
 };
 

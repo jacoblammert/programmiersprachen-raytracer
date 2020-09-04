@@ -1,8 +1,11 @@
 
 #include "cylinder.hpp"
 
-Cylinder::Cylinder(const glm::vec3 &position, const glm::vec3 &axis, float width, float height) :
-        width_{width}, height_{height} {
+Cylinder::Cylinder(std::string const& name, const glm::vec3 &position, const glm::vec3 &axis, float width, float height) :
+    width_ {width},
+    height_ {height}
+{
+    name_ = name;
     position_ = position;
     set_rotation_axis(axis);
 }

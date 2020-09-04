@@ -10,10 +10,18 @@ Box::Box() {
 
 /**
  * box constructor for axis alligned box with a min and max vector for example: {-1,-1,-1} {1,1,1}
+ * @param name name of box
  * @param minXminYminZ minimum of the box (individual values must be smaller than their counterpart in max vector)
  * @param maxXmaxYmaxZ maximum of the box (individual values must be greater than their counterpart in min vector)
  */
-Box::Box(const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z){
+Box::Box(std::string const& name, const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z) {
+    name_ = name;
+    position_ = (min_x_y_z + max_x_y_z) * 0.5f;
+    bounds_.push_back(min_x_y_z);
+    bounds_.push_back(max_x_y_z);
+}
+
+Box::Box(const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z) {
     position_ = (min_x_y_z + max_x_y_z) * 0.5f;
     bounds_.push_back(min_x_y_z);
     bounds_.push_back(max_x_y_z);

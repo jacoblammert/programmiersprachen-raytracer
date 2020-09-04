@@ -17,18 +17,19 @@ Composite::Composite(int depth) :
 
 /**
  * Initializer with a vector of Shape pointers and a depth
+ * @param name name of composite object
  * @param shapes
  * @param depth
  */
-Composite::Composite(std::vector<std::shared_ptr<Shape>> const &shapes) :
+Composite::Composite(std::string const& name, std::vector<std::shared_ptr<Shape>> const &shapes) :
+    shapes_{std::move(shapes)}
 
-        shapes_{std::move(shapes)} {
+{
+    name_ = name;
     set_min_max_mid();
-
     if (!this->shapes_.empty()) {
         split(); // it is not an endless loop
     }
-
 }
 
 

@@ -3,15 +3,13 @@
 
 #include <cmath>
 #include <iostream>
-
 #include "shape.hpp"
 
 class Triangle : public Shape {
 public:
-    Triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c);
+    Triangle (std::string const& name, const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c);
 
     //Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, Color const& color);
-
 
     bool get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const override;
 
@@ -35,8 +33,6 @@ private:
     glm::vec3 b_;
     glm::vec3 c_;
     glm::vec3 normal_;
-
-
 };
 
 

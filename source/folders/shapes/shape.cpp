@@ -61,3 +61,7 @@ void Shape::set_rotation_axis(const glm::vec3& axis) {
             rotation_axis[0] * rotation_axis[2] * (1 - cos_angle) - sin_angle * rotation_axis[1] ,rotation_axis[1] * rotation_axis[2] * (1 - cos_angle) + sin_angle * rotation_axis[0] ,rotation_axis[2] * rotation_axis[2] * (1 - cos_angle) + cos_angle
     };
 }
+
+std::string Shape::get_name() const {
+    return name_;
+}

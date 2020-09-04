@@ -1,5 +1,27 @@
 #include "cone.hpp"
 
+
+Cone::Cone (std::string const& name, const glm::vec3 &position, const glm::vec3 &axis, float width, float height) :
+    width_ {width},
+    height_ {height}
+
+{
+    name_ = name;
+    position_ = position;
+    set_rotation_axis(axis);
+
+    //double sin_angle = std::sin(angle);
+    //double cos_angle = std::cos(angle);
+
+
+    //rotation_matrix_ = glm::mat3x3{
+    //        axis[0] * axis[0] * (1 - cos_angle) + cos_angle           ,axis[1] * axis[0] * (1 - cos_angle) - sin_angle * axis[2] ,axis[2] * axis[0] * (1 - cos_angle) + sin_angle * axis[1],
+    //        axis[0] * axis[1] * (1 - cos_angle) + sin_angle * axis[2] ,axis[1] * axis[1] * (1 - cos_angle) + cos_angle           ,axis[2] * axis[1] * (1 - cos_angle) - sin_angle * axis[0] ,
+    //        axis[0] * axis[2] * (1 - cos_angle) - sin_angle * axis[1] ,axis[1] * axis[2] * (1 - cos_angle) + sin_angle * axis[0] ,axis[2] * axis[2] * (1 - cos_angle) + cos_angle
+    //};
+}
+
+
 bool Cone::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
 /// only for "normalized cone in origin with diameter 1 and height 1
@@ -142,18 +164,3 @@ void Cone::translate(const glm::vec3 &position) {
     position_ += position;
 }
 
-Cone::Cone(const glm::vec3 &position, const glm::vec3 &axis, float width, float height) :
-        width_{width}, height_{height} {
-    position_ = position;
-    set_rotation_axis(axis);
-
-    //double sin_angle = std::sin(angle);
-    //double cos_angle = std::cos(angle);
-
-
-    //rotation_matrix_ = glm::mat3x3{
-    //        axis[0] * axis[0] * (1 - cos_angle) + cos_angle           ,axis[1] * axis[0] * (1 - cos_angle) - sin_angle * axis[2] ,axis[2] * axis[0] * (1 - cos_angle) + sin_angle * axis[1],
-    //        axis[0] * axis[1] * (1 - cos_angle) + sin_angle * axis[2] ,axis[1] * axis[1] * (1 - cos_angle) + cos_angle           ,axis[2] * axis[1] * (1 - cos_angle) - sin_angle * axis[0] ,
-    //        axis[0] * axis[2] * (1 - cos_angle) - sin_angle * axis[1] ,axis[1] * axis[2] * (1 - cos_angle) + sin_angle * axis[0] ,axis[2] * axis[2] * (1 - cos_angle) + cos_angle
-    //};
-}

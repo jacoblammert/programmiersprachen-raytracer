@@ -7,7 +7,7 @@
 
 class Cone: public Shape {
 public:
-    Cone(const glm::vec3& position,const glm::vec3& axis,float width, float height);
+    Cone (std::string const& name, const glm::vec3& position,const glm::vec3& axis,float width, float height);
 
     bool get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const override;
 
@@ -30,6 +30,5 @@ public:
 private:
     float height_;
     float width_;
-
 };
 #endif //RAYTRACER_CONE_HPP

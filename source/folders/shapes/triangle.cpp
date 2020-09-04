@@ -7,10 +7,11 @@
  * @param b glm::vec3 number 2
  * @param c glm::vec3 number 3
  */
-Triangle::Triangle(const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
+Triangle::Triangle (std::string const& name, const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c) :
         b_ {b},
         c_ {c}
 {
+    name_ = name;
     position_ = a;
     glm::vec3 ab = b - a;
     glm::vec3 ac = c - a;

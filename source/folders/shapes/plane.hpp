@@ -6,7 +6,7 @@
 
 class Plane : public Shape {
 public:
-    Plane(glm::vec3 const& position, glm::vec3 const& normal);
+    Plane (std::string const& name, glm::vec3 const& position, glm::vec3 const& normal);
 
     bool get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const override;
 

@@ -2,12 +2,14 @@
 
 /**
  * Sphere with a given Position and radius
+ * @name name of sphere
  * @param position as glm::vec3 for x, y, z
  * @param radius value of input, if radius = -10, radius will be made positive
  */
-Sphere::Sphere(const glm::vec3 &position, float radius) :
+Sphere::Sphere(std::string const& name, const glm::vec3 &position, float radius) :
         radius_ {abs(radius)}
 {
+    name_ = name;
     position_ = position;
 
 }

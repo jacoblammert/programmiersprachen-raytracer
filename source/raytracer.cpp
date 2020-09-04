@@ -252,7 +252,11 @@ int main(int argc, char *argv[]) {
  
  Anmerkungen:
  - eventuell shared pointer als const möglich? z.B. std::shared_ptr <Shape const>
- - const correctness der Methoden
+ - const correctness der Methoden + Parameter
  - default initialisierung structs
  - floats, ... initialisieren
+ - Kommentare
+ - Formatierung, Namensgebung (struct variablen ohne _)
+ - reihenfolge methoden in hpp = cpp
+ - Konsistenz: light hpp Konstruktorliste in cpp
  */

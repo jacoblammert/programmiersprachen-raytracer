@@ -3,6 +3,7 @@
 
 
 #include <glm-0.9.5.3/glm/vec3.hpp>
+#include <string>
 
 struct Light {
 
@@ -13,7 +14,8 @@ struct Light {
      * @param brightness as float
      * @param hardness as float => 1 = hard shadows, 0 = really soft shadows
      */
-    Light(glm::vec3 const& position, glm::vec3 const& color, glm::vec3 const& brightness, float hardness = 1.0):
+    Light(std::string const& name, glm::vec3 const& position, glm::vec3 const& color, glm::vec3 const& brightness, float hardness = 1.0):
+        name_ {name},
         position_{position},
         color_ {color},
         brightness_ {brightness},
@@ -25,6 +27,7 @@ struct Light {
     //float brightness_;
     glm::vec3 brightness_;
     float hardness_ = 1.0f;
+    std::string name_;
 
 };
 

@@ -1,5 +1,7 @@
 #include "material.hpp"
 
+
+
 /**
  *
  * @param roughness of the surface
@@ -34,6 +36,24 @@ Material::Material(float roughness, float glossy, float opacity, float refractiv
         refractive_index_{refractiveIndex},
         aberration_strength_{abberationStrength},
         color_ambient_{color} {}
+
+/**
+ * Material definition from sdf format
+ * @param name name of the material
+ * @param color_ambient
+ * @param color_diffuse
+ * @param color_reflective
+ * @param reflective_exponent
+ */
+Material::Material (std::string const& name, const glm::vec3 &color_ambient, const glm::vec3 &color_diffuse, const glm::vec3 &color_specular,
+                    float reflective_exponent) :
+name {name},
+color_ambient_{color_ambient},
+color_diffuse_{color_diffuse},
+color_specular_{color_specular},
+reflective_exponent_{reflective_exponent} {
+    
+}
 
 /**
  * Material definition from sdf format
