@@ -26,7 +26,7 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
     }
 
     Renderer renderer{x_res, y_res,filename};
-    camera.set_width_hight((int) image_width, (int) image_height);
+    camera.set_width_hight((int) image_width * 2, (int) image_height * 2); // * 2 for antialiasing
 
 
     Render render;
@@ -53,10 +53,18 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
 
                 Pixel color{(unsigned int) i, (unsigned int) j};
 
-                glm::vec3 color_vec = render.get_color(camera.generate_ray(i, j), 0);
 
-                color_vec = color_vec / (color_vec + glm::vec3{1, 1, 1});
+                glm::vec3 color_vec;
+                for (int k = 0; k < 4; ++k) {
 
+
+                    glm::vec3 color_vec_1 = render.get_color(camera.generate_ray(2 * i + k % 2, 2 * j + (int)(floor( k/2))), 0);
+
+                    color_vec += color_vec_1 / (color_vec_1 + glm::vec3{1, 1, 1});
+
+
+                }
+                color_vec /= 4;
                 color.color = {color_vec[0], color_vec[1], color_vec[2]};
 
                 renderer.write(color);
