@@ -103,3 +103,10 @@ void Plane::print(std::fstream & file) const {
 void Plane::translate(glm::vec3 const& position) {
     position_ += position;
 }
+
+std::string Plane::get_information() const {
+    std::string information = std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
+            + std::to_string(normal_[0]) + " " + std::to_string(normal_[1]) + " " + std::to_string(normal_[2]) + " "
+            + material_->name_;
+    return information;
+}

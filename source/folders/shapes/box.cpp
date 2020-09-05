@@ -211,8 +211,7 @@ glm::vec3 Box::get_max() const {
  * @return the position of the box
  */
 glm::vec3
-Box::get_median() const { //besser getPosition? Ja, aber diese Funktion wird von verschiedenen Shapes genutzt z.B. Dreieck -> welche Position ist dann gemeint?
-    // Und es gibt ja eine min/max Funktion -> mid/Median/M... Funktion macht nur Sinn
+Box::get_median() const {
     return position_;
 }
 
@@ -220,10 +219,7 @@ Box::get_median() const { //besser getPosition? Ja, aber diese Funktion wird von
  * outputs important information in the console
  */
 void Box::print(std::fstream & file) const {
-    //bounds[0].print();
-    //bounds[1].print();
-
-    file << bounds_[0][0] << " " << bounds_[0][1] << " " << bounds_[0][2] << " " << bounds_[1][0] << " " << bounds_[1][1] << " " << bounds_[1][2] << " " << material_->name << "\n";
+    file << bounds_[0][0] << " " << bounds_[0][1] << " " << bounds_[0][2] << " " << bounds_[1][0] << " " << bounds_[1][1] << " " << bounds_[1][2] << " " << material_->name_ << "\n";
 }
 
 /**
@@ -313,5 +309,10 @@ void Box::get_intersect_vec(glm::vec3 &direction, glm::vec3 &hit_normal) const {
 
 std::vector<glm::vec3> Box::get_bounds () const {
     return bounds_;
+}
+
+std::string Box::get_information() const {
+    std::string information = std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " + material_->name_;
+    return information;
 }
 

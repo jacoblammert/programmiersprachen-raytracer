@@ -51,6 +51,8 @@ public:
     
     std::vector<std::shared_ptr<Shape>> get_shapes () const;
 
+    std::string get_information() const;
+
 private:
 
     void set_min_max_mid();

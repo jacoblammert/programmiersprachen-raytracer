@@ -26,7 +26,7 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
     samples = 1; // no antialiasing (only one sample per Pixel)
 
 
-    camera.set_width_height((int) image_width * sqrt(samples), (int) image_height * sqrt(samples)); // * 2 for antialiasing
+    camera.set_width_height((int) (image_width * sqrt(samples)), (int) (image_height * sqrt(samples))); // * 2 for antialiasing
 
 
     Render render;

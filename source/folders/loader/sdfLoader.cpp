@@ -77,7 +77,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                     bool material_found = false;
                     
                     for (auto const& i : materials) {
-                        if (i->name == mat_name_box) {
+                        if (i->name_ == mat_name_box) {
                             box->set_material(i);
                             material_found = true;
                         }
@@ -116,7 +116,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                     bool material_found = false;
                     
                     for (auto const& i : materials) {
-                        if (i->name == mat_name_sphere) {
+                        if (i->name_ == mat_name_sphere) {
                             sphere->set_material(i);
                             material_found = true;
                         }
@@ -170,7 +170,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                     bool material_found = false;
                     
                     for (auto const& i : materials) {
-                        if (i->name == mat_name_triangle) {
+                        if (i->name_ == mat_name_triangle) {
                             triangle->set_material(i);
                             material_found = true;
                         }
@@ -218,7 +218,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                         bool material_found = false;
                         
                         for (auto const& i : materials) {
-                            if (i->name == mat_name_cone_cylinder) {
+                            if (i->name_ == mat_name_cone_cylinder) {
                                 cone->set_material(i);
                                 material_found = true;
                             }
@@ -243,7 +243,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                         bool material_found = false;
                         
                         for (auto const& i : materials) {
-                            if (i->name == mat_name_cone_cylinder) {
+                            if (i->name_ == mat_name_cone_cylinder) {
                                 cylinder->set_material(i);
                                 material_found = true;
                             }
@@ -291,7 +291,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                     bool material_found = false;
                     
                     for (auto const& i : materials) {
-                        if (i->name == mat_name_plane) {
+                        if (i->name_ == mat_name_plane) {
                             plane->set_material(i);
                             material_found = true;
                         }

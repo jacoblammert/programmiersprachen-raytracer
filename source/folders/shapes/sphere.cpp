@@ -116,3 +116,8 @@ void Sphere::print(std::fstream & file) const {
 void Sphere::translate(glm::vec3 const& position) {
     position_ += position;
 }
+
+std::string Sphere::get_information() const {
+    std::string information = std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " " + std::to_string(radius_) + " " + material_->name_;
+    return information;
+}

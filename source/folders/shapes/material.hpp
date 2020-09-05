@@ -15,7 +15,7 @@ struct Material {
     glm::vec3 color_diffuse_ = glm::vec3 {0,0,0};
     glm::vec3 color_specular_ = glm::vec3 {0,0,0};
     float reflective_exponent_ = 1;
-    std::string name;
+    std::string name_;
 
     Material(std::string const& name, glm::vec3 const& color_ambient, glm::vec3 const& color_diffuse, glm::vec3 const& color_specular, float reflective_exponent);
     Material (glm::vec3 const& color_ambient,glm::vec3 const& color_diffuse,glm::vec3 const& color_specular,float reflective_exponent);

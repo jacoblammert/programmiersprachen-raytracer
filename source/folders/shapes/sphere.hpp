@@ -28,6 +28,8 @@ public:
     
     void translate(glm::vec3 const& position) override;
 
+    std::string get_information()const override;
+
 private:
     float radius_;
 };

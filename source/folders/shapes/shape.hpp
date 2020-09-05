@@ -46,8 +46,10 @@ public:
     void set_angle(float angle);
 
     void set_rotation_axis(const glm::vec3& axis);
-    
+
     std::string get_name() const;
+
+    virtual std::string get_information() const = 0;
     
     ShapeType get_shape_type() const;
 

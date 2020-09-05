@@ -42,6 +42,9 @@ public:
     
     std::vector<glm::vec3> get_bounds() const;
 
+
+    std::string get_information() const override;
+
 private:
     int sign (glm::vec3 const& vec3, int position) const;
 

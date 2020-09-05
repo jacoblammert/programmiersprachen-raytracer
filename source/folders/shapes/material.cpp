@@ -47,7 +47,7 @@ Material::Material(float roughness, float glossy, float opacity, float refractiv
  */
 Material::Material (std::string const& name, const glm::vec3 &color_ambient, const glm::vec3 &color_diffuse, const glm::vec3 &color_specular,
                     float reflective_exponent) :
-name {name},
+name_{name},
 color_ambient_{color_ambient},
 color_diffuse_{color_diffuse},
 color_specular_{color_specular},
