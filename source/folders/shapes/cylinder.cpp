@@ -168,7 +168,7 @@ void Cylinder::set_material(const std::shared_ptr<Material> &material) {
     material_ = material;
 }
 
-void Cylinder::print() const {
+void Cylinder::print(std::fstream & file) const {
 
 }
 

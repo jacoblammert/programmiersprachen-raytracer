@@ -336,7 +336,6 @@ void SdfLoader::load_file() const { //const correctness valid?
                             }
                         }
                     }
-                    std::cout << "HALLOOOOOO" << std::endl;
                     composite->add_shapes(composite_shapes);
                     //std::cout<< "Shapes loaded"<< std::endl;
                     

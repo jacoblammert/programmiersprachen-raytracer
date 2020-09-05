@@ -41,7 +41,7 @@ public:
 
     void set_material (std::shared_ptr<Material> const& material) override;
     
-    void print() const override;
+    void print(std::fstream & file) const override;
 
     void build();
 

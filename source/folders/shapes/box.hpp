@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <vector>
 
 #include "shape.hpp"
@@ -35,9 +36,11 @@ public:
 
     void set_material (std::shared_ptr<Material> const& material) override;
 
-    void print() const override;
+    void print(std::fstream & file) const override;
     
     void translate(glm::vec3 const& position) override;
+    
+    std::vector<glm::vec3> get_bounds() const;
 
 private:
     int sign (glm::vec3 const& vec3, int position) const;

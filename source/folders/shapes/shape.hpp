@@ -33,7 +33,7 @@ public:
 
     virtual void set_material (std::shared_ptr<Material> const& material) = 0; // needs override for composite object
 
-    virtual void print() const = 0;
+    virtual void print(std::fstream & file) const = 0;
 
     virtual void translate(glm::vec3 const& position) = 0;
 

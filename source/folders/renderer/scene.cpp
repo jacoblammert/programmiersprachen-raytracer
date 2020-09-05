@@ -30,7 +30,7 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
 
 
     Render render;
-    composite_->print();
+    //composite_->print();
     render.set_composite(composite_);
     render.set_ambient_scene(ambient_);
     render.set_lights(lights_);

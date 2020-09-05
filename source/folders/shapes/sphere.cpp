@@ -104,7 +104,7 @@ void Sphere::set_material(std::shared_ptr<Material> const& material) {
  * //TODO implement a good print function
  * outputs important information in the console
  */
-void Sphere::print() const {
+void Sphere::print(std::fstream & file) const {
     std::cout << "Sphere" << std::endl;
     //print();
 }

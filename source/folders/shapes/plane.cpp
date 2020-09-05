@@ -91,7 +91,7 @@ void Plane::set_material(std::shared_ptr<Material> const& material) {
 /**
  * should print "interesting" information about our plane (position, normal, material,...)
  */
-void Plane::print() const {
+void Plane::print(std::fstream & file) const {
     std::cout << "Plane" << std::endl;
     //print();
 }

@@ -248,6 +248,8 @@ int main(int argc, char *argv[]) {
  nicht fertig:
  - (etwas schwerer) Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions)
  - (machbar) Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert online suchen)
+ - zeichnen auch ohne composite ermöglichen (Arbeitsblatt Beipspiel SDF)
+ - composite mit nur einem Element nicht möglich
 
  
  Anmerkungen:

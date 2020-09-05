@@ -154,7 +154,7 @@ void Triangle::set_material(std::shared_ptr<Material> const& material) {
 /**
  * outputs important information in the console
  */
-void Triangle::print() const {
+void Triangle::print(std::fstream & file) const {
     std::cout << "Triangle" << std::endl;
     std::cout << "A: ";
     //a.print();

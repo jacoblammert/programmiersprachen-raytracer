@@ -157,7 +157,7 @@ void Cone::set_material(const std::shared_ptr<Material> &material) {
     this->material_ = material;
 }
 
-void Cone::print() const {
+void Cone::print(std::fstream & file) const {
 
 }
 

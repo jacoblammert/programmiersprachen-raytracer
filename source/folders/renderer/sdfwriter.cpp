@@ -27,21 +27,33 @@ void SdfWriter::create_sdf (std::shared_ptr<Composite> composite,
     }
     
     for (auto const& i : shapes) {
+        int count_box = 0, count_cone = 0, count_cylinder = 0, count_plane = 0, count_sphere = 0, count_triangle = 0, count_composite = 0;
+        
         switch (i->get_shape_type()) {
             case BOX:
-                //
+                file << "define shape box box" << count_box << " ";
+                i->print(file);
+                
+                /*box->get_bounds()[0][0] << " " << box->get_bounds()[0][1] << " " << box->get_bounds()[0][2] << " " << box->get_bounds()[1][0] << " " << box->get_bounds()[1][1] << " " << box->get_bounds()[1][2] << " " << box->get_material()->name;
+                 */
             case CONE:
-                //
+                file << "define shape cone cone" << count_cone;
+                file << "\n";
             case CYLINDER:
-                //
+                file << "define shape cylinder cylinder" << count_cylinder;
+                file << "\n";
             case PLANE:
-                //
+                file << "define shape plane plane" << count_plane;
+                file << "\n";
             case SPHERE:
-                //
+                file << "define shape sphere sphere" << count_sphere;
+                file << "\n";
             case TRIANGLE:
-                //
+                file << "define shape triangle triangle" << count_triangle;
+                file << "\n";
             case COMPOSITE:
-                //
+                file << "define shape composite composite" << count_composite;
+                file << "\n";
             default:
                 break;
         }
