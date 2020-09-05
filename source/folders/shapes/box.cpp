@@ -14,7 +14,7 @@ Box::Box() {
  * @param minXminYminZ minimum of the box (individual values must be smaller than their counterpart in max vector)
  * @param maxXmaxYmaxZ maximum of the box (individual values must be greater than their counterpart in min vector)
  */
-Box::Box(std::string const& name, const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z) {
+Box::Box(std::string const &name, const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z) {
     name_ = name;
     shape_type_ = BOX;
     position_ = (min_x_y_z + max_x_y_z) * 0.5f;
@@ -35,7 +35,7 @@ Box::Box(const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z) {
  * @param yScale float for size in y direction
  * @param zScale float for size in z direction
  */
-Box::Box(glm::vec3 const &pos, float xScale, float yScale, float zScale){
+Box::Box(glm::vec3 const &pos, float xScale, float yScale, float zScale) {
     position_ = pos;
 
     glm::vec3 min_x_y_z = {pos[0] - (xScale / 2), pos[1] - (yScale / 2), pos[2] - (zScale / 2)};
@@ -179,7 +179,7 @@ glm::vec3 Box::get_normal(glm::vec3 const &pos) const {
 
     glm::vec3 size = get_max() - get_min();
 
-    size = pos/size; // with this transformation it works for different sized boxes (no rotaterino yet)
+    size = pos / size; // with this transformation it works for different sized boxes (no rotaterino yet)
 
 
     if (fabs(size[0]) > fabs(size[1]) && fabs(size[0]) > fabs(size[2])) { // X is largest;
@@ -263,6 +263,55 @@ void Box::translate(glm::vec3 const &position) {
  */
 int Box::sign(glm::vec3 const &vec3, int pos) const {
     return ((pos == 0 && vec3[0] < 0) || (pos == 1 && vec3[1] < 0) || (pos == 2 && vec3[2] < 0));
+}
+
+
+/**
+ * Only important for the Skybox
+ * we now the ray hits the Skybox, therfore we can remove a few things
+ * @param direction
+ * @param hit_normal
+ */
+void Box::get_intersect_vec(glm::vec3 &direction, glm::vec3 &hit_normal) const {
+
+
+    glm::vec3 ray_direction = direction;
+
+    ray_direction = 1.0f / direction;
+
+    float t_min, t_max, t_y_min, t_y_max, t_z_min, t_z_max;
+
+
+    t_min = (bounds_[sign(ray_direction, 0)][0]) * ray_direction[0];
+    t_max = (bounds_[1 - sign(ray_direction, 0)][0]) * ray_direction[0];
+
+    t_y_min = (bounds_[sign(ray_direction, 1)][1]) * ray_direction[1];
+    t_y_max = (bounds_[1 - sign(ray_direction, 1)][1]) * ray_direction[1];
+
+    if (t_y_min > t_min)
+        t_min = t_y_min;
+    if (t_y_max < t_max)
+        t_max = t_y_max;
+
+    t_z_min = (bounds_[sign(ray_direction, 2)][2]) * ray_direction[2];
+    t_z_max = (bounds_[1 - sign(ray_direction, 2)][2]) * ray_direction[2];
+
+    if (t_z_min > t_min)
+        t_min = t_z_min;
+    if (t_z_max < t_max)
+        t_max = t_z_max;
+
+
+    if (0 < t_min) {
+        direction *= t_min;
+
+        hit_normal = get_normal(direction);
+    }
+    if (t_min < 0 && 0 < t_max) {
+        direction *= t_max;
+
+        hit_normal = get_normal(direction);
+    }
 }
 
 

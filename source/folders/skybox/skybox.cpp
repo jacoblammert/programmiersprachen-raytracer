@@ -26,13 +26,11 @@ glm::vec3 Skybox::get_color(glm::vec3 direction) const {
     Box box{{-1,-1,-1},{1,1,1}};
     glm::vec3 hit_normal;
     glm::vec3 hit_point;
-    float dist = INFINITY;
 
-    box.get_intersect_vec({{},direction},hit_point,hit_normal,dist);
+    box.get_intersect_vec(direction,hit_normal);
 
     glm::vec3 color;
 
-    direction *= dist;
 
     if (hit_normal[0] == 1) { // left
         x = (1 + direction[2]) * 0.5f;
