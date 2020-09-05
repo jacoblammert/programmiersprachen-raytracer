@@ -11,6 +11,7 @@ Triangle::Triangle (std::string const& name, const glm::vec3 &a, const glm::vec3
         b_ {b},
         c_ {c}
 {
+    shape_type_ = TRIANGLE;
     name_ = name;
     position_ = a;
     glm::vec3 ab = b - a;

@@ -259,4 +259,5 @@ int main(int argc, char *argv[]) {
  - Formatierung, Namensgebung (struct variablen ohne _)
  - reihenfolge methoden in hpp = cpp
  - Konsistenz: light hpp Konstruktorliste in cpp
+ - alle includes otwendig?
  */

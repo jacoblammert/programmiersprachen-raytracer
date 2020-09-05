@@ -6,6 +6,7 @@ Cone::Cone (std::string const& name, const glm::vec3 &position, const glm::vec3 
     height_ {height}
 
 {
+    shape_type_ = CONE;
     name_ = name;
     position_ = position;
     set_rotation_axis(axis);

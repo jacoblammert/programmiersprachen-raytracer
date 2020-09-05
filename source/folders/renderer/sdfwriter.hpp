@@ -1,12 +1,11 @@
-#ifndef RAYTRACER_SCENE_HPP
-#define RAYTRACER_SCENE_HPP
+#ifndef RAYTRACER_SDFWRITER_HPP
+#define RAYTRACER_SDFWRITER_HPP
 
-#include <map>
 //#include <omp.h>
-#include <utility>
-#include <renderer.hpp>
-#include <ppmwriter.hpp>
-#include <window.hpp>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <fstream>
 #include "../camera/camera.hpp"
 #include "light.hpp"
 #include "render.hpp"
@@ -18,19 +17,16 @@
 class SdfWriter {
     
 public:
-    SdfWriter (std::shared_ptr<Composite> composite,
-          std::map<std::string,std::shared_ptr<Light>> light_map,
-          std::map<std::string,std::shared_ptr<Camera>> camera_map,
-          const glm::vec3& ambient);
+    SdfWriter (std::string const& file);
     
-    void draw_scene(Camera camera, std::string filename, unsigned int x_res, unsigned int y_res) const;
+    void create_sdf (std::shared_ptr<Composite> composite,
+    std::vector<std::shared_ptr<Light>> lights_,
+    std::vector<std::shared_ptr<Camera>> cameras_,
+                                glm::vec3 ambient_) const;
     
 private:
-    std::shared_ptr<Composite> composite_;
-    std::map<std::string,std::shared_ptr<Light>> light_map_;
-    std::map<std::string,std::shared_ptr<Camera>> camera_map_;
-    glm::vec3 ambient_;
+    std::string file_;
 };
 
 
-#endif //RAYTRACER_SCENE_HPP
+#endif //RAYTRACER_SDFWRITER_HPP

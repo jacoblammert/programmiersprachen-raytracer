@@ -65,3 +65,7 @@ void Shape::set_rotation_axis(const glm::vec3& axis) {
 std::string Shape::get_name() const {
     return name_;
 }
+
+ShapeType Shape::get_shape_type() const {
+    return shape_type_;
+}

@@ -1,7 +1,6 @@
 #ifndef RAYTRACER_SCENE_HPP
 #define RAYTRACER_SCENE_HPP
 
-#include <map>
 //#include <omp.h>
 #include <utility>
 #include <renderer.hpp>
@@ -10,6 +9,7 @@
 #include "../camera/camera.hpp"
 #include "light.hpp"
 #include "render.hpp"
+#include "sdfwriter.hpp"
 #include "../shapes/sphere.hpp"
 #include "../shapes/composite.hpp"
 #include "../shapes/shape.hpp"

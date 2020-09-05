@@ -10,6 +10,11 @@
 #include "../camera/ray.hpp"
 #include "material.hpp"
 
+enum ShapeType {
+    BOX, CONE, CYLINDER, PLANE, SPHERE, TRIANGLE, COMPOSITE
+};
+
+
 class Shape {
 public:
 
@@ -43,15 +48,18 @@ public:
     void set_rotation_axis(const glm::vec3& axis);
     
     std::string get_name() const;
+    
+    ShapeType get_shape_type() const;
 
 protected:
     glm::vec3 axis_ = glm::vec3 {};
     glm::mat3x3 rotation_matrix_ = glm::mat3x3{1,0,0,0,1,0,0,0,1};
     glm::mat3x3 rotation_matrix_inverse = glm::mat3x3{1,0,0,0,1,0,0,0,1};
     float angle_ = 0.0f;
-    glm::vec3 position_ = glm::vec3 {};
     std::shared_ptr<Material> material_;
+    ShapeType shape_type_;
     std::string name_;
+    glm::vec3 position_ = glm::vec3 {};
 };
 
 

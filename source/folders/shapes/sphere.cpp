@@ -9,6 +9,7 @@
 Sphere::Sphere(std::string const& name, const glm::vec3 &position, float radius) :
         radius_ {abs(radius)}
 {
+    shape_type_ = SPHERE;
     name_ = name;
     position_ = position;
 

@@ -26,6 +26,7 @@ Composite::Composite(std::string const& name, std::vector<std::shared_ptr<Shape>
 
 {
     name_ = name;
+    shape_type_ = COMPOSITE;
     set_min_max_mid();
     if (!this->shapes_.empty()) {
         split(); // it is not an endless loop
@@ -283,6 +284,9 @@ void Composite::get_max(glm::vec3 const &shape_max) {
     }
 }
 
+std::vector<std::shared_ptr<Shape>> Composite::get_shapes () const {
+    return shapes_;
+}
 
 
 

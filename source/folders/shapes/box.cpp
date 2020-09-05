@@ -16,6 +16,7 @@ Box::Box() {
  */
 Box::Box(std::string const& name, const glm::vec3 &min_x_y_z, const glm::vec3 &max_x_y_z) {
     name_ = name;
+    shape_type_ = BOX;
     position_ = (min_x_y_z + max_x_y_z) * 0.5f;
     bounds_.push_back(min_x_y_z);
     bounds_.push_back(max_x_y_z);

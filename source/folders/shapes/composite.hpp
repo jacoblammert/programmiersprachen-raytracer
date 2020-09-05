@@ -48,6 +48,8 @@ public:
     void add_shape(const std::shared_ptr<Shape>& shape);
 
     void add_shapes(std::vector<std::shared_ptr<Shape>> const& shapes);
+    
+    std::vector<std::shared_ptr<Shape>> get_shapes () const;
 
 private:
 

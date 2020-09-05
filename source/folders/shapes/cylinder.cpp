@@ -5,6 +5,7 @@ Cylinder::Cylinder(std::string const& name, const glm::vec3 &position, const glm
     width_ {width},
     height_ {height}
 {
+    shape_type_ = CYLINDER;
     name_ = name;
     position_ = position;
     set_rotation_axis(axis);
