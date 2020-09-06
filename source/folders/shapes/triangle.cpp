@@ -175,7 +175,7 @@ void Triangle::translate(glm::vec3 const& position) {
 }
 
 std::string Triangle::get_information() const {
-    std::string information = std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
+    std::string information = name_ + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
             + std::to_string(b_[0]) + " " + std::to_string(b_[1]) + " " + std::to_string(b_[2]) + " "
             + std::to_string(c_[0]) + " " + std::to_string(c_[1]) + " " + std::to_string(c_[2]) + " "
             + material_->name_;

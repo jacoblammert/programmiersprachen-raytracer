@@ -1,6 +1,6 @@
 //#include <omp.h>
 #include "scene.hpp"
-
+#include <algorithm>
 SdfWriter::SdfWriter(std::string const& file) :
     file_ {file}
 {}
@@ -31,33 +31,33 @@ void SdfWriter::create_sdf (std::shared_ptr<Composite> composite,
         int count_box = 0, count_cone = 0, count_cylinder = 0, count_plane = 0, count_sphere = 0, count_triangle = 0, count_composite = 0;
         switch (i->get_shape_type()) {
             case BOX:
-                file << "define shape box box" << count_box << " " <<i->get_information();
+                file << "define shape box "<<i->get_information();
                 file << "\n";
                 i->print(file);
                 count_box++;
                 break;
             case CONE:
-                file << "define shape cone cone" << count_cone << " " <<i->get_information();
+                file << "define shape cone " <<i->get_information();
                 file << "\n";
                 count_cone++;
                 break;
             case CYLINDER:
-                file << "define shape cylinder cylinder" << count_cylinder<< " " <<i->get_information();
+                file << "define shape cylinder " <<i->get_information();
                 file << "\n";
                 count_cylinder++;
                 break;
             case PLANE:
-                file << "define shape plane plane" << count_plane<< " " <<i->get_information();
+                file << "define shape plane " <<i->get_information();
                 file << "\n";
                 count_plane++;
                 break;
             case SPHERE:
-                file << "define shape sphere sphere" << count_sphere<< " " <<i->get_information();
+                file << "define shape sphere " <<i->get_information();
                 file << "\n";
                 count_sphere++;
                 break;
             case TRIANGLE:
-                file << "define shape triangle triangle" << count_triangle<< " " <<i->get_information();
+                file << "define shape triangle " <<i->get_information();
                 file << "\n";
                 count_triangle++;
                 break;

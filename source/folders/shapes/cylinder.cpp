@@ -177,7 +177,7 @@ void Cylinder::translate(const glm::vec3 &position) {
 }
 
 std::string Cylinder::get_information() const {
-    std::string information = std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
+    std::string information = name_ + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
             + std::to_string(axis_[0]) + " " + std::to_string(axis_[1]) + " " + std::to_string(axis_[2]) + " "
             + std::to_string(width_) + " " + std::to_string(height_) + " " + material_->name_;
     return information;

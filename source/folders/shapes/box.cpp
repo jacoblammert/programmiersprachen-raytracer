@@ -312,7 +312,7 @@ std::vector<glm::vec3> Box::get_bounds () const {
 }
 
 std::string Box::get_information() const {
-    std::string information = std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " + material_->name_;
+    std::string information = name_ + " " + std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " +  std::to_string(bounds_[0][0]) + " " + material_->name_;
     return information;
 }
 
