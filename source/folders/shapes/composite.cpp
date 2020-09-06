@@ -290,6 +290,11 @@ std::vector<std::shared_ptr<Shape>> Composite::get_shapes () const {
 
 std::string Composite::get_information() const {
     std::string information;
+
+    if (depth_ == 1){ /// minimum depth of all the composite objects
+        information = name_ + " ";
+    }
+
     for (int i = 0; i < shapes_.size(); ++i) {
         information += shapes_[i]->get_name();
         if (i < (shapes_.size() - 1)) { // To avoid " " + " " when the information gets back

@@ -62,7 +62,7 @@ void SdfWriter::create_sdf (std::shared_ptr<Composite> composite,
                 count_triangle++;
                 break;
             case COMPOSITE:
-                file << "define shape composite composite" << count_composite<< " " <<i->get_information();
+                file << "define shape composite " <<i->get_information();
                 file << "\n";
                 count_composite++;
                 break;

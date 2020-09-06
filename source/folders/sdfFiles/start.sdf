@@ -10,7 +10,7 @@ define shape sphere csphere 0 0 -8 5 red
 # define shape cone bcone 2 0 -2 -0.25 -1.7 0.3 5 10 blue
 # define shape cylinder bcylinder 2 0 -2 1 0 0 5 5 blue
 # composite
-define shape composite bsphere csphere
+define shape composite composite_name bsphere csphere
 # scene xform
 # transform rbottom rotate 45 0 0 1
 # transform rbottom translate 0 0 -10

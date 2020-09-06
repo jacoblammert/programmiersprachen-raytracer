@@ -316,7 +316,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                     //std::vector <std::string> composites; //notwendig?
                     
                     in_sstream >> composite_name;
-                    
+
                     std::vector<std::shared_ptr<Shape>> composite_shapes;
                     
                     /* TODO give composite_name to composite */
