@@ -293,8 +293,11 @@ std::string Composite::get_information() const {
     for (int i = 0; i < shapes_.size(); ++i) {
         information += shapes_[i]->get_name();
         if (i < (shapes_.size() - 1)) { // To avoid " " + " " when the information gets back
-            information += " ";
+            shapes_[i]->get_name() += " ";
         }
+    }
+    for (int i = 0; i < boxes_.size(); ++i) {
+        information += boxes_[i].get_information();
     }
     return information;
 }
