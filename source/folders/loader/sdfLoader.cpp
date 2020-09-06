@@ -355,18 +355,26 @@ void SdfLoader::load_file() const { //const correctness valid?
                 float kd_red = 0.0f, kd_green = 0.0f, kd_blue = 0.0f;
                 float ks_red = 0.0f, ks_green = 0.0f, ks_blue = 0.0f;
                 float m = 0.0f;
+                float opacity = 1.0f;
+                float reflectivity = 0.0f;
+                float refractive_index = 1.0f;
+                float roughness = 0.0f;
                 
                 glm::vec3 ka;
                 glm::vec3 kd;
                 glm::vec3 ks;
                 
                 in_sstream >> material_name;
-                in_sstream >> ka_red >> ka_green >> ka_blue; //abmient reflection
+                in_sstream >> ka_red >> ka_green >> ka_blue; //ambient reflection
                 in_sstream >> kd_red >> kd_green >> kd_blue; //diffuse reflection
                 in_sstream >> ks_red >> ks_green >> ks_blue; //reflecting reflection
                 in_sstream >> m; //exponent for reflecting reflection
-                
-                
+                in_sstream >> opacity; //opacity
+                in_sstream >> reflectivity; //reflectivity
+                in_sstream >> refractive_index; //refractive index
+                in_sstream >> roughness; //refractive index
+
+
                 ka[0] = ka_red;
                 ka[1] = ka_green;
                 ka[2] = ka_blue;
@@ -379,9 +387,15 @@ void SdfLoader::load_file() const { //const correctness valid?
                 ks[1] = ks_green;
                 ks[2] = ks_blue;
                 
-                
+
                 
                 auto material = std::make_shared<Material> (Material{material_name, ka, kd, ks, m});
+
+                material->opacity_ = opacity;
+                material->glossy_ = reflectivity;
+                material->refractive_index_ = refractive_index;
+                material->roughness_ = roughness;
+
                 materials.push_back(material);
                 
             } else if ("light" == class_name) {

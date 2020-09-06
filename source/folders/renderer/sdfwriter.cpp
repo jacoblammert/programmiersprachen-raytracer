@@ -23,7 +23,17 @@ void SdfWriter::create_sdf (std::shared_ptr<Composite> composite,
         if (std::find(materials.begin(), materials.end(), material) == materials.end()) {
             materials.push_back(material);
             //put material in file as definition
-            file << "define material " << material->name_ << " " << material->color_ambient_[0] << " " << material->color_ambient_[1] << " " << material->color_ambient_[2] << " " << material->color_diffuse_[0] << " " << material->color_diffuse_[1] << " " << material->color_diffuse_[2] << " " << material->color_specular_[0] << " " << material->color_specular_[1] << " " << material->color_specular_[2] << " " << material->reflective_exponent_ << "\n";
+
+            file << "define material " << material->name_ << " "
+            << material->color_ambient_[0] << " " << material->color_ambient_[1] << " " << material->color_ambient_[2] << " "
+            << material->color_diffuse_[0] << " " << material->color_diffuse_[1] << " " << material->color_diffuse_[2] << " "
+            << material->color_specular_[0] << " " << material->color_specular_[1] << " " << material->color_specular_[2] << " "
+            << material->reflective_exponent_ << " "
+            << material->opacity_ << " "
+            << material->glossy_ << " "
+            << material->refractive_index_ << " "
+            << material->roughness_
+            << "\n";
         }
     }
     
