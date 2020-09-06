@@ -38,48 +38,43 @@ void SdfWriter::create_sdf (std::shared_ptr<Composite> composite,
     }
     
     for (auto const& i : shapes) {
-        int count_box = 0, count_cone = 0, count_cylinder = 0, count_plane = 0, count_sphere = 0, count_triangle = 0, count_composite = 0;
         switch (i->get_shape_type()) {
             case BOX:
                 file << "define shape box "<<i->get_information();
                 file << "\n";
                 i->print(file);
-                count_box++;
                 break;
             case CONE:
                 file << "define shape cone " <<i->get_information();
                 file << "\n";
-                count_cone++;
                 break;
             case CYLINDER:
                 file << "define shape cylinder " <<i->get_information();
                 file << "\n";
-                count_cylinder++;
                 break;
             case PLANE:
                 file << "define shape plane " <<i->get_information();
                 file << "\n";
-                count_plane++;
                 break;
             case SPHERE:
                 file << "define shape sphere " <<i->get_information();
                 file << "\n";
-                count_sphere++;
                 break;
             case TRIANGLE:
                 file << "define shape triangle " <<i->get_information();
                 file << "\n";
-                count_triangle++;
-                break;
-            case COMPOSITE:
-                file << "define shape composite " <<i->get_information();
-                file << "\n";
-                count_composite++;
                 break;
             default:
                 break;
         }
     }
-    
+
+    file << "define shape composite " <<composite->get_information();
+    file << "\n";
+
+    //TODO add light,...
+
+
+    file <<"define light sun 500 800 0 1.0 1.0 1.0 100 100 100\nambient 0.1 0.1 0.1\ndefine camera eye 60.0\ntransform eye rotate -45 0 1 0\ntransform eye translate 100 0 100\nrender eye image.ppm 480 320";
     
 }

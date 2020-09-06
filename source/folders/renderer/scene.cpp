@@ -79,7 +79,7 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
     }
     ppm_writer.save(filename);
     
-    SdfWriter sdf_writer ("Hallo.sdf");
+    SdfWriter sdf_writer ("../../source/folders/sdfFiles/Hallo.sdf");
     sdf_writer.create_sdf(composite_, lights_, cameras_, ambient_);
 
 }

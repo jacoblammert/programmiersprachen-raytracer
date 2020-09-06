@@ -285,6 +285,13 @@ void Composite::get_max(glm::vec3 const &shape_max) {
 }
 
 std::vector<std::shared_ptr<Shape>> Composite::get_shapes () const {
+    std::vector<std::shared_ptr<Shape>> shapes;
+
+    for (int i = 0; i < boxes_.size(); ++i) {
+        std::vector<std::shared_ptr<Shape>> shapes_of_boxes = boxes_[i].get_shapes();
+        shapes.insert(shapes.end(),shapes_of_boxes.begin(),shapes_of_boxes.end());
+    }
+    shapes.insert(shapes.end(),shapes_.begin(),shapes_.end());
     return shapes_;
 }
 
@@ -296,10 +303,7 @@ std::string Composite::get_information() const {
     }
 
     for (int i = 0; i < shapes_.size(); ++i) {
-        information += shapes_[i]->get_name();
-        if (i < (shapes_.size() - 1)) { // To avoid " " + " " when the information gets back
-            shapes_[i]->get_name() += " ";
-        }
+        information += shapes_[i]->get_name() + " ";
     }
     for (int i = 0; i < boxes_.size(); ++i) {
         information += boxes_[i].get_information();
