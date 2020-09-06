@@ -5,7 +5,8 @@ SdfWriter::SdfWriter(std::string const& file) :
     file_ {file}
 {}
 
-void SdfWriter::create_sdf (std::shared_ptr<Composite> composite,
+void SdfWriter::create_sdf (std::vector<std::shared_ptr<Material>> materials,
+                            std::shared_ptr<Composite> composite,
                             std::vector<std::shared_ptr<Light>> lights_,
                             std::vector<std::shared_ptr<Camera>> cameras_,
                             glm::vec3 ambient_) const {
@@ -14,14 +15,15 @@ void SdfWriter::create_sdf (std::shared_ptr<Composite> composite,
     file.clear();
     
     std::vector<std::shared_ptr<Shape>> shapes = composite->get_shapes();
-    std::vector<std::shared_ptr<Material>> materials;
+    //std::vector<std::shared_ptr<Material>> materials;
+
+    file << "# materials car cag cab cdr cdg cdb csr csg csb reflective_exponent opacity reflectivity refractive_index roughness\n";
     
-    
-    for (auto const& i : shapes) {
-        auto material = i->get_material();
+    for (auto const& material : materials) {
+        //auto material = i->get_material();
         //look if material is already in vector materials - if false add material
-        if (std::find(materials.begin(), materials.end(), material) == materials.end()) {
-            materials.push_back(material);
+        //if (std::find(materials.begin(), materials.end(), material) == materials.end()) {
+            //materials.push_back(material);
             //put material in file as definition
 
             file << "define material " << material->name_ << " "
@@ -34,8 +36,9 @@ void SdfWriter::create_sdf (std::shared_ptr<Composite> composite,
             << material->refractive_index_ << " "
             << material->roughness_
             << "\n";
-        }
+        //}
     }
+    file<<"# geometry\n";
     
     for (auto const& i : shapes) {
         switch (i->get_shape_type()) {
@@ -68,6 +71,7 @@ void SdfWriter::create_sdf (std::shared_ptr<Composite> composite,
                 break;
         }
     }
+    file<<"# composite\n";
 
     file << "define shape composite " <<composite->get_information();
     file << "\n";

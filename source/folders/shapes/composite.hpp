@@ -48,7 +48,9 @@ public:
     void add_shape(const std::shared_ptr<Shape>& shape);
 
     void add_shapes(std::vector<std::shared_ptr<Shape>> const& shapes);
-    
+
+    void set_name(std::string name);
+
     std::vector<std::shared_ptr<Shape>> get_shapes () const;
 
     std::string get_information() const override;

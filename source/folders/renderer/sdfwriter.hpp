@@ -19,7 +19,8 @@ class SdfWriter {
 public:
     SdfWriter (std::string const& file);
     
-    void create_sdf (std::shared_ptr<Composite> composite,
+    void create_sdf (std::vector<std::shared_ptr<Material>> materials,
+            std::shared_ptr<Composite> composite,
     std::vector<std::shared_ptr<Light>> lights_,
     std::vector<std::shared_ptr<Camera>> cameras_,
                                 glm::vec3 ambient_) const;

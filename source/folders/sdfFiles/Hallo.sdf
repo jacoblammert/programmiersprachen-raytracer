@@ -1,0 +1,18 @@
+# materials car cag cab cdr cdg cdb csr csg csb reflective_exponent opacity reflectivity refractive_index roughness
+define material red 1 0 0 1 0 0 1 0 0 10 1 0 1 0
+define material blue 0 0 1 0 0 1 0 0 1 10 1 0 1 0
+define material green 0 1 0 0 1 0 0 1 0 10 1 1 1 0
+define material water 0 1 0 0 1 0 0 1 0 10 0 0 1.36 0
+# geometry
+define shape plane bplane 0.000000 -2.000000 -8.000000 0.000000 1.000000 0.000000 blue
+define shape sphere csphere 0.000000 0.000000 0.000000 5.000000 green
+define shape sphere dsphere 0.000000 10.000000 8.000000 5.000000 water
+define shape sphere bsphere 0.000000 0.000000 -10.000000 5.000000 blue
+# composite
+define shape composite composite_name bplane csphere dsphere bsphere 
+define light sun 500 800 0 1.0 1.0 1.0 100 100 100
+ambient 0.1 0.1 0.1
+define camera eye 60.0
+transform eye rotate -45 0 1 0
+transform eye translate 100 0 100
+render eye image.ppm 480 320

@@ -18,7 +18,8 @@
 class Scene {
     
 public:
-    Scene(std::shared_ptr<Composite> composite,
+    Scene(std::vector<std::shared_ptr<Material>> materials,
+            std::shared_ptr<Composite> composite,
           std::vector<std::shared_ptr<Light>> lights,
           std::vector<std::shared_ptr<Camera>> cameras,
           const glm::vec3& ambient);
@@ -26,6 +27,7 @@ public:
     void draw_scene(Camera camera, std::string filename, unsigned int x_res, unsigned int y_res) const;
     
 private:
+    std::vector<std::shared_ptr<Material>> materials_;
     std::shared_ptr<Composite> composite_;
     std::vector<std::shared_ptr<Light>> lights_;
     std::vector<std::shared_ptr<Camera>> cameras_;

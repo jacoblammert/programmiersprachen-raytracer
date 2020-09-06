@@ -1,10 +1,12 @@
 //#include <omp.h>
 #include "scene.hpp"
 
-Scene::Scene(std::shared_ptr<Composite> composite,
+Scene::Scene(std::vector<std::shared_ptr<Material>> materials,
+        std::shared_ptr<Composite> composite,
              std::vector<std::shared_ptr<Light>> lights,
              std::vector<std::shared_ptr<Camera>> cameras,
              const glm::vec3& ambient) :
+        materials_{std::move(materials)},
         composite_{std::move(composite)},
         lights_{std::move(lights)},
         cameras_{std::move(cameras)},
@@ -80,6 +82,6 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
     ppm_writer.save(filename);
     
     SdfWriter sdf_writer ("../../source/folders/sdfFiles/Hallo.sdf");
-    sdf_writer.create_sdf(composite_, lights_, cameras_, ambient_);
+    sdf_writer.create_sdf(materials_, composite_, lights_, cameras_, ambient_);
 
 }

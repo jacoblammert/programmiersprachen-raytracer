@@ -317,14 +317,14 @@ void SdfLoader::load_file() const { //const correctness valid?
                     
                     in_sstream >> composite_name;
 
+                    composite->set_name(composite_name);
+
                     std::vector<std::shared_ptr<Shape>> composite_shapes;
-                    
-                    /* TODO give composite_name to composite */
                     
                     while (!in_sstream.eof()) {
                         
                         in_sstream >> param;
-                        //std::cout<<"Param: " <<param<< std::endl;
+                        std::cout<<"######################Param: " <<param<< std::endl;
                         /*
                         if (shapes.find(param) != shapes.end()) {
                             composite_shapes.push_back(shapes[param]);
@@ -333,6 +333,7 @@ void SdfLoader::load_file() const { //const correctness valid?
                         for (auto const& i : shapes) {
                             if (i->get_name() == param) {
                                 composite_shapes.push_back(i);
+                                param = ""; /// important! Since we added the shape to the composite vector, we need to change the param to avoid a false positive
                             }
                         }
                     }
@@ -519,7 +520,7 @@ void SdfLoader::load_file() const { //const correctness valid?
             in_sstream >> name_camera_render >> filename >> x_res >> y_res;
             
             //create scene with root of composite tree
-            Scene scene (composite, lights, cameras, ambient);
+            Scene scene (materials,composite, lights, cameras, ambient);
             
             
             bool camera_found = false;

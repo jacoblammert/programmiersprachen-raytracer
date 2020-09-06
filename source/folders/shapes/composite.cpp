@@ -1,10 +1,12 @@
 #include "composite.hpp"
 
+#include <utility>
+
 /**
  * default constructor
  */
 Composite::Composite() {
-
+    depth_ = 1;
 }
 
 /**
@@ -237,11 +239,7 @@ void Composite::split() {
     boxes_[1] = (left);
 
     for (int i = (int) shapes_.size() - 1; 0 <= i; --i) {
-        //std::cout<<i << " " << count++ <<" Type: " << typeid(*shapes[i].get()).hash_code()<<std::endl;
-        /// hashcode must not be equal to the planes hashcode
-        //TODO check, if a hashcode might be different on different systems
-        auto obj = shapes_[i].get();
-        if (typeid(*obj).hash_code() != 3060751613) { // Planes stay in the first Box, because they are really big
+        if (shapes_[i]->get_shape_type() != PLANE) { // Planes stay in the first Box, because they are really big
 
             if (shapes_[i]->get_median()[axis] > position_[axis]) { // right
                 boxes_[0].add_shape(shapes_[i]); // right
@@ -287,12 +285,13 @@ void Composite::get_max(glm::vec3 const &shape_max) {
 std::vector<std::shared_ptr<Shape>> Composite::get_shapes () const {
     std::vector<std::shared_ptr<Shape>> shapes;
 
+    shapes.insert(shapes.end(),shapes_.begin(),shapes_.end());
+
     for (int i = 0; i < boxes_.size(); ++i) {
         std::vector<std::shared_ptr<Shape>> shapes_of_boxes = boxes_[i].get_shapes();
         shapes.insert(shapes.end(),shapes_of_boxes.begin(),shapes_of_boxes.end());
     }
-    shapes.insert(shapes.end(),shapes_.begin(),shapes_.end());
-    return shapes_;
+    return shapes;
 }
 
 std::string Composite::get_information() const {
@@ -309,6 +308,10 @@ std::string Composite::get_information() const {
         information += boxes_[i].get_information();
     }
     return information;
+}
+
+void Composite::set_name(std::string name) {
+    name_ = std::move(name);
 }
 
 
