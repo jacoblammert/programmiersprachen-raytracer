@@ -51,7 +51,7 @@ public:
     
     std::vector<std::shared_ptr<Shape>> get_shapes () const;
 
-    std::string get_information() const;
+    std::string get_information() const override;
 
 private:
 
