@@ -8,7 +8,8 @@ Camera::Camera(std::string const& name, float fov_x) :
     direction_{glm::vec3{0.0000001, 0.00000001, -1}},
     width_{1},
     height_{1}, //TODO Berechnen durch fov in y Richtung?
-    distance_{fov_x}// from presentation
+    distance_{fov_x}, // from presentation
+    fov_x_ {fov_x}
 {
     distance_ *= MATH_PI / 360.0f;
     distance_ = (float) (0.5f / std::tan(distance_)); // from presentation
@@ -21,8 +22,8 @@ Camera::Camera (std::string const& name, float fov_x, glm::vec3 const& eye, glm:
     width_{1},
     height_{1}, //TODO Berechnen durch fov in y Richtung?
     distance_{fov_x}, // from presentation
-    up_vector_ {up}
-
+    up_vector_ {up},
+    fov_x_ {fov_x}
 {
     distance_ *= MATH_PI / 360.0f;
     distance_ = (float) (0.5f / std::tan(distance_)); // from presentation
@@ -219,4 +220,9 @@ void Camera::set_width_height(int width, int height) {
 
 std::string Camera::get_name() const {
     return name_;
+}
+
+std::string Camera::get_information() const {
+    std::string information = " " + name_ + " " + std::to_string(fov_x_) + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " " + std::to_string(direction_[0]) + " " + std::to_string(direction_[1]) + " " + std::to_string(direction_[2]) + " " + std::to_string(up_vector_[0]) + " " + std::to_string(up_vector_[1]) + " " + std::to_string(up_vector_[2]) + "\n";
+    return information;
 }

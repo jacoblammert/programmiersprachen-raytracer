@@ -75,18 +75,15 @@ void SdfWriter::create_sdf (std::vector<std::shared_ptr<Material>> materials,
     file << "define shape composite " << composite->get_information();
     file << "\n";
 
-    //TODO add light,...
-
     //file <<"define light sun 500 800 0 1.0 1.0 1.0 100 100 100\nambient 0.1 0.1 0.1\ndefine camera eye 60.0\ntransform eye rotate -45 0 1 0\ntransform eye translate 100 0 100\nrender eye image.ppm 480 320";
     
     for (auto const& light : lights_) {
         file << "define light " << light->name_ << " " << light->position_[0] << " " << light->position_[1] << " " << light->position_[2] << " " << light->color_[0] << " " << light->color_[1] << " " << light->color_[2] << " " << light->brightness_[0] << " " << light->brightness_[1] << " " << light->brightness_[2] << "\n";
     }
-    
-    /*
+     
     for (auto const& camera : cameras_) {
-        file << "define camera " << light->name_ << " " << light->position_[0] << " " << light->position_[1] << " " << light->position_[2] << " " << light->color_[0] << " " << light->color_[1] << " " << light->color_[2] << " " << light->brightness_[0] << " " << light->brightness_[1] << " " << light->brightness_[2] << "\n";
+        file << "define camera" << camera->get_information();;
     }
-     */
+     
     
 }
