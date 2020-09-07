@@ -22,12 +22,11 @@ struct Light {
         hardness_ {hardness}
     {}
 
+    std::string name_;
     glm::vec3 position_;
     glm::vec3 color_;
-    //float brightness_;
     glm::vec3 brightness_;
     float hardness_ = 1.0f;
-    std::string name_;
 
 };
 

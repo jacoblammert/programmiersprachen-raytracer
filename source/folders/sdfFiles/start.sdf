@@ -3,25 +3,27 @@ define material red 1 0 0 1 0 0 1 0 0 10
 define material blue 0 0 1 0 0 1 0 0 1 10
 define material water 0 1 0 0 1 0 0 1 0 10 0 0 1.36 0
 # geometry
-define shape box rbottom -2 -2 -2 0 0 0 0 1 0 red
-define shape box rbottom1 -20 -20 -20 20 20 20 0 1 0 blue
-define shape box rbottom2 -2 -2 12 0 0 10 0 1 0 red
-define shape sphere bsphere 0 0 -10 5 blue
+# define shape box rbottom -2 -2 -2 0 0 0 0 1 0 red
+# define shape box rbottom1 -20 -20 -20 20 20 20 0 1 0 blue
+# define shape box rbottom2 -2 -2 12 0 0 10 0 1 0 red
+# define shape sphere bsphere 0 0 -10 5 blue
 
 
-define shape sphere bsphere1 0 0 0 2 blue
-define shape sphere bsphere2 0 0 20 2 blue
-define shape sphere bsphere3 20 0 0 2 blue
+ define shape sphere bsphere1 0 0 0 2 blue
+ define shape sphere bsphere2 0 0 20 2 blue
+# define shape sphere bsphere3 20 0 0 2 blue
 
 
 
-define shape sphere csphere 0 0 -8 5 red
+# define shape sphere csphere 0 0 -8 5 red
 # define shape plane bplane 0 0 -8 0 1 0 blue
-define shape triangle btriangle 100 10 100 -100 10 100 -100 10 -100 red
+# define shape triangle btriangle 100 10 100 -100 10 100 -100 10 -100 red
 # define shape cone bcone 2 0 -2 0 -1 0 5 10 water
 # define shape cylinder bcylinder 2 0 -2 1 0 0 5 5 blue
 # composite
-define shape composite composite_name bsphere1 bsphere2 bsphere3 rbottom rbottom1 btriangle
+define shape composite composite_name bsphere1 bsphere2
+# bsphere3 rbottom rbottom1 btriangle
+
 # rbottom rbottom1 rbottom2
 # bsphere1 bsphere2 bsphere3
 # bsphere csphere
@@ -32,7 +34,7 @@ define shape composite composite_name bsphere1 bsphere2 bsphere3 rbottom rbottom
 # transform bsphere translate 0 0 -10
 # lights
 define light sun 500 800 0 1.0 1.0 1.0 100 100 100
-# define light spot1 -0 8 -3 0.8 0.8 0.8 100 100 100
+ define light spot1 -0 8 -3 0.8 0.8 0.8 100 100 100
 define light spot2 0 40 0 1 1 1 200 200 200
 ambient 0.1 0.1 0.1
 # camera
