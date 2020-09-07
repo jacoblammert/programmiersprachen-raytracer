@@ -39,9 +39,6 @@ public:
     void print(std::fstream & file) const override;
     
     void translate(glm::vec3 const& position) override;
-    
-    std::vector<glm::vec3> get_bounds() const;
-
 
     std::string get_information() const override;
 
