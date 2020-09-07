@@ -31,10 +31,10 @@ public:
 
     std::string get_information()const override;
 
+    void set_rotation_axis(const glm::vec3& axis);
 private:
     glm::vec3 b_;
     glm::vec3 c_;
-    glm::vec3 normal_;
 };
 
 

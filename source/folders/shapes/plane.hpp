@@ -28,8 +28,6 @@ public:
 
     std::string get_information()const override;
 
-private:
-    glm::vec3 normal_;
 };
 
 

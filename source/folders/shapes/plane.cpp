@@ -5,19 +5,13 @@
  * @param position for the new plane
  * @param normal of the pane (will be normalized automatically)
  */
-Plane::Plane(std::string const& name, glm::vec3 const &position, glm::vec3 const &normal) :
-    normal_ {glm::normalize(normal)}
-{
+Plane::Plane(std::string const& name, glm::vec3 const &position, glm::vec3 const &normal){
+    axis_ = glm::normalize(normal);
     shape_type_ = PLANE;
     name_ = name;
     position_ = position;
 }
-/* //TODO add later (with materials)
-plane::Plane(Vector const& position, Vector const& normal, Material *material) :
-        pos{position}, normal{normal} {
-    this->normal.normalize();
-    this->material = material;
-}*/
+
 
 /**
  * returns true, if this plane has been intersected in front of the ray, no intersections with negative scalar for ray direction allowed
@@ -28,7 +22,7 @@ plane::Plane(Vector const& position, Vector const& normal, Material *material) :
  * @return true, if intersected in front of the ray, false otherwise
  */
 bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
-    float t = glm::dot(position_ - ray.position_, normal_) / glm::dot(ray.direction_, normal_);
+    float t = glm::dot(position_ - ray.position_, axis_) / glm::dot(ray.direction_, axis_);
 
     if (0 <= t && t < distance) {
         distance = t;
@@ -44,11 +38,7 @@ bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &h
  * @return normal of the plane always "pointing" towards the camera
  */
 glm::vec3 Plane::get_normal(glm::vec3 const &pos) const {
-    //if (glm::dot(glm::normalize(pos-this->pos),normal) < 0) {
-    //    return -normal;
-    //} else{
-        return normal_;
-    //}
+    return axis_;
 }
 
 /**
@@ -85,7 +75,7 @@ std::shared_ptr<Material> Plane::get_material() {
 * @param material is given to plane
 */
 void Plane::set_material(std::shared_ptr<Material> const& material) {
-    this->material_ = std::move(material);
+    this->material_ = material;
 }
 
 /**
@@ -106,7 +96,7 @@ void Plane::translate(glm::vec3 const& position) {
 
 std::string Plane::get_information() const {
     std::string information = name_ + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
-            + std::to_string(normal_[0]) + " " + std::to_string(normal_[1]) + " " + std::to_string(normal_[2]) + " "
+            + std::to_string(axis_[0]) + " " + std::to_string(axis_[1]) + " " + std::to_string(axis_[2]) + " "
             + material_->name_;
     return information;
 }

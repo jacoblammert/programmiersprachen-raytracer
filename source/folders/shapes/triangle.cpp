@@ -16,19 +16,10 @@ Triangle::Triangle (std::string const& name, const glm::vec3 &a, const glm::vec3
     position_ = a;
     glm::vec3 ab = b - a;
     glm::vec3 ac = c - a;
-    this->normal_ = glm::normalize(glm::cross(ab,ac));
+    this->axis_ = glm::normalize(glm::cross(ab,ac));
 }
 
-/*
-Triangle::Triangle(glm::vec3 const& a, glm::vec3 const& b, glm::vec3 const& c, Color const& color) :
-        a{a},
-        b{b},
-        c{c} {
-    glm::vec3 ab = b - a;
-    glm::vec3 ac = c - a;
-    this->normal = glm::normalize(glm::cross(ab,ac));
-}
-*/
+
 
 /**
  * returns true, if the triangle was in front of the ray and the ray intersected the triangle
@@ -48,8 +39,6 @@ bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3
     // ray and triangle are parallel if det is close to 0 -> no division by zero
     if (std::fabs(det) == 0.0f)
         return false;
-
-    //glm::vec3 rayposition = ray.position;
 
     float u = glm::dot(p_vec, ray.position_ - position_) / det;
 
@@ -81,11 +70,7 @@ bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3
  * @return normal of the triangle
  */
 glm::vec3 Triangle::get_normal(glm::vec3 const& pos) const {
-    //if (glm::dot(glm::normalize(pos-this->a),normal) < 0) {
-    //    return -normal;
-    //} else{
-        return normal_;
-    //}
+    return axis_;
 }
 
 /**
@@ -133,7 +118,7 @@ glm::vec3 Triangle::get_max() const {
 glm::vec3 Triangle::get_median() const {
 
     glm::vec3 median = position_ + b_ + c_;
-    median *= (1.0f / 3.0f);
+    median /= 3.0f;
     return median;
 }
 
@@ -180,4 +165,48 @@ std::string Triangle::get_information() const {
             + std::to_string(c_[0]) + " " + std::to_string(c_[1]) + " " + std::to_string(c_[2]) + " "
             + material_->name_;
     return std::string();
+}
+
+/**
+ * This function lets you set the normal of the triangle.
+ * The position_ stays the same, therefore a and b must change and rotate around the position
+ * in a way that the new rotated vector form a triangle with the axis_ standing perpendicular on its plane
+ *
+ * Not yet working correctly
+ * @param axis
+ */
+void Triangle::set_rotation_axis(const glm::vec3 &axis) {
+
+    Shape::set_rotation_axis(axis);
+
+    glm::vec3 ab = b_ - position_;
+    glm::vec3 ac = c_ - position_;
+
+    float length_b = glm::length(ab);
+    float length_c = glm::length(ac);
+
+    ab = glm::normalize(ab);
+    ac = glm::normalize(ac);
+
+
+    //ab = rotation_matrix_ * ab;
+    //ac = rotation_matrix_ * ac;
+
+
+    glm::vec3 up_vec = glm::normalize(glm::vec3{0, 0, 1}); // vector used for rotation
+    glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, axis_));
+    float angle = (float)acos(glm::dot(up_vec,axis_));
+
+
+    ab = glm::normalize(get_rotated_vec3(ab,rotation_axis,angle));
+    ac = glm::normalize(get_rotated_vec3(ac,rotation_axis,angle));
+
+    std::cout<<"Gleichheit: " << glm::dot(glm::normalize(glm::cross(ab,ac)),glm::normalize(axis));
+
+    ab *= length_b;
+    ac *= length_c;
+
+    b_ = ab + position_;
+    c_ = ac + position_;
+
 }

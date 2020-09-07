@@ -46,7 +46,7 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
         camera.move(window);
 
         float start_time = window.get_time();
-
+        composite_->get_information();
 
 //        omp_set_num_threads(128);
 //#pragma omp parallel for

@@ -1,16 +1,18 @@
 # materials aus main.pdf
 define material red 1 0 0 1 0 0 1 0 0 10
 define material blue 0 0 1 0 0 1 0 0 1 10
+define material water 0 1 0 0 1 0 0 1 0 10 0 0 1.36 0
 # geometry
 # define shape box rbottom -100 -80 -200 100 80 -100 red
 define shape sphere bsphere 0 0 -10 5 blue
 define shape sphere csphere 0 0 -8 5 red
 # define shape plane bplane 0 0 -8 0 1 0 blue
-# define shape triangle btriangle 100 10 100 -100 10 100 -100 10 -100 red
-# define shape cone bcone 2 0 -2 -0.25 -1.7 0.3 5 10 blue
+define shape triangle btriangle 10 10 10 -10 10 10 -10 10 -10 red
+# define shape cone bcone 2 0 -2 0 -1 0 5 10 water
 # define shape cylinder bcylinder 2 0 -2 1 0 0 5 5 blue
 # composite
-define shape composite composite_name bsphere csphere
+define shape composite composite_name btriangle
+# bsphere csphere
 # scene xform
 # transform rbottom rotate 45 0 0 1
 # transform rbottom translate 0 0 -10

@@ -303,6 +303,7 @@ std::string Composite::get_information() const {
 
     for (int i = 0; i < shapes_.size(); ++i) {
         information += shapes_[i]->get_name() + " ";
+        shapes_[i]->set_rotation_axis(glm::vec3{((float)(rand()%1000))/500.0f-0.5,((float)(rand()%1000))/500.0f-0.5,((float)(rand()%1000))/500.0f-0.5});
     }
     for (int i = 0; i < boxes_.size(); ++i) {
         information += boxes_[i].get_information();

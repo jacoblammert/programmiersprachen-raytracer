@@ -45,7 +45,7 @@ public:
 
     void set_angle(float angle);
 
-    void set_rotation_axis(const glm::vec3& axis);
+    virtual void set_rotation_axis(const glm::vec3& axis);
 
     std::string get_name() const;
 
