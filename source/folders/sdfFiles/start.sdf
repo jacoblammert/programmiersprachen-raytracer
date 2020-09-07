@@ -39,7 +39,6 @@ define light spot2 0 40 0 1 1 1 200 200 200
 ambient 0.1 0.1 0.1
 # camera
 define camera eye 60.0 0.0 0.0 0.0 0.0 0.0 -1.0 0.0 1.0 0.0
-define camera eye 60.0
 # camera xform
 transform eye rotate -45 0 1 0
 transform eye translate 100 0 100
