@@ -54,13 +54,15 @@ void SdfLoader::load_file() const { //const correctness valid?
                 if (shape_type == "box") {
                     //parse box attributes
                     std::string name_box, mat_name_box;
-                    glm::vec3 p1, p2;
+                    glm::vec3 p1, p2,axis;
                     float p1_x = 0.0f, p1_y = 0.0f, p1_z = 0.0f;
                     float p2_x = 0.0f, p2_y = 0.0f, p2_z = 0.0f;
+                    float a_x = 0.0f, a_y = 1.0f, a_z = 0.0f;
                     
                     in_sstream >> name_box;
                     in_sstream >> p1_x >> p1_y >> p1_z;
                     in_sstream >> p2_x >> p2_y >> p2_z;
+                    in_sstream >> a_x >> a_y >> a_z;
                     in_sstream >> mat_name_box;
                     
                     p1[0] = p1_x;
@@ -70,10 +72,15 @@ void SdfLoader::load_file() const { //const correctness valid?
                     p2[0] = p2_x;
                     p2[1] = p2_y;
                     p2[2] = p2_z;
+
+                    axis[0] = a_x;
+                    axis[1] = a_y;
+                    axis[2] = a_z;
                     
                     // add a box and access it later with its name from the map
                     // set material to sphere (if its defined)
                     auto box = std::make_shared<Box>(Box{name_box, p1, p2});
+                    box->set_rotation_axis(axis);
                     bool material_found = false;
                     
                     for (auto const& i : materials) {

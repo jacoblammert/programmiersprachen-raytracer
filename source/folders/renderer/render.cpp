@@ -25,10 +25,13 @@ glm::vec3 Render::get_color(Ray ray, int depth) const {
     composite_->get_intersected_shape(ray, shape, hit_point, hit_normal,dist);
 
 
-
     if (dist == INFINITY) { // shape has not been hit
         return skybox_.get_color(ray.direction_);
     }
+    //else if (1000<dist){
+    //    return glm::vec3 {1,1,1};
+    //}
+    //return 10.0f/(glm::vec3 {1,1,1} * dist); /// depth map
 
 
     float glossy = shape->get_material()->glossy_;

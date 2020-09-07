@@ -3,9 +3,14 @@ define material red 1 0 0 1 0 0 1 0 0 10 1 0 1 0
 define material blue 0 0 1 0 0 1 0 0 1 10 1 0 1 0
 define material water 0 1 0 0 1 0 0 1 0 10 0 0 1.36 0
 # geometry
-define shape triangle 
+define shape sphere bsphere2 0.000000 0.000000 20.000000 2.000000 blue
+define shape triangle btriangle 100.000000 10.000000 100.000000 -100.000000 10.000000 100.000000 -100.000000 10.000000 -100.000000 red
+define shape sphere bsphere1 0.000000 0.000000 0.000000 2.000000 blue
+define shape sphere bsphere3 20.000000 0.000000 0.000000 2.000000 blue
+define shape box rbottom1 -20.000000 -20.000000 -20.000000 20.000000 20.000000 20.000000 0.000000 1.000000 0.000000 blue
+define shape box rbottom -2.000000 -2.000000 -2.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 red
 # composite
-define shape composite composite_name btriangle 
+define shape composite composite_name bsphere2 btriangle bsphere1 bsphere3 rbottom1 rbottom 
 define light sun 500 800 0 1.0 1.0 1.0 100 100 100
 ambient 0.1 0.1 0.1
 define camera eye 60.0

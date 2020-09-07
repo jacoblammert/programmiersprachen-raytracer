@@ -24,7 +24,7 @@
 
 int main(int argc, char *argv[]) {
 
-    SdfLoader loader{"../../source/folders/sdfFiles/start.sdf"};
+    SdfLoader loader{"../../source/folders/sdfFiles/Hallo.sdf"};
     loader.load_file();
 
 

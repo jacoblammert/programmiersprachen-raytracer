@@ -21,7 +21,7 @@ public:
 
     Composite(int depth); //name auch hinzufügen?
 
-    Composite(std::string const& name, std::vector<std::shared_ptr<Shape>> const& shapes);
+    Composite(std::string const& name, std::vector<std::shared_ptr<Shape>>  shapes);
 
     bool get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const override;
 

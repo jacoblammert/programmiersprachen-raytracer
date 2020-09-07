@@ -45,7 +45,6 @@ void SdfWriter::create_sdf (std::vector<std::shared_ptr<Material>> materials,
             case BOX:
                 file << "define shape box "<<i->get_information();
                 file << "\n";
-                i->print(file);
                 break;
             case CONE:
                 file << "define shape cone " <<i->get_information();

@@ -160,11 +160,12 @@ void Triangle::translate(glm::vec3 const& position) {
 }
 
 std::string Triangle::get_information() const {
-    std::string information = name_ + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
+    std::string information = name_+ " "
+            + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
             + std::to_string(b_[0]) + " " + std::to_string(b_[1]) + " " + std::to_string(b_[2]) + " "
             + std::to_string(c_[0]) + " " + std::to_string(c_[1]) + " " + std::to_string(c_[2]) + " "
             + material_->name_;
-    return std::string();
+    return information;
 }
 
 /**
@@ -201,8 +202,16 @@ void Triangle::set_rotation_axis(const glm::vec3 &axis) {
     ab = glm::normalize(get_rotated_vec3(ab,rotation_axis,angle));
     ac = glm::normalize(get_rotated_vec3(ac,rotation_axis,angle));
 
-    std::cout<<"Gleichheit: " << glm::dot(glm::normalize(glm::cross(ab,ac)),glm::normalize(axis));
+    //std::cout<<"Gleichheit: " << glm::dot(glm::normalize(glm::cross(ab,ac)),glm::normalize(axis))<< std::endl;
+/*/
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            std::cout<<rotation_matrix_[j][i]<<" ";
+        }
+        std::cout<<std::endl;
+    }
 
+    std::cout<<std::endl;/**/
     ab *= length_b;
     ac *= length_c;
 
