@@ -2,14 +2,17 @@
 #include "scene.hpp"
 #include <algorithm>
 SdfWriter::SdfWriter(std::string const& file) :
-    file_ {file}
-{}
+    filename_ {file}
+{
+    file_ = "../../source/folders/sdfFiles/" + filename_;
+}
 
 void SdfWriter::create_sdf (std::vector<std::shared_ptr<Material>> materials,
                             std::shared_ptr<Composite> composite,
                             std::vector<std::shared_ptr<Light>> lights_,
                             std::vector<std::shared_ptr<Camera>> cameras_,
-                            glm::vec3 ambient_) const {
+                            glm::vec3 ambient_,
+                            unsigned int x_res, unsigned int y_res) const {
     
     std::fstream file(file_.c_str(), std::ios::out);
     file.clear();
@@ -78,12 +81,17 @@ void SdfWriter::create_sdf (std::vector<std::shared_ptr<Material>> materials,
     //file <<"define light sun 500 800 0 1.0 1.0 1.0 100 100 100\nambient 0.1 0.1 0.1\ndefine camera eye 60.0\ntransform eye rotate -45 0 1 0\ntransform eye translate 100 0 100\nrender eye image.ppm 480 320";
     
     for (auto const& light : lights_) {
-        file << "define light " << light->name_ << " " << light->position_[0] << " " << light->position_[1] << " " << light->position_[2] << " " << light->color_[0] << " " << light->color_[1] << " " << light->color_[2] << " " << light->brightness_[0] << " " << light->brightness_[1] << " " << light->brightness_[2] << "\n";
+        file << "define light " << light->name << " " << light->position[0] << " " << light->position[1] << " " << light->position[2] << " " << light->color[0] << " " << light->color[1] << " " << light->color[2] << " " << light->brightness[0] << " " << light->brightness[1] << " " << light->brightness[2] << "\n";
     }
      
     for (auto const& camera : cameras_) {
-        file << "define camera" << camera->get_information();;
+        file << "define camera" << camera->get_information();
     }
+    
+    //transformations
+    
+    //welche Kamera nehmen, doch nur eine sinnvoll?
+    file << "render " << cameras_[0]->get_name() << " " << filename_ << " " << x_res << " " << x_res << "\n";
      
     
 }

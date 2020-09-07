@@ -23,9 +23,11 @@ public:
             std::shared_ptr<Composite> composite,
     std::vector<std::shared_ptr<Light>> lights_,
     std::vector<std::shared_ptr<Camera>> cameras_,
-                                glm::vec3 ambient_) const;
+    glm::vec3 ambient_,
+    unsigned int x_res, unsigned int y_res) const;
     
 private:
+    std::string filename_;
     std::string file_;
 };
 

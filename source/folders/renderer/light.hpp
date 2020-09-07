@@ -7,26 +7,13 @@
 
 struct Light {
 
-    /**
-     *
-     * @param position as vec 3
-     * @param color as vec 3 (red, gren, blue)
-     * @param brightness as float
-     * @param hardness as float => 1 = hard shadows, 0 = really soft shadows
-     */
-    Light(std::string const& name, glm::vec3 const& position, glm::vec3 const& color, glm::vec3 const& brightness, float hardness = 1.0):
-        name_ {name},
-        position_{position},
-        color_ {color},
-        brightness_ {brightness},
-        hardness_ {hardness}
-    {}
+    Light (std::string const& name, glm::vec3 const& position, glm::vec3 const& color, glm::vec3 const& brightness, float hardness = 1.0);
 
-    std::string name_;
-    glm::vec3 position_;
-    glm::vec3 color_;
-    glm::vec3 brightness_;
-    float hardness_ = 1.0f;
+    std::string name;
+    glm::vec3 position;
+    glm::vec3 color;
+    glm::vec3 brightness;
+    float hardness = 1.0f;
 
 };
 

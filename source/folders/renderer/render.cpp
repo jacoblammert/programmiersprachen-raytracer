@@ -269,7 +269,7 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
 
     for (int i = 0; i < lights_.size(); ++i) {
 
-        hit_to_light = (lights_[i]->position_ - hit_point);
+        hit_to_light = (lights_[i]->position - hit_point);
 
         light_distance = glm::length(hit_to_light);
         hit_to_light = glm::normalize(hit_to_light);
@@ -289,7 +289,7 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
             /// Diffuse:
             diffuse = shape->get_material()->color_diffuse_ * angle + specular;
 
-            diffuse = lights_[i]->brightness_ * diffuse;
+            diffuse = lights_[i]->brightness * diffuse;
 
 
 
@@ -308,9 +308,9 @@ glm::vec3 Render::get_brightness_color(Ray const &ray, glm::vec3 hit_point, glm:
 
             //for (int j = 0; j < samples; ++j) {
 
-                if (lights_[i]->hardness_ < 1.0f) {
+                if (lights_[i]->hardness < 1.0f) {
                     /// for soft shadows
-                    offset = glm::normalize(glm::vec3{random_float(), random_float(), random_float()}) * (1.0f - lights_[i]->hardness_);
+                    offset = glm::normalize(glm::vec3{random_float(), random_float(), random_float()}) * (1.0f - lights_[i]->hardness);
                 }
                 //if (depth < 10) {
                     offset += glm::normalize(hit_to_light) * 0.001f;
