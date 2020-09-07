@@ -22,6 +22,7 @@ define material water 0 1 0 0 1 0 0 1 0 10 0 0 1.36 0
 # define shape cylinder bcylinder 2 0 -2 1 0 0 5 5 blue
 # composite
 define shape composite composite_name bsphere1 bsphere2
+# rbottom rbottom1 rbottom2 bsphere csphere bplane btriangle bcone bcylinderss
 # bsphere3 rbottom rbottom1 btriangle
 
 # rbottom rbottom1 rbottom2
@@ -34,13 +35,13 @@ define shape composite composite_name bsphere1 bsphere2
 # transform bsphere translate 0 0 -10
 # lights
 define light sun 500 800 0 1.0 1.0 1.0 100 100 100
- define light spot1 -0 8 -3 0.8 0.8 0.8 100 100 100
+define light spot1 -0 8 -3 0.8 0.8 0.8 100 100 100
 define light spot2 0 40 0 1 1 1 200 200 200
 ambient 0.1 0.1 0.1
 # camera
-define camera eye 60.0 0.0 0.0 0.0 0.0 0.0 -1.0 0.0 1.0 0.0
+define camera eye 60.0 0.0 4.0 0.0 0.0 0.0 -1.0 0.0 1.0 0.0
 # camera xform
 transform eye rotate -45 0 1 0
-transform eye translate 100 0 100
+transform eye translate 100 100 100
 # ... and go
 render eye image.ppm 480 320

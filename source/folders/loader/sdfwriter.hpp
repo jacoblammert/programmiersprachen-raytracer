@@ -6,9 +6,10 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include "../renderer/scene.hpp"
 #include "../camera/camera.hpp"
-#include "light.hpp"
-#include "render.hpp"
+#include "../renderer/light.hpp"
+#include "../renderer/render.hpp"
 #include "../shapes/sphere.hpp"
 #include "../shapes/composite.hpp"
 #include "../shapes/shape.hpp"
@@ -17,18 +18,14 @@
 class SdfWriter {
     
 public:
-    SdfWriter (std::string const& file);
+    SdfWriter (std::string  file);
     
-    void create_sdf (std::vector<std::shared_ptr<Material>> materials,
-            std::shared_ptr<Composite> composite,
-    std::vector<std::shared_ptr<Light>> lights_,
-    std::vector<std::shared_ptr<Camera>> cameras_,
-    glm::vec3 ambient_,
-    unsigned int x_res, unsigned int y_res) const;
+    void create_sdf (const std::shared_ptr<Scene>& scene);
     
 private:
     std::string filename_;
     std::string file_;
+
 };
 
 

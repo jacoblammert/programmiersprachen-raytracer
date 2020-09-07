@@ -1,19 +1,23 @@
 //#include <omp.h>
-#include "scene.hpp"
 #include <algorithm>
-SdfWriter::SdfWriter(std::string const& file) :
-    filename_ {file}
+#include "sdfwriter.hpp"
+#include <utility>
+
+SdfWriter::SdfWriter(std::string  file) :
+    filename_ {std::move(file)}
 {
     file_ = "../../source/folders/sdfFiles/" + filename_;
 }
 
-void SdfWriter::create_sdf (std::vector<std::shared_ptr<Material>> materials,
-                            std::shared_ptr<Composite> composite,
-                            std::vector<std::shared_ptr<Light>> lights_,
-                            std::vector<std::shared_ptr<Camera>> cameras_,
-                            glm::vec3 ambient_,
-                            unsigned int x_res, unsigned int y_res) const {
-    
+void SdfWriter::create_sdf (const std::shared_ptr<Scene>& scene) {
+
+    std::vector<std::shared_ptr<Material>> materials = scene->materials_;
+    std::shared_ptr<Composite> composite = scene->composite_;
+    std::vector<std::shared_ptr<Light>> lights_ = scene->lights_;
+    std::vector<std::shared_ptr<Camera>> cameras_ = scene->cameras_;
+    glm::vec3 ambient_ = scene->ambient_;
+
+
     std::fstream file(file_.c_str(), std::ios::out);
     file.clear();
     
@@ -83,15 +87,17 @@ void SdfWriter::create_sdf (std::vector<std::shared_ptr<Material>> materials,
     for (auto const& light : lights_) {
         file << "define light " << light->name << " " << light->position[0] << " " << light->position[1] << " " << light->position[2] << " " << light->color[0] << " " << light->color[1] << " " << light->color[2] << " " << light->brightness[0] << " " << light->brightness[1] << " " << light->brightness[2] << "\n";
     }
+
+    file<<"ambient "<<std::to_string(scene->ambient_[0])<<" "<<std::to_string(scene->ambient_[1])<<" "<<std::to_string(scene->ambient_[2])<<"\n";
      
     for (auto const& camera : cameras_) {
-        file << "define camera" << camera->get_information();
+        file << "define camera" << camera->get_information() << "\n";
     }
     
     //transformations
     
     //welche Kamera nehmen, doch nur eine sinnvoll?
-    file << "render " << cameras_[0]->get_name() << " " << filename_ << " " << x_res << " " << x_res << "\n";
+    file << "render " << cameras_[0]->get_name() << " " << filename_ << " " << scene->x_res_ << " " << scene->y_res_ << "\n";
      
     
 }

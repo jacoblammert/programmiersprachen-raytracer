@@ -4,7 +4,7 @@ SdfLoader::SdfLoader(std::string filepath) :
 filepath_ {std::move(filepath)}
 {}
 
-void SdfLoader::load_file() const { //const correctness valid?
+void SdfLoader::load_file() { //const correctness valid?
     
     if (filepath_.empty()) {
         std::cout << "Please set a valid filepath" << std::endl;
@@ -527,17 +527,17 @@ void SdfLoader::load_file() const { //const correctness valid?
             in_sstream >> name_camera_render >> filename >> x_res >> y_res;
             
             //create scene with root of composite tree
-            Scene scene (materials,composite, lights, cameras, ambient);
-            
+            scene_ = std::make_shared<Scene>(Scene{materials,composite, lights, cameras, ambient,(int) x_res,(int) y_res});
+
             
             bool camera_found = false;
             
-            for (auto const& i : cameras) {
-                if (i->get_name() == name_camera_render) {
-                    scene.draw_scene(*i, filename, x_res, y_res);
-                    camera_found = true;
-                }
-            }
+            //for (auto const& i : cameras) {
+            //    if (i->get_name() == name_camera_render) {
+            //        scene_->draw_scene(0, filename, x_res, y_res);
+            //        camera_found = true;
+            //    }
+            //}
             if (!camera_found) {
                 std::cout << "Please only render scene with defined camera!" << std::endl;
             }
@@ -561,4 +561,8 @@ void SdfLoader::load_file() const { //const correctness valid?
 
     //close file
     in_file.close();
+}
+
+std::shared_ptr<Scene> SdfLoader::get_Scene() {
+    return scene_;
 }

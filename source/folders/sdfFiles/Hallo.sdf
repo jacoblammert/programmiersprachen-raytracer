@@ -10,5 +10,6 @@ define shape composite composite_name bsphere1 bsphere2
 define light sun 500 800 0 1 1 1 100 100 100
 define light spot1 -0 8 -3 0.8 0.8 0.8 100 100 100
 define light spot2 0 40 0 1 1 1 200 200 200
-define camera eye 60.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -1.000000 0.000000 1.000000 0.000000
-render eye Hallo.sdf 480 480
+ambient 0.100000 0.100000 0.100000
+define camera eye 60.000000 0.000000 4.000000 0.000000 -0.275335 -0.817724 0.505488 0.000000 1.000000 0.000000
+render eye Hallo.sdf 480 320

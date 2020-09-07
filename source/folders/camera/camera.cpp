@@ -1,9 +1,11 @@
 #include "camera.hpp"
 #include <math.h>
 
+#include <utility>
 
-Camera::Camera(std::string const& name, float fov_x) :
-    name_ {name},
+
+Camera::Camera(std::string  name, float fov_x) :
+    name_ {std::move(name)},
     position_{0.0f, 0.0f, 0.0f},
     direction_{glm::vec3{0.0000001, 0.00000001, -1}},
     width_{1},
@@ -15,8 +17,8 @@ Camera::Camera(std::string const& name, float fov_x) :
     distance_ = (float) (0.5f / std::tan(distance_)); // from presentation
 }
 
-Camera::Camera (std::string const& name, float fov_x, glm::vec3 const& eye, glm::vec3 const& direction, glm::vec3 const& up) :
-    name_ {name},
+Camera::Camera (std::string  name, float fov_x, glm::vec3 const& eye, glm::vec3 const& direction, glm::vec3 const& up) :
+    name_ {std::move(name)},
     position_ {eye}, //correct value?
     direction_ {direction},
     width_{1},
@@ -81,10 +83,8 @@ distance_{fov} { // from presentation
 Ray Camera::generate_ray(int x, int y) const {
     
     
-    glm::vec3 right = glm::normalize(
-                                     glm::cross(this->direction_, up_vector_));// from the left of the camera plane to the right (normalized)
-    glm::vec3 top = glm::normalize(
-                                   glm::cross(this->direction_, right)); // from bottom of the camera plane to the top (normalized)
+    glm::vec3 right = glm::normalize(glm::cross(this->direction_, up_vector_));// from the left of the camera plane to the right (normalized)
+    glm::vec3 top = glm::normalize(glm::cross(this->direction_, right)); // from bottom of the camera plane to the top (normalized)
     
     float x_percentage = (float) x / (float) this->width_; // could be simplified to save two variables
     float y_percentage = (float) y / (float) this->height_;// could be simplified to save two variables
@@ -103,7 +103,7 @@ Ray Camera::generate_ray(int x, int y) const {
     
     blur *= doF_strength_; ///"strength of depth effect" standard 0
     
-    glm::vec3 direction = glm::normalize(this->direction_ * this->distance_ + (top * scale_y) +
+    glm::vec3 direction = glm::normalize((this->direction_ * this->distance_) + (top * scale_y) +
                                          (right * scale_x));
     
     direction *= focal_length_;/// standard 1
@@ -223,6 +223,6 @@ std::string Camera::get_name() const {
 }
 
 std::string Camera::get_information() const {
-    std::string information = " " + name_ + " " + std::to_string(fov_x_) + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " " + std::to_string(direction_[0]) + " " + std::to_string(direction_[1]) + " " + std::to_string(direction_[2]) + " " + std::to_string(up_vector_[0]) + " " + std::to_string(up_vector_[1]) + " " + std::to_string(up_vector_[2]) + "\n";
+    std::string information = " " + name_ + " " + std::to_string(fov_x_) + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " " + std::to_string(direction_[0]) + " " + std::to_string(direction_[1]) + " " + std::to_string(direction_[2]) + " " + std::to_string(up_vector_[0]) + " " + std::to_string(up_vector_[1]) + " " + std::to_string(up_vector_[2]);
     return information;
 }

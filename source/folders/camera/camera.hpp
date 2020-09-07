@@ -14,8 +14,8 @@
 
 class Camera {
 public:
-    Camera (std::string const& name, float fov_x);
-    Camera (std::string const& name, float fov_x, glm::vec3 const& eye, glm::vec3 const& direction, glm::vec3 const& up);
+    Camera (std::string  name, float fov_x);
+    Camera (std::string  name, float fov_x, glm::vec3 const& eye, glm::vec3 const& direction, glm::vec3 const& up);
     //Camera (float fov_x);
     //Camera (float fov_x, glm::vec3 const& eye, glm::vec3 const& direction, glm::vec3 const& up);
     Camera(glm::vec3 const& position, glm::vec3 const& direction, int width, int height, float distance);

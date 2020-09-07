@@ -1,38 +1,47 @@
 //#include <omp.h>
 #include "scene.hpp"
 
+#include <utility>
+
 Scene::Scene(std::vector<std::shared_ptr<Material>> materials,
-        std::shared_ptr<Composite> composite,
+             std::shared_ptr<Composite> composite,
              std::vector<std::shared_ptr<Light>> lights,
              std::vector<std::shared_ptr<Camera>> cameras,
-             const glm::vec3& ambient) :
+             const glm::vec3 &ambient,
+             int x_res, int y_res) :
         materials_{std::move(materials)},
         composite_{std::move(composite)},
         lights_{std::move(lights)},
         cameras_{std::move(cameras)},
-        ambient_{ambient} {}
+        ambient_{ambient},
+        x_res_{x_res}, y_res_{y_res} {
 
-void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, unsigned int y_res) const {
+}
 
-    unsigned const image_width = x_res;
-    unsigned const image_height = y_res;
+Scene::Scene() {
 
-    Window window{{x_res, y_res}};
-
-    PpmWriter ppm_writer(x_res, y_res, filename);
-
-    Renderer renderer{x_res, y_res,filename};
-
-
-    int samples = 4; /// 4 Samples per Pixel
-    samples = 1; // no antialiasing (only one sample per Pixel)
+}
+/**
+ * opens a window and displays the rendered image on it
+ * It saves the last rendered image as a ppm file with the given string
+ * @param camera 0 if only one camera has been read by the sdfLoader
+ * @param name_image "image.ppm" as example
+ */
+void Scene::draw_scene(int camera, const std::string &name_image) const {
 
 
-    camera.set_width_height((int) (image_width * sqrt(samples)), (int) (image_height * sqrt(samples))); // * 2 for antialiasing
+    Window window{{x_res_, y_res_}};
+
+    PpmWriter ppm_writer(x_res_, y_res_, name_image);
+
+    Renderer renderer{(unsigned int) x_res_, (unsigned int) y_res_, name_image};
+
+
+    cameras_[camera]->set_width_height((int) (x_res_ * sqrt(antialiasing_samples_)),
+                                       (int) (y_res_ * sqrt(antialiasing_samples_))); // * 2 for antialiasing
 
 
     Render render;
-    //composite_->print();
     render.set_composite(composite_);
     render.set_ambient_scene(ambient_);
     render.set_lights(lights_);
@@ -42,31 +51,33 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
         if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             window.close();
         }
-        camera.set_direction(window);
-        camera.move(window);
+        cameras_[camera]->set_direction(window);
+        cameras_[camera]->move(window);
 
         float start_time = window.get_time();
-        composite_->get_information();
 
 //        omp_set_num_threads(128);
 //#pragma omp parallel for
-        for (int i = 0; i < image_width; ++i) {
-            for (int j = 0; j < image_height; ++j) {
+        for (int i = 0; i < x_res_; ++i) {
+            for (int j = 0; j < y_res_; ++j) {
 
                 Pixel color{(unsigned int) i, (unsigned int) j};
 
 
                 glm::vec3 color_vec;
-                for (int k = 0; k < samples; ++k) {
+                for (int k = 0; k < antialiasing_samples_; ++k) {
 
 
-                    glm::vec3 color_vec_1 = render.get_color(camera.generate_ray(sqrt(samples) * i + k % (int)sqrt(samples), sqrt(samples) * j + (int)(floor( k/sqrt(samples)))), 0);
+                    glm::vec3 color_vec_1 = render.get_color(cameras_[camera]->generate_ray(
+                            (int) (sqrt(antialiasing_samples_) * i + k % (int) sqrt(antialiasing_samples_)),
+                            (int) (sqrt(antialiasing_samples_) * j + (int) (floor(k / sqrt(antialiasing_samples_))))),
+                                                             0);
 
                     color_vec += color_vec_1 / (color_vec_1 + glm::vec3{1, 1, 1});
 
 
                 }
-                color_vec /= samples;
+                color_vec /= antialiasing_samples_;
                 color.color = {color_vec[0], color_vec[1], color_vec[2]};
 
                 renderer.write(color);
@@ -79,9 +90,54 @@ void Scene::draw_scene(Camera camera, std::string filename, unsigned int x_res, 
         std::cout << "Time: " << round((window.get_time() - start_time) * 100) / 100 << " Fps: "
                   << round(100 / (window.get_time() - start_time)) / 100 << std::endl;
     }
-    ppm_writer.save(filename);
-    
-    SdfWriter sdf_writer ("Hallo.sdf");
-    sdf_writer.create_sdf(materials_, composite_, lights_, cameras_, ambient_, x_res, y_res);
+    ppm_writer.save(name_image);
+}
 
+/**
+ * Renders only a single image and saves it as a ppm file with the given string
+ * @param camera 0 if only one camera has been read by the sdfLoader
+ * @param name_image "image.ppm" as example
+ */
+void Scene::draw_frame(int camera, const std::string &name_image) const {
+
+    PpmWriter ppm_writer(x_res_, y_res_, name_image);
+
+    Renderer renderer{(unsigned int) x_res_, (unsigned int) y_res_, name_image};
+
+
+    cameras_[camera]->set_width_height((int) (x_res_ * sqrt(antialiasing_samples_)),
+                                       (int) (y_res_ * sqrt(antialiasing_samples_))); // * 2 for antialiasing
+
+
+    Render render;
+    render.set_composite(composite_);
+    render.set_ambient_scene(ambient_);
+    render.set_lights(lights_);
+
+
+//        omp_set_num_threads(128);
+//#pragma omp parallel for
+    for (int i = 0; i < x_res_; ++i) {
+        for (int j = 0; j < y_res_; ++j) {
+
+            Pixel color{(unsigned int) i, (unsigned int) j};
+
+
+            glm::vec3 color_vec;
+            for (int k = 0; k < antialiasing_samples_; ++k) {
+
+
+                glm::vec3 color_vec_1 = render.get_color(cameras_[camera]->generate_ray(
+                        (int) (sqrt(antialiasing_samples_) * i + k % (int) sqrt(antialiasing_samples_)),
+                        (int) (sqrt(antialiasing_samples_) * j + (int) (floor(k / sqrt(antialiasing_samples_))))), 0);
+                color_vec += color_vec_1 / (color_vec_1 + glm::vec3{1, 1, 1});
+            }
+            color_vec /= antialiasing_samples_;
+            color.color = {color_vec[0], color_vec[1], color_vec[2]};
+
+            renderer.write(color);
+            ppm_writer.write(color);
+        }
+    }
+    ppm_writer.save(name_image);
 }

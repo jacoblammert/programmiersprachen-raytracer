@@ -28,8 +28,8 @@ folders/camera/ray.cpp
 
 folders/renderer/render.cpp
 folders/renderer/light.cpp
+        folders/loader/sdfwriter.cpp
 folders/renderer/scene.cpp
-folders/renderer/sdfwriter.cpp
 
 folders/skybox/skybox.cpp
 folders/skybox/ppm.cpp
