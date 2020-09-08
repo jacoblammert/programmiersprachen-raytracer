@@ -448,7 +448,7 @@ void SdfLoader::load_file() { //const correctness valid?
                 in_sstream >> fov_x;
                 in_sstream >> eye_x;
                 
-                if (eye_x != '\0') {
+                //if (eye_x != '\0') {
                     in_sstream >>  eye_y >> eye_z >> direction_x >> direction_y >> direction_z >> up_x >> up_y >> up_z;
                     
                     eye[0] = eye_x;
@@ -469,10 +469,10 @@ void SdfLoader::load_file() { //const correctness valid?
                     
                     auto camera = std::make_shared<Camera> (Camera(name_camera, fov_x, eye, direction, up));
                     cameras.push_back(camera);
-                } else {
-                    auto camera = std::make_shared<Camera> (Camera(name_camera, fov_x));
-                    cameras.push_back(camera);
-                }
+                //} else {
+                //    auto camera = std::make_shared<Camera> (Camera(name_camera, fov_x));
+                //    cameras.push_back(camera);
+                //}
                 
             } else {
                 std::cout << "Line was not valid!" << std::endl;
