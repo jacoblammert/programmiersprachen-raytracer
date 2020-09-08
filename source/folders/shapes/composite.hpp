@@ -19,7 +19,7 @@ public:
 
     Composite();
 
-    Composite(int depth); //name auch hinzufügen?
+    explicit Composite(int depth);
 
     Composite(std::string const& name, std::vector<std::shared_ptr<Shape>>  shapes);
 
@@ -37,7 +37,7 @@ public:
 
     void translate(glm::vec3 const &position) override;
 
-    std::shared_ptr<Material> get_material() override; //muss drin sein aber nicht sinnvoll?
+    std::shared_ptr<Material> get_material() override; //muss drin sein aber nicht sinnvoll? Ja
 
     void set_material (std::shared_ptr<Material> const& material) override;
     

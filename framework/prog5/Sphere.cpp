@@ -52,8 +52,8 @@ std::ostream &Sphere::print(std::ostream &os) const {
  */
 HitPoint Sphere::intersect(Ray ray) const {
 /**/
-    glm::normalize(ray.direction_);
-    glm::vec3 raydirection = ray.direction_;
+    glm::normalize(ray.direction);
+    glm::vec3 raydirection = ray.direction;
     glm::vec3 rayorigin = ray.origin_;
 
 
@@ -77,7 +77,7 @@ HitPoint Sphere::intersect(Ray ray) const {
         float t1 = t - x; // close intersection point
         float t2 = t + x; // far intersection point
 
-        raydirection = ray.direction_;
+        raydirection = ray.direction;
 
         float dist = 0;
 
@@ -103,7 +103,7 @@ HitPoint Sphere::intersect(Ray ray) const {
         //    raydirection * t2;
         //    dist = t2;
         //}
-        return {true, dist, name_, color_, ray.origin_ + raydirection, ray.direction_};
+        return {true, dist, name_, color_, ray.origin_ + raydirection, ray.direction};
     }/**/
 
     return {false};

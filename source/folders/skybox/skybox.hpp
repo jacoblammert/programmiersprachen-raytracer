@@ -1,7 +1,3 @@
-//
-// Created by Jacob Lammert on 01.09.2020.
-//
-
 #ifndef RAYTRACER_SKYBOX_HPP
 #define RAYTRACER_SKYBOX_HPP
 

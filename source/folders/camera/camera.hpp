@@ -20,20 +20,18 @@ public:
     Camera (glm::vec3 const& position, glm::vec3 const& direction, int width, int height, float distance);
     Camera (glm::vec3 const& position, int width, int height, float fov);
 
-    Ray generate_ray(int x, int y) const;
-    void set_position(glm::vec3 const& pos);
-    void set_width_height(int width, int height);
-    void translate(glm::vec3 const& pos);
-    void look_at(glm::vec3 const& pos);
-    void print() const;
-
-    void move(Window const& window);
-    void set_direction(Window const& window);
-
-    void set_depth_of_Field(float doF_strength, float focal_length);
-    glm::vec3 get_position()const;
+    Ray generate_ray (int x, int y) const;
+    void set_position (glm::vec3 const& pos);
+    void set_width_height (int width, int height);
+    void set_direction (Window const& window);
+    void set_depth_of_field (float dof_strength, float focal_length);
+    glm::vec3 get_position() const;
     std::string get_name() const;
     std::string get_information() const;
+    void print() const;
+    void translate (glm::vec3 const& pos);
+    void look_at (glm::vec3 const& pos);
+    void move (Window const& window);
 
 private:
     float random_float() const;
@@ -51,7 +49,7 @@ private:
     int height_;
     // distance from cameraposition to cameraplane
     float distance_;
-    float doF_strength_ = 0.0f;
+    float dof_strength_ = 0.0f;
     float focal_length_ = 1.0f;
     
 };

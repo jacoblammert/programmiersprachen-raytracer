@@ -1,7 +1,3 @@
-//
-// Created by Jacob Lammert on 27.08.2020.
-//
-
 #ifndef RAYTRACER_CYLINDER_HPP
 #define RAYTRACER_CYLINDER_HPP
 

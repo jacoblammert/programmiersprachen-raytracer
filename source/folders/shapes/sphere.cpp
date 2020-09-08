@@ -25,25 +25,25 @@ Sphere::Sphere(std::string const& name, const glm::vec3 &position, float radius)
  */
 bool Sphere::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
-    float t = glm::dot(position_ - ray.position_, ray.direction_);
-    float x = glm::length(position_ - ray.position_ - (ray.direction_ * t));
+    float t = glm::dot(position_ - ray.position, ray.direction);
+    float x = glm::length(position_ - ray.position - (ray.direction * t));
 
     if (x < radius_) {
 
         x = sqrt(radius_ * radius_ - x * x);
 
-        // "improved" code by reusing variables & removing some for simplicity/ speed
+        // "improved/ faster" code by reusing variables & removing some for simplicity/ speed
 
         if (0 < (t - x) && (t - x) < distance) {
             distance = (t - x);
-            hit_point = ray.position_ + (ray.direction_ * (t - x));
+            hit_point = ray.position + (ray.direction * (t - x));
             hit_normal = get_normal(hit_point);
             return true;
         }
 
         if ((t - x) < 0 && 0 < (t + x) && (t + x) < distance) {
             distance = (t + x);
-            hit_point = ray.position_ + (ray.direction_ * (t + x));
+            hit_point = ray.position + (ray.direction * (t + x));
             hit_normal = get_normal(hit_point);
             return true;
         }
@@ -64,9 +64,7 @@ glm::vec3 Sphere::get_normal(glm::vec3 const& position) const {
  * @return a vector with the minimal values of x, y and z for the sphere (for a box around the sphere)
  */
 glm::vec3 Sphere::get_min() const {
-    //glm::vec3 rad = glm::vec3(radius_, radius_, radius_);
-    glm::vec3 rad {radius_, radius_, radius_};
-    return position_ - rad;
+    return position_ - glm::vec3{1, 1, 1} * radius_;
 }
 
 
@@ -74,9 +72,7 @@ glm::vec3 Sphere::get_min() const {
  * @return a vector with the maximal values of x, y and z for the sphere (for a box around the sphere)
  */
 glm::vec3 Sphere::get_max() const {
-    //glm::vec3 rad = glm::vec3(radius_, radius_, radius_);
-    glm::vec3 rad {radius_, radius_, radius_};
-    return position_ + rad;
+    return position_ + glm::vec3{1, 1, 1} * radius_;
 }
 
 /**
@@ -106,7 +102,6 @@ void Sphere::set_material(std::shared_ptr<Material> const& material) {
  */
 void Sphere::print(std::fstream & file) const {
     std::cout << "Sphere" << std::endl;
-    //print();
 }
 
 /**
@@ -118,6 +113,6 @@ void Sphere::translate(glm::vec3 const& position) {
 }
 
 std::string Sphere::get_information() const {
-    std::string information = name_ + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " " + std::to_string(radius_) + " " + material_->name_;
+    std::string information = name_ + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " " + std::to_string(radius_) + " " + material_->name;
     return information;
 }

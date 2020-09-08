@@ -33,20 +33,20 @@ Triangle::Triangle (std::string const& name, const glm::vec3 &a, const glm::vec3
 bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
 
-    glm::vec3 p_vec = glm::cross(ray.direction_ , (c_ - position_));
+    glm::vec3 p_vec = glm::cross(ray.direction , (c_ - position_));
     float det = glm::dot(p_vec, (b_ - position_));
 
     // ray and triangle are parallel if det is close to 0 -> no division by zero
     if (std::fabs(det) == 0.0f)
         return false;
 
-    float u = glm::dot(p_vec, ray.position_ - position_) / det;
+    float u = glm::dot(p_vec, ray.position - position_) / det;
 
     if (u < 0 || u > 1)
         return false;
 
-    p_vec = glm::cross((ray.position_ - position_), (b_ - position_));
-    float v = glm::dot(p_vec, ray.direction_) / det;
+    p_vec = glm::cross((ray.position - position_), (b_ - position_));
+    float v = glm::dot(p_vec, ray.direction) / det;
 
     if (v < 0 || (u + v) > 1)
         return false;
@@ -55,10 +55,10 @@ bool Triangle::get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3
 
     if (0 < det && det < distance) {
         distance = det;
-        p_vec = ray.direction_;
+        p_vec = ray.direction;
         p_vec *= det;
-        hit_point = ray.position_ + p_vec;
-        hit_normal = get_normal(ray.position_);
+        hit_point = ray.position + p_vec;
+        hit_normal = get_normal(ray.position);
         return true;
     }
     return false;
@@ -140,12 +140,12 @@ void Triangle::set_material(std::shared_ptr<Material> const& material) {
  * outputs important information in the console
  */
 void Triangle::print(std::fstream & file) const {
-    std::cout << "Triangle" << std::endl;
-    std::cout << "A: ";
+    //std::cout << "Triangle" << std::endl;
+    //std::cout << "A: ";
     //a.print();
-    std::cout << "B: ";
+    //std::cout << "B: ";
     //b.print();
-    std::cout << "C: ";
+    //std::cout << "C: ";
     //c.print();
 }
 
@@ -164,7 +164,7 @@ std::string Triangle::get_information() const {
             + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
             + std::to_string(b_[0]) + " " + std::to_string(b_[1]) + " " + std::to_string(b_[2]) + " "
             + std::to_string(c_[0]) + " " + std::to_string(c_[1]) + " " + std::to_string(c_[2]) + " "
-            + material_->name_;
+            + material_->name;
     return information;
 }
 
@@ -173,7 +173,7 @@ std::string Triangle::get_information() const {
  * The position_ stays the same, therefore a and b must change and rotate around the position
  * in a way that the new rotated vector form a triangle with the axis_ standing perpendicular on its plane
  *
- * Not yet working correctly
+ * Not yet working correctly! Dont use!
  * @param axis
  */
 void Triangle::set_rotation_axis(const glm::vec3 &axis) {
