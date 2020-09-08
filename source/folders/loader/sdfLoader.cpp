@@ -446,10 +446,10 @@ void SdfLoader::load_file() { //const correctness valid?
                 
                 in_sstream >> name_camera;
                 in_sstream >> fov_x;
-                in_sstream >> eye_x_test;
+                in_sstream >> eye_x;
                 
-                if (eye_x_test != '\0') {
-                    in_sstream >> eye_x >> eye_y >> eye_z >> direction_x >> direction_y >> direction_z >> up_x >> up_y >> up_z;
+                if (eye_x != '\0') {
+                    in_sstream >>  eye_y >> eye_z >> direction_x >> direction_y >> direction_z >> up_x >> up_y >> up_z;
                     
                     eye[0] = eye_x;
                     eye[1] = eye_y;
