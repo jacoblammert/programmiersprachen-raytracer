@@ -21,16 +21,12 @@
 
 class SdfLoader {
 public:
-    SdfLoader(std::string filepath);
-
+    SdfLoader (std::string const& filepath);
     void load_file();
-
-    std::shared_ptr<Scene> get_Scene();
+    std::shared_ptr<Scene> get_scene();
 
 private:
-
     std::shared_ptr<Scene> scene_;
-
     std::string filepath_;
 };
 

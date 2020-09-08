@@ -1,9 +1,17 @@
 #include "sdfLoader.hpp"
 
-SdfLoader::SdfLoader(std::string filepath) :
-        filepath_{std::move(filepath)} {}
+/**
+ Constructor creating sdf-loader for given file
+ @param filepath of the .sdf
+ */
+SdfLoader::SdfLoader(std::string const& filepath) :
+        filepath_{filepath}
+{}
 
-void SdfLoader::load_file() { //const correctness valid?
+/**
+ Gathers information from sdf file at filepath_ and creates scene
+ */
+void SdfLoader::load_file() { //TODO const correctness valid?
 
     if (filepath_.empty()) {
         std::cout << "Please set a valid filepath" << std::endl;
@@ -11,35 +19,31 @@ void SdfLoader::load_file() { //const correctness valid?
     }
 
     //open file in read-only && ASCII mode
-    std::ifstream in_file(filepath_, std::ios::in);
+    std::ifstream in_file (filepath_, std::ios::in);
+    
     std::string line_buffer;
-
     std::string identifier;
 
-
-    std::shared_ptr<Composite> composite = std::make_shared<Composite>(
-            Composite{0}); /// all possiblt compositepointer  TODO turn to smartpointer
-    std::vector<std::shared_ptr<Shape>> shapes; /// map with all the shapes accessible with their names
-
-
+    // all possiblt compositepointer  TODO turn to smartpointer ?
+    std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{0});
+    std::vector<std::shared_ptr<Shape>> shapes;
     std::vector<std::shared_ptr<Material>> materials;
     std::vector<std::shared_ptr<Light>> lights;
     std::vector<std::shared_ptr<Camera>> cameras;
     glm::vec3 ambient;
-
     std::string name_camera_render, filename;
     unsigned int x_res, y_res;
 
-
+    
     while (std::getline(in_file, line_buffer)) {
+        
+        // prints lines which are read
         std::cout << line_buffer << std::endl;
 
         //construct stringstream using line_buffer string
-        std::istringstream in_sstream(line_buffer);
+        std::istringstream in_sstream (line_buffer);
 
         in_sstream >> identifier;
-
-        //std::cout << "Identifier content: " << identifier << std::endl;
 
         //check for definition or transformation
         if ("define" == identifier) {
@@ -57,6 +61,7 @@ void SdfLoader::load_file() { //const correctness valid?
                     float p1_x = 0.0f, p1_y = 0.0f, p1_z = 0.0f;
                     float p2_x = 0.0f, p2_y = 0.0f, p2_z = 0.0f;
                     float a_x = 0.0f, a_y = 1.0f, a_z = 0.0f;
+                    bool unique = true;
 
                     in_sstream >> name_box;
                     in_sstream >> p1_x >> p1_y >> p1_z;
@@ -75,23 +80,35 @@ void SdfLoader::load_file() { //const correctness valid?
                     axis[0] = a_x;
                     axis[1] = a_y;
                     axis[2] = a_z;
-
-                    // add a box and access it later with its name from the map
-                    // set material to sphere (if its defined)
-                    auto box = std::make_shared<Box>(Box{name_box, p1, p2});
-                    box->set_rotation_axis(axis);
-                    bool material_found = false;
-
-                    for (auto const &i : materials) {
-                        if (i->name == mat_name_box) {
-                            box->set_material(i);
-                            material_found = true;
+                    
+                    // checks that name of box is unique
+                    for (auto const& i : shapes) {
+                        if (i->get_name() == name_box) {
+                            unique = false;
+                            std::cout << "Names of objects need to be unique!" << std::endl;
                         }
                     }
-                    if (!material_found) {
-                        std::cout << "Please only use defined materials!" << std::endl;
+                    
+                    if (unique) {
+                        auto box = std::make_shared<Box> (name_box, p1, p2);
+                        box->set_rotation_axis(axis); // remove - use read rotation
+                        bool material_found = false;
+
+                        // set material to box (if its defined)
+                        for (auto const& i : materials) {
+                            if (i->name == mat_name_box) {
+                                box->set_material(i);
+                                material_found = true;
+                            }
+                        }
+                        
+                        if (!material_found) {
+                            std::cout << "Please only use defined materials!" << std::endl;
+                        }
+                        
+                        // add the box to shapes vector
+                        shapes.push_back(box);
                     }
-                    shapes.push_back(box);
 
                 } else if (shape_type == "sphere") {
                     //parse sphere attributes
@@ -99,6 +116,7 @@ void SdfLoader::load_file() { //const correctness valid?
                     float radius = 0.0f;
                     float center_x = 0.0f, center_y = 0.0f, center_z = 0.0f;
                     glm::vec3 center;
+                    bool unique = true;
 
                     in_sstream >> name_sphere;
                     in_sstream >> center_x >> center_y >> center_z;
@@ -109,21 +127,33 @@ void SdfLoader::load_file() { //const correctness valid?
                     center[1] = center_y;
                     center[2] = center_z;
 
-                    // add a sphere and access it later with its name from the map
-                    auto sphere = std::make_shared<Sphere>(Sphere{name_sphere, center, radius});
-                    bool material_found = false;
-
-                    for (auto const &i : materials) {
-                        if (i->name == mat_name_sphere) {
-                            sphere->set_material(i);
-                            material_found = true;
+                    // checks that name of sphere is unique
+                    for (auto const& i : shapes) {
+                        if (i->get_name() == name_sphere) {
+                            unique = false;
+                            std::cout << "Names of objects need to be unique!" << std::endl;
                         }
                     }
-                    if (!material_found) {
-                        std::cout << "Please only use defined materials!" << std::endl;
-                    }
+                    
+                    if (unique) {
+                        // set material to sphere (if its defined)
+                        auto sphere = std::make_shared<Sphere>(name_sphere, center, radius);
+                        bool material_found = false;
 
-                    shapes.push_back(sphere);
+                        for (auto const& i : materials) {
+                            if (i->name == mat_name_sphere) {
+                                sphere->set_material(i);
+                                material_found = true;
+                            }
+                        }
+                        
+                        if (!material_found) {
+                            std::cout << "Please only use defined materials!" << std::endl;
+                        }
+
+                        // add the sphere to shapes vector
+                        shapes.push_back(sphere);
+                    }
 
                 } else if (shape_type == "triangle") {
                     //parse triangle attributes - define shape triangle [vec1] [vec2] [vec3] <mat-name>
@@ -134,6 +164,7 @@ void SdfLoader::load_file() { //const correctness valid?
                     glm::vec3 vector_2;
                     float x_3 = 0.0f, y_3 = 0.0f, z_3 = 0.0f;
                     glm::vec3 vector_3;
+                    bool unique = true;
 
                     in_sstream >> name_triangle;
                     in_sstream >> x_1 >> y_1 >> z_1;
@@ -152,22 +183,33 @@ void SdfLoader::load_file() { //const correctness valid?
                     vector_3[0] = x_3;
                     vector_3[1] = y_3;
                     vector_3[2] = z_3;
-
-                    // add a triangle and access it later with its name from the map
-                    auto triangle = std::make_shared<Triangle>(Triangle{name_triangle, vector_1, vector_2, vector_3});
-                    bool material_found = false;
-
-                    for (auto const &i : materials) {
-                        if (i->name == mat_name_triangle) {
-                            triangle->set_material(i);
-                            material_found = true;
+                    
+                    // checks that name of triangle is unique
+                    for (auto const& i : shapes) {
+                        if (i->get_name() == name_triangle) {
+                            unique = false;
+                            std::cout << "Names of objects need to be unique!" << std::endl;
                         }
                     }
-                    if (!material_found) {
-                        std::cout << "Please only use defined materials!" << std::endl;
-                    }
 
-                    shapes.push_back(triangle);
+                    if (unique) {
+                        // set material to triangle (if its defined)
+                        auto triangle = std::make_shared<Triangle>(name_triangle, vector_1, vector_2, vector_3);
+                        bool material_found = false;
+
+                        for (auto const& i : materials) {
+                            if (i->name == mat_name_triangle) {
+                                triangle->set_material(i);
+                                material_found = true;
+                            }
+                        }
+                        if (!material_found) {
+                            std::cout << "Please only use defined materials!" << std::endl;
+                        }
+
+                        // add the triangle to shapes vector
+                        shapes.push_back(triangle);
+                    }
 
                 } else if (shape_type == "cone" || shape_type == "cylinder") {
                     //parse cone/cylinder attributes - define shape cone/cylinder [pos] [axis] <width> <height> <mat-name>
@@ -176,6 +218,7 @@ void SdfLoader::load_file() { //const correctness valid?
                     float axis_x = 0.0f, axis_y = 0.0f, axis_z = 0.0f;
                     float width = 0.0f, height = 0.0f;
                     glm::vec3 position, axis;
+                    bool unique = true;
 
                     in_sstream >> name_cone_cylinder;
                     in_sstream >> position_x >> position_y >> position_z;
@@ -190,42 +233,54 @@ void SdfLoader::load_file() { //const correctness valid?
                     axis[0] = axis_x;
                     axis[1] = axis_y;
                     axis[2] = axis_z;
-
-                    if (shape_type == "cone") {
-                        // add a cone and access it later with its name from the map
-                        auto cone = std::make_shared<Cone>(Cone{name_cone_cylinder, position, axis, width, height});
-                        bool material_found = false;
-
-                        for (auto const &i : materials) {
-                            if (i->name == mat_name_cone_cylinder) {
-                                cone->set_material(i);
-                                material_found = true;
-                            }
+                    
+                    // checks that name of cone/ cylinder is unique
+                    for (auto const& i : shapes) {
+                        if (i->get_name() == name_cone_cylinder) {
+                            unique = false;
+                            std::cout << "Names of objects need to be unique!" << std::endl;
                         }
-                        if (!material_found) {
-                            std::cout << "Please only use defined materials!" << std::endl;
-                        }
-                        shapes.push_back(cone);
-
-                    } else {
-                        // add a cylinder and access it later with its name from the map
-                        auto cylinder = std::make_shared<Cylinder>(
-                                Cylinder{name_cone_cylinder, position, axis, width, height});
-                        bool material_found = false;
-
-                        for (auto const &i : materials) {
-                            if (i->name == mat_name_cone_cylinder) {
-                                cylinder->set_material(i);
-                                material_found = true;
-                            }
-                        }
-                        if (!material_found) {
-                            std::cout << "Please only use defined materials!" << std::endl;
-                        }
-
-                        shapes.push_back(cylinder);
                     }
+                    
+                    if (unique) {
+                        if (shape_type == "cone") {
+                            
+                            // set material to cone (if its defined)
+                            auto cone = std::make_shared<Cone>(name_cone_cylinder, position, axis, width, height);
+                            bool material_found = false;
 
+                            for (auto const& i : materials) {
+                                if (i->name == mat_name_cone_cylinder) {
+                                    cone->set_material(i);
+                                    material_found = true;
+                                }
+                            }
+                            if (!material_found) {
+                                std::cout << "Please only use defined materials!" << std::endl;
+                            }
+                            
+                            // add the cone to shapes vector
+                            shapes.push_back(cone);
+
+                        } else {
+                            // set material to cylinder (if its defined)
+                            auto cylinder = std::make_shared<Cylinder>(name_cone_cylinder, position, axis, width, height);
+                            bool material_found = false;
+
+                            for (auto const& i : materials) {
+                                if (i->name == mat_name_cone_cylinder) {
+                                    cylinder->set_material(i);
+                                    material_found = true;
+                                }
+                            }
+                            if (!material_found) {
+                                std::cout << "Please only use defined materials!" << std::endl;
+                            }
+
+                            // add the cylinder to shapes vector
+                            shapes.push_back(cylinder);
+                        }
+                    }
 
                 } else if (shape_type == "plane") {
                     //parse plane attributes - define shape plane [pos] [normal] <mat-name>
@@ -233,6 +288,7 @@ void SdfLoader::load_file() { //const correctness valid?
                     float position_x = 0.0f, position_y = 0.0f, position_z = 0.0f;
                     float normal_x = 0.0f, normal_y = 0.0f, normal_z = 0.0f;
                     glm::vec3 position, normal;
+                    bool unique = true;
 
                     in_sstream >> name_plane;
                     in_sstream >> position_x >> position_y >> position_z;
@@ -246,58 +302,57 @@ void SdfLoader::load_file() { //const correctness valid?
                     normal[0] = normal_x;
                     normal[1] = normal_y;
                     normal[2] = normal_z;
-
-                    // add a cone and access it later with its name from the map
-                    auto plane = std::make_shared<Plane>(Plane{name_plane, position, normal});
-
-                    bool material_found = false;
-
-                    for (auto const &i : materials) {
-                        if (i->name == mat_name_plane) {
-                            plane->set_material(i);
-                            material_found = true;
+                    
+                    // checks that name of plane is unique
+                    for (auto const& i : shapes) {
+                        if (i->get_name() == name_plane) {
+                            unique = false;
+                            std::cout << "Names of objects need to be unique!" << std::endl;
                         }
                     }
-                    if (!material_found) {
-                        std::cout << "Please only use defined materials!" << std::endl;
-                    }
-                    shapes.push_back(plane);
 
+                    if (unique) {
+                        // set material to cylinder (if its defined)
+                        auto plane = std::make_shared<Plane>(name_plane, position, normal);
+                        bool material_found = false;
+
+                        for (auto const& i : materials) {
+                            if (i->name == mat_name_plane) {
+                                plane->set_material(i);
+                                material_found = true;
+                            }
+                        }
+                        if (!material_found) {
+                            std::cout << "Please only use defined materials!" << std::endl;
+                        }
+                        shapes.push_back(plane);
+                    }
+                    
                 } else if (shape_type == "composite") {
                     //parse composite attributes
-                    //int count = 0;
                     std::string composite_name, param;
-                    //std::vector <std::string> composites; //notwendig?
 
                     in_sstream >> composite_name;
-
+                    //set name of composite
                     composite->set_name(composite_name);
-
+                    //vector of shapes in composite
                     std::vector<std::shared_ptr<Shape>> composite_shapes;
 
                     while (!in_sstream.eof()) {
-
                         in_sstream >> param;
-                        std::cout << "######################Param: " << param << std::endl;
-
-                        for (auto const &i : shapes) {
+                        // put mentioned shapes in composite
+                        for (auto const& i : shapes) {
                             if (i->get_name() == param) {
                                 composite_shapes.push_back(i);
-                                param = ""; /// important! Since we added the shape to the composite vector, we need to change the param to avoid a false positive
+                                param = ""; // important! Since we added the shape to the composite vector, we need to change the param to avoid a false positive
                             }
                         }
                     }
                     composite->add_shapes(composite_shapes);
-                    //std::cout<< "Shapes loaded"<< std::endl;
 
                     // all the shapes have now been added to this single composite object, therefore we can build it now
                     composite->build();
-                    //std::cout<< "composite build"<< std::endl;
-
-                    // we will later test every ray against every composite object inside of this single vector
-                    //composite->add_shape()push_back(composite);
-
-                    // even shapes which are not inside a composite object might later be added to a new composite object to make the intersection tests faster
+                    
                 }
             } else if ("material" == class_name) {
                 //parse material attributes
@@ -310,20 +365,28 @@ void SdfLoader::load_file() { //const correctness valid?
                 float reflectivity = 0.0f;
                 float refractive_index = 1.0f;
                 float roughness = 0.0f;
-
                 glm::vec3 ka;
                 glm::vec3 kd;
                 glm::vec3 ks;
+                bool unique = true;
 
                 in_sstream >> material_name;
-                in_sstream >> ka_red >> ka_green >> ka_blue; //ambient reflection
-                in_sstream >> kd_red >> kd_green >> kd_blue; //diffuse reflection
-                in_sstream >> ks_red >> ks_green >> ks_blue; //reflecting reflection
-                in_sstream >> m; //exponent for reflecting reflection
-                in_sstream >> opacity; //opacity
-                in_sstream >> reflectivity; //reflectivity
-                in_sstream >> refractive_index; //refractive index
-                in_sstream >> roughness; //refractive index
+                //ambient reflection
+                in_sstream >> ka_red >> ka_green >> ka_blue;
+                //diffuse reflection
+                in_sstream >> kd_red >> kd_green >> kd_blue;
+                //reflecting reflection
+                in_sstream >> ks_red >> ks_green >> ks_blue;
+                //exponent for reflecting reflection
+                in_sstream >> m;
+                //opacity
+                in_sstream >> opacity;
+                //reflectivity
+                in_sstream >> reflectivity;
+                //refractive index
+                in_sstream >> refractive_index;
+                //refractive index
+                in_sstream >> roughness;
 
 
                 ka[0] = ka_red;
@@ -337,16 +400,26 @@ void SdfLoader::load_file() { //const correctness valid?
                 ks[0] = ks_red;
                 ks[1] = ks_green;
                 ks[2] = ks_blue;
+                
+                // checks that name of material is unique
+                for (auto const& i : materials) {
+                    if (i->name == material_name) {
+                        unique = false;
+                        std::cout << "Names of objects need to be unique!" << std::endl;
+                    }
+                }
+                
+                if (unique) {
+                    // create material with given attributes and push it in material vector
+                    auto material = std::make_shared<Material>(material_name, ka, kd, ks, m);
 
+                    material->opacity = opacity;
+                    material->glossy = reflectivity;
+                    material->refractive_index = refractive_index;
+                    material->roughness = roughness;
 
-                auto material = std::make_shared<Material>(Material{material_name, ka, kd, ks, m});
-
-                material->opacity = opacity;
-                material->glossy = reflectivity;
-                material->refractive_index = refractive_index;
-                material->roughness = roughness;
-
-                materials.push_back(material);
+                    materials.push_back(material);
+                }
 
             } else if ("light" == class_name) {
                 //parse light attributes
@@ -355,6 +428,7 @@ void SdfLoader::load_file() { //const correctness valid?
                 float pos_x = 0.0f, pos_y = 0.0f, pos_z = 0.0f;
                 float color_x = 0.0f, color_y = 0.0f, color_z = 0.0f;
                 float brightness_x = 0.0f, brightness_y = 0.0f, brightness_z = 0.0f;
+                bool unique = true;
 
                 in_sstream >> name_light;
                 in_sstream >> pos_x >> pos_y >> pos_z;
@@ -372,25 +446,35 @@ void SdfLoader::load_file() { //const correctness valid?
                 brightness[0] = brightness_x;
                 brightness[1] = brightness_y;
                 brightness[2] = brightness_z;
-
-                auto light = std::make_shared<Light>(Light(name_light, pos, color, brightness));
-                lights.push_back(light);
+                
+                // checks that name of light is unique
+                for (auto const& i : lights) {
+                    if (i->name == name_light) {
+                        unique = false;
+                        std::cout << "Names of objects need to be unique!" << std::endl;
+                    }
+                }
+                
+                if (unique) {
+                    // create light with given attributes and push it in lights vector
+                    auto light = std::make_shared<Light>(name_light, pos, color, brightness);
+                    lights.push_back(light);
+                }
 
             } else if ("camera" == class_name) {
                 //parse camera attributes
                 std::string name_camera;
                 float fov_x = 0.0f;
                 glm::vec3 eye, direction, up;
-                char eye_x_test = '\0';
                 float eye_x = 0.0f, eye_y = 0.0f, eye_z = 0.0f;
                 float direction_x = 0.0f, direction_y = 0.0f, direction_z = 0.0f;
                 float up_x = 0.0f, up_y = 0.0f, up_z = 0.0f;
+                bool unique = true;
 
                 in_sstream >> name_camera;
                 in_sstream >> fov_x;
                 in_sstream >> eye_x;
 
-                //if (eye_x != '\0') {
                 in_sstream >> eye_y >> eye_z >> direction_x >> direction_y >> direction_z >> up_x >> up_y >> up_z;
 
                 eye[0] = eye_x;
@@ -405,47 +489,108 @@ void SdfLoader::load_file() { //const correctness valid?
                 up[1] = up_y;
                 up[2] = up_z;
 
-                std::cout << eye[0] << eye[1] << eye[2] << std::endl;
-                std::cout << direction[0] << direction[1] << direction[2] << std::endl;
-                std::cout << up[0] << up[1] << up[2] << std::endl;
-
-                auto camera = std::make_shared<Camera>(Camera(name_camera, fov_x, eye, direction, up));
-                cameras.push_back(camera);
+                // checks that name of light is unique
+                for (auto const& i : cameras) {
+                    if (i->get_name() == name_camera) {
+                        std::cout << "Names of objects need to be unique!" << std::endl;
+                        unique = false;
+                    }
+                }
+                
+                if (unique) {
+                    // create camera with given attributes and push back in camera vector
+                    auto camera = std::make_shared<Camera>(name_camera, fov_x, eye, direction, up);
+                    cameras.push_back(camera);
+                }
 
             } else {
                 std::cout << "Line was not valid!" << std::endl;
             }
         } else if ("transform" == identifier) {
             std::string object, transfomation_type;
+            
             in_sstream >> object;
             in_sstream >> transfomation_type;
+            
             //check for transformation type and parse arguments
             if ("translate" == transfomation_type) {
                 glm::vec3 offset;
                 float offset_x = 0.0f, offset_y = 0.0f, offset_z = 0.0f;
+                bool found = false;
 
                 in_sstream >> offset_x >> offset_y >> offset_z;
 
                 offset[0] = offset_x;
                 offset[1] = offset_y;
                 offset[2] = offset_z;
+                
+                for (auto const& i : shapes) {
+                    if (i->get_name() == object) {
+                        i->translate (offset);
+                        found = true;
+                    }
+                }
+                
+                if (!found) {
+                    for (auto const& i : cameras) {
+                        if (i->get_name() == object) {
+                            i->translate (offset);
+                            found = true;
+                        }
+                    }
+                }
 
             } else if ("rotate" == transfomation_type) {
-                glm::vec3 vector;
+                glm::vec3 axis;
                 float angle = 0.0f;
-                float vector_x = 0.0f, vector_y = 0.0f, vector_z = 0.0f;
+                float axis_x = 0.0f, axis_y = 0.0f, axis_z = 0.0f;
+                bool found = false;
 
                 in_sstream >> angle;
-                in_sstream >> vector_x >> vector_y >> vector_z;
+                in_sstream >> axis_x >> axis_y >> axis_z;
 
-                vector[0] = vector_x;
-                vector[1] = vector_y;
-                vector[2] = vector_z;
+                axis[0] = axis_x;
+                axis[1] = axis_y;
+                axis[2] = axis_z;
+                
+                for (auto const& i : shapes) {
+                    if (i->get_name() == object) {
+                        i->set_rotation_axis (axis);
+                        i->set_angle (angle);
+                        found = true;
+                    }
+                }
+                
+                if (!found) {
+                    for (auto const& i : cameras) {
+                        if (i->get_name() == object) {
+                            // TODO implement rotation function
+                            found = true;
+                        }
+                    }
+                }
 
             } else if ("scale" == transfomation_type) {
                 float value = 0.0f;
+                bool found = false;
 
                 in_sstream >> value;
+                
+                for (auto const& i : shapes) {
+                    if (i->get_name() == object) {
+                        // TODO implement scale function
+                        found = true;
+                    }
+                }
+                
+                if (!found) {
+                    for (auto const& i : cameras) {
+                        if (i->get_name() == object) {
+                            // TODO implement scale function
+                            found = true;
+                        }
+                    }
+                }
 
             } else {
                 std::cout << "Line was not valid!" << std::endl;
@@ -465,17 +610,17 @@ void SdfLoader::load_file() { //const correctness valid?
             in_sstream >> name_camera_render >> filename >> x_res >> y_res;
 
             //create scene with root of composite tree
-            scene_ = std::make_shared<Scene>(
-                    Scene{materials, composite, lights, cameras, ambient, (int) x_res, (int) y_res});
+            scene_ = std::make_shared<Scene>(materials, composite, lights, cameras, ambient, (int) x_res, (int) y_res);
 
-
+            // check if camera to be rendered with is defined
             bool camera_found = false;
 
-            for (auto const &i : cameras) {
+            for (auto const& i : cameras) {
                 if (i->get_name() == name_camera_render) {
                     camera_found = true;
                 }
             }
+            
             if (!camera_found) {
                 std::cout << "Please only render scene with defined camera!" << std::endl;
             }
@@ -493,6 +638,11 @@ void SdfLoader::load_file() { //const correctness valid?
     in_file.close();
 }
 
-std::shared_ptr<Scene> SdfLoader::get_Scene() {
+/**
+ Returns scene created with given attributes (given by sdf file)
+ @return pointer to scene constructed
+ */
+
+std::shared_ptr<Scene> SdfLoader::get_scene() {
     return scene_;
 }

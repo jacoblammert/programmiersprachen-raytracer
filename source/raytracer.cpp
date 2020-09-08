@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 
 
 
-    std::shared_ptr<Scene> scene = loader.get_Scene();
+    std::shared_ptr<Scene> scene = loader.get_scene();
 
     float progress = 0;
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
         loader = {"../../source/folders/sdfFiles/" + animation_name + std::to_string(i) + ".sdf"};
         loader.load_file();
 
-        scene = loader.get_Scene();
+        scene = loader.get_scene();
 
         scene->antialiasing_samples_ = 1;
 
@@ -110,6 +110,8 @@ int main(int argc, char *argv[]) {
  - (machbar) Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert)  (Mit der Animation kann nun begonnen werden)
  - zeichnen auch ohne composite ermöglichen (Arbeitsblatt Beipspiel SDF)
  - composite mit nur einem Element nicht möglich
+ - objekte müssen eindeutige namen haben
+ - mehrere Composites einlesen möglich?
 
  
  Anmerkungen:
