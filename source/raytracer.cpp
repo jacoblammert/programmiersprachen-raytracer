@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 
 
     std::shared_ptr<Scene> scene = loader.get_scene();
-
+/*
     float progress = 0;
 
     for (int i = 0; i < frames; ++i) {
@@ -62,9 +62,11 @@ int main(int argc, char *argv[]) {
         scene->draw_frame(0,"../../source/folders/images/"+animation_name + std::to_string(i) + ".ppm"); /// Renders the loaded sdf file and saves it as ppm
     }
 
+*/
+    scene->draw_scene(0, "image.ppm"); // Maybe open a window after it rendered? With the information of the last .sdf file
 
-    //scene->draw_scene(0, "image.ppm"); // Maybe open a window after it rendered? With the information of the last .sdf file 
 
+ 
     return 0;
 }
 /* checkerboard pattern: // könnte man vielleicht auch für ein Material nutzen
@@ -107,11 +109,11 @@ int main(int argc, char *argv[]) {
  - (etwas schwerer) Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions) (So gut wie möglich/ teilweise)
 
  nicht fertig:
- - (machbar) Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert)  (Mit der Animation kann nun begonnen werden)
+ - (machbar) Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert)  (Mit der Animation kann nun begonnen werden) - fertig?
+ 
  - zeichnen auch ohne composite ermöglichen (Arbeitsblatt Beipspiel SDF)
  - composite mit nur einem Element nicht möglich
- - objekte müssen eindeutige namen haben
- - mehrere Composites einlesen möglich?
+ - transformationen die eingelesen werden umsetzen
 
  
  Anmerkungen:
@@ -123,5 +125,5 @@ int main(int argc, char *argv[]) {
  - Formatierung, Namensgebung (struct variablen ohne _)
  - reihenfolge methoden in hpp = cpp
  - Konsistenz: light hpp Konstruktorliste in cpp
- - alle includes otwendig?
+ - alle includes notwendig?
  */
