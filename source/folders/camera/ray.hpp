@@ -7,7 +7,7 @@
 struct Ray {
     glm::vec3 position;
     glm::vec3 direction;
-    Ray(const glm::vec3& position,const glm::vec3& direction);
+    Ray (glm::vec3 const& position, glm::vec3 const& direction);
 };
 
 

@@ -166,13 +166,15 @@ void Camera::set_direction (Window const &window) {
         float mouse_x = -mouse[0] / window.window_size()[0];
         float mouse_y = mouse[1] / window.window_size()[1];
 
-        /// x, y and z are calculated by the position of the mouse (moving mose to the left side = direction goes to a position on the "left" side)
-        float x = sin(3.14f * 2 * mouse_x);/// sin -> rotation around origin, 3.14f * 2 * mouse_x for a range from 0 to 2 pi
-        float y = cos(3.14f * 2 * mouse_x);/// cos -> rotation around origin, 3.14f * 2 * mouse_y for a range from 0 to 2 pi
-        float z = cos(3.14f * mouse_y);
+        // x, y and z are calculated by the position of the mouse (moving mose to the left side = direction goes to a position on the "left" side)
+        float x = sin (3.14f * 2 * mouse_x); // sin -> rotation around origin, 3.14f * 2 * mouse_x for a range from 0 to 2 pi
+        float y = cos (3.14f * 2 * mouse_x); // cos -> rotation around origin, 3.14f * 2 * mouse_y for a range from 0 to 2 pi
+        float z = cos (3.14f * mouse_y);
         
-        x *= (1 - abs(z)); // Need to be scaled because we do nat have a cylinder, but a sphere (z = 1/ z = 0) => x or y must be close to Zero and not 1 as largest possible value
-        y *= (1 - abs(z)); // Need to be scaled because we do nat have a cylinder, but a sphere (z = 1/ z = 0) => x or y must be close to Zero and not 1 as largest possible value
+        // Need to be scaled because we dont have a cylinder, but a sphere (z = 1/ z = 0) => x or y must be close to zero and not 1 as largest possible value
+        x *= (1 - abs(z));
+        // Need to be scaled because we dont have a cylinder, but a sphere (z = 1/ z = 0) => x or y must be close to zero and not 1 as largest possible value
+        y *= (1 - abs(z));
         
         direction_ = glm::normalize(glm::vec3 {x, z, -y});
     }
@@ -187,8 +189,7 @@ void Camera::set_direction (Window const &window) {
 
 void Camera::set_depth_of_field (float dof_strength, float focal_length) {
 
-    /// The focal point will be set to a given distance, therefore there must be an offset in position and direction which cancel at the direction
-
+    // The focal point will be set to a given distance, therefore there must be an offset in position and direction which cancel at the direction
     dof_strength_ = focal_length < INFINITY ? (focal_length / 250) : 0.1f;
     focal_length_ = focal_length < INFINITY ? focal_length : 4.0f;
     
@@ -232,11 +233,11 @@ void Camera::print() const {
 
 /**
  Translates the camera by using given position
- @param pos new position of the camera
+ @param pos vector the camera is translated by
 */
 
 void Camera::translate (glm::vec3 const &pos) {
-    /// Verschieben der Kamera um pos
+    // translating the camera by pos
     position_ += pos;
 }
 
@@ -273,13 +274,13 @@ void Camera::move (Window const &window) {
     float z = a - d;
     float y = space - shift;
     
-    /// Calculating the direction the camera moves in with ehen one of the w a s d Keys are pressed (ws in one direction (dir) and dir_orthogonal for a and d)
+    // Calculating the direction the camera moves in with when one of the w a s d Keys are pressed (ws in one direction (dir) and dir_orthogonal for a and d)
     glm::vec3 dir = glm::normalize (glm::vec3 {direction_[0], 0, direction_[2]});
     glm::vec3 dir_orthogonal = glm::normalize (glm::cross (dir, up_vector_));
     
     dir *= x;
     dir_orthogonal *= z;
-    /// New position calculated
+    // New position calculated
     position_ += glm::vec3 {0, y, 0} + dir + dir_orthogonal;
     
 }
