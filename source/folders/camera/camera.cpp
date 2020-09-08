@@ -122,8 +122,9 @@ Ray Camera::generate_ray (int x, int y) const {
     blur *= dof_strength_;
     
     glm::vec3 direction = glm::normalize((direction_ * distance_) + (top * scale_y) + (right * scale_x));
-    
-    // standard 1
+
+
+    /// The focal point will be set to a given distance, therefore there must be an offset in position and direction which cancel at the direction
     direction *= focal_length_;
     
     // new custom camera ray for the given pixel
@@ -164,20 +165,19 @@ void Camera::set_direction (Window const &window) {
         
         float mouse_x = -mouse[0] / window.window_size()[0];
         float mouse_y = mouse[1] / window.window_size()[1];
-        
-        // TODO Kommentar was genau die Berechnungen machen
-        float x = sin(3.14f * 2 * mouse_x);
-        float y = cos(3.14f * 2 * mouse_x);
+
+        /// x, y and z are calculated by the position of the mouse (moving mose to the left side = direction goes to a position on the "left" side)
+        float x = sin(3.14f * 2 * mouse_x);/// sin -> rotation around origin, 3.14f * 2 * mouse_x for a range from 0 to 2 pi
+        float y = cos(3.14f * 2 * mouse_x);/// cos -> rotation around origin, 3.14f * 2 * mouse_y for a range from 0 to 2 pi
         float z = cos(3.14f * mouse_y);
         
-        x *= (1 - abs(z));
-        y *= (1 - abs(z));
+        x *= (1 - abs(z)); // Need to be scaled because we do nat have a cylinder, but a sphere (z = 1/ z = 0) => x or y must be close to Zero and not 1 as largest possible value
+        y *= (1 - abs(z)); // Need to be scaled because we do nat have a cylinder, but a sphere (z = 1/ z = 0) => x or y must be close to Zero and not 1 as largest possible value
         
         direction_ = glm::normalize(glm::vec3 {x, z, -y});
     }
 }
 
-//TODO korrekte Dokumentation? evtl Kommentar wie es berechnet wird?
 
 /**
  Sets the depth of field by getting the strength of the depth effect and the length of the focal area
@@ -186,7 +186,9 @@ void Camera::set_direction (Window const &window) {
 */
 
 void Camera::set_depth_of_field (float dof_strength, float focal_length) {
-    
+
+    /// The focal point will be set to a given distance, therefore there must be an offset in position and direction which cancel at the direction
+
     dof_strength_ = focal_length < INFINITY ? (focal_length / 250) : 0.1f;
     focal_length_ = focal_length < INFINITY ? focal_length : 4.0f;
     
@@ -226,7 +228,7 @@ void Camera::print() const {
     std::cout << "Camera direction: x: " << this->direction_[0] << " y: " << this->direction_[1] << " z: " << this->direction_[2] << std::endl;
 }
 
-// TODO richtig das kamera zu pos tranlatiert wird oder nur um pos verschoben?
+
 
 /**
  Translates the camera by using given position
@@ -234,6 +236,7 @@ void Camera::print() const {
 */
 
 void Camera::translate (glm::vec3 const &pos) {
+    /// Verschieben der Kamera um pos
     position_ += pos;
 }
 
@@ -270,13 +273,13 @@ void Camera::move (Window const &window) {
     float z = a - d;
     float y = space - shift;
     
-    // TODO was genau wird hier berechnet?
+    /// Calculating the direction the camera moves in with ehen one of the w a s d Keys are pressed (ws in one direction (dir) and dir_orthogonal for a and d)
     glm::vec3 dir = glm::normalize (glm::vec3 {direction_[0], 0, direction_[2]});
     glm::vec3 dir_orthogonal = glm::normalize (glm::cross (dir, up_vector_));
     
     dir *= x;
     dir_orthogonal *= z;
-    
+    /// New position calculated
     position_ += glm::vec3 {0, y, 0} + dir + dir_orthogonal;
     
 }
