@@ -532,12 +532,12 @@ void SdfLoader::load_file() { //const correctness valid?
             
             bool camera_found = false;
             
-            //for (auto const& i : cameras) {
-            //    if (i->get_name() == name_camera_render) {
+            for (auto const& i : cameras) {
+                if (i->get_name() == name_camera_render) {
             //        scene_->draw_scene(0, filename, x_res, y_res);
-            //        camera_found = true;
-            //    }
-            //}
+                    camera_found = true;
+                }
+            }
             if (!camera_found) {
                 std::cout << "Please only render scene with defined camera!" << std::endl;
             }
