@@ -32,7 +32,7 @@ PpmWriter::PpmWriter(std::size_t w, std::size_t h)
 void
 PpmWriter::write(Pixel const& p)
 {
-  //size_t buf_pos = width_* (width_-1-p.y) + p.x;
+  //size_t buf_pos = width* (width-1-p.y) + p.x;
   size_t buf_pos = width_* (height_-1-p.y) + p.x;
   std::size_t pos = (sizeof(Color)/sizeof(float)) * buf_pos;
   if (pos + ((sizeof(Color)/sizeof(float)) - 1) > data_.size() || (int)buf_pos < 0) {

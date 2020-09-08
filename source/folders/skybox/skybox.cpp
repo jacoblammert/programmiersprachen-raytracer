@@ -1,13 +1,9 @@
-//
-// Created by Jacob Lammert on 01.09.2020.
-//
-
 #include "skybox.hpp"
 
 Skybox::Skybox() {
 
-    top_.load("../../source/folders/skybox/posy.ppm"); // "../../source/folders/sdfFiles/start.sdf"
-    bottom_.load("../../source/folders/skybox/negy.ppm"); // "../../source/folders/skybox/"
+    top_.load("../../source/folders/skybox/posy.ppm");
+    bottom_.load("../../source/folders/skybox/negy.ppm");
     left_.load("../../source/folders/skybox/negx.ppm");
     right_.load("../../source/folders/skybox/posx.ppm");
     front_.load("../../source/folders/skybox/negz.ppm");
@@ -69,7 +65,6 @@ glm::vec3 Skybox::get_color(glm::vec3 direction) const {
         y = (1 - direction[2]) * 0.5f;
         color = get_pixel_interpolated(x, y,bottom_);
     }
-    //color = (hit_normal + glm::vec3 {1,1,1}) * 0.5f;
     return color;
 }
 
@@ -84,19 +79,19 @@ glm::vec3 Skybox::get_color(glm::vec3 direction) const {
 glm::vec3 Skybox::get_pixel_interpolated(float x, float y,Ppm const & image) const{
 
     if (0 <= x && 0 <= y) {
-        x = x * (float) image.width_;
-        y = y * (float) image.height_;
+        x = x * (float) image.width;
+        y = y * (float) image.height;
 
         float percentageX = x-floor(x);
         float percentageY = y-floor(y);
 
 
-        x = ((int) floor(x)) % (int) image.width_;
-        y = ((int) floor(y)) % (int) image.height_;
+        x = ((int) floor(x)) % (int) image.width;
+        y = ((int) floor(y)) % (int) image.height;
 
 
-        int xMax = (x+1) < image.width_ ?  x+1 :x;
-        int yMax = (y+1) < image.height_ ? y+1 :y;
+        int xMax = (x+1) < image.width ? x + 1 : x;
+        int yMax = (y+1) < image.height ? y + 1 : y;
 
         glm::vec3 middle = image.get_pixel({x,y});
         glm::vec3 right = image.get_pixel({xMax,y});

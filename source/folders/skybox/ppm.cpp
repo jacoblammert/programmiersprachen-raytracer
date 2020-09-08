@@ -60,28 +60,28 @@ void Ppm::load(const std::string& filename) {
 
             if (i < 4) {
                 if (i == 1) {
-                    width_ = std::stoi(filestring[i]);
+                    width = std::stoi(filestring[i]);
                 } else if (i == 2) {
-                    height_ = std::stoi(filestring[i]);
+                    height = std::stoi(filestring[i]);
                     std::vector<glm::vec3> vec;
-                    vec.assign(width_, {});
-                    image_.assign(height_, vec);
+                    vec.assign(width, {});
+                    image.assign(height, vec);
                 }
             } else {
                 if (i % 3 == 1) {
 
-                    x = ((i - 2) / 3) % width_;
+                    x = ((i - 2) / 3) % width;
 
-                    image_[y][x][0] = std::stoi(filestring[i])/255.0f;
+                    image[y][x][0] = std::stoi(filestring[i]) / 255.0f;
                 } else if (i % 3 == 2) {
-                    image_[y][x][1] = std::stoi(filestring[i])/255.0f;
+                    image[y][x][1] = std::stoi(filestring[i]) / 255.0f;
                 } else {
-                    image_[y][x][2] = std::stoi(filestring[i])/255.0f;
+                    image[y][x][2] = std::stoi(filestring[i]) / 255.0f;
 
-                    if (((i - 1) / 3) % width_ == 0) {
+                    if (((i - 1) / 3) % width == 0) {
                         y++;
                     }
-                    y = y % height_;
+                    y = y % height;
                 }
             }
         }
@@ -89,15 +89,15 @@ void Ppm::load(const std::string& filename) {
 }
 
 glm::vec3 Ppm::get_pixel(glm::vec2 position) const {
-    if (width_ < position[0]){
-        position[0] = width_;
+    if (width < position[0]){
+        position[0] = width;
     }
-    if (height_ < position[1]){
-        position[1] = height_;
+    if (height < position[1]){
+        position[1] = height;
     }
 
     if (0 <= position[0] && 0 <= position[1]) {
-        return image_[position[1]][position[0]];
+        return image[position[1]][position[0]];
     } else{
         return {};
     }

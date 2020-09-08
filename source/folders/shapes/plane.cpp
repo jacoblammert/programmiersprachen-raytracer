@@ -22,12 +22,12 @@ Plane::Plane(std::string const& name, glm::vec3 const &position, glm::vec3 const
  * @return true, if intersected in front of the ray, false otherwise
  */
 bool Plane::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
-    float t = glm::dot(position_ - ray.position_, axis_) / glm::dot(ray.direction_, axis_);
+    float t = glm::dot(position_ - ray.position, axis_) / glm::dot(ray.direction, axis_);
 
     if (0 <= t && t < distance) {
         distance = t;
-        hit_point = ray.position_ + ray.direction_ * t;
-        hit_normal = get_normal(ray.position_);
+        hit_point = ray.position + ray.direction * t;
+        hit_normal = get_normal(ray.position);
         return true;
     }
     return false;
@@ -97,6 +97,6 @@ void Plane::translate(glm::vec3 const& position) {
 std::string Plane::get_information() const {
     std::string information = name_ + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
             + std::to_string(axis_[0]) + " " + std::to_string(axis_[1]) + " " + std::to_string(axis_[2]) + " "
-            + material_->name_;
+            + material_->name;
     return information;
 }

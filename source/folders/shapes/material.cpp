@@ -13,11 +13,11 @@
 Material::Material(float roughness, float glossy, float transparency, float refractiveIndex,
                    glm::vec3 const &color_ambient) :
 
-        roughness_{roughness},
-        glossy_{glossy},
-        opacity_{transparency},
-        refractive_index_{refractiveIndex},
-        color_ambient_{color_ambient} {};
+        roughness{roughness},
+        glossy{glossy},
+        opacity{transparency},
+        refractive_index{refractiveIndex},
+        color_ambient{color_ambient} {};
 
 /**
  *
@@ -30,12 +30,12 @@ Material::Material(float roughness, float glossy, float transparency, float refr
  */
 Material::Material(float roughness, float glossy, float opacity, float refractiveIndex, float abberationStrength,
                    const glm::vec3 &color) :
-        roughness_{roughness},
-        glossy_{glossy},
-        opacity_{opacity},
-        refractive_index_{refractiveIndex},
-        aberration_strength_{abberationStrength},
-        color_ambient_{color} {}
+        roughness{roughness},
+        glossy{glossy},
+        opacity{opacity},
+        refractive_index{refractiveIndex},
+        aberration_strength{abberationStrength},
+        color_ambient{color} {}
 
 /**
  * Material definition from sdf format
@@ -47,11 +47,11 @@ Material::Material(float roughness, float glossy, float opacity, float refractiv
  */
 Material::Material (std::string const& name, const glm::vec3 &color_ambient, const glm::vec3 &color_diffuse, const glm::vec3 &color_specular,
                     float reflective_exponent) :
-name_{name},
-color_ambient_{color_ambient},
-color_diffuse_{color_diffuse},
-color_specular_{color_specular},
-reflective_exponent_{reflective_exponent} {
+        name{name},
+        color_ambient{color_ambient},
+        color_diffuse{color_diffuse},
+        color_specular{color_specular},
+        reflective_exponent{reflective_exponent} {
     
 }
 
@@ -64,8 +64,8 @@ reflective_exponent_{reflective_exponent} {
  */
 Material::Material(const glm::vec3 &color_ambient, const glm::vec3 &color_diffuse, const glm::vec3 &color_specular,
                    float reflective_exponent) :
-        color_ambient_{color_ambient}, color_diffuse_{color_diffuse}, color_specular_{color_specular},
-        reflective_exponent_{reflective_exponent} {
+        color_ambient{color_ambient}, color_diffuse{color_diffuse}, color_specular{color_specular},
+        reflective_exponent{reflective_exponent} {
 
 }
 
@@ -80,7 +80,7 @@ Material::Material(const glm::vec3 &color_ambient, const glm::vec3 &color_diffus
  */
 Material::Material(const glm::vec3 &color_ambient, const glm::vec3 &color_diffuse, const glm::vec3 &color_specular,
                    float reflective_exponent, float opacity, float refractive_index) :
-        color_ambient_{color_ambient}, color_diffuse_{color_diffuse}, color_specular_{color_specular},
-        reflective_exponent_{reflective_exponent}, opacity_{opacity}, refractive_index_{refractive_index} {
+        color_ambient{color_ambient}, color_diffuse{color_diffuse}, color_specular{color_specular},
+        reflective_exponent{reflective_exponent}, opacity{opacity}, refractive_index{refractive_index} {
 
 }

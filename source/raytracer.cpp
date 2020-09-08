@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
         //TODO fix Camera information saved to sdf file (Weird copy saved below the actual information) + Direction of Camera does not appear to be computed correctly (should look at 0 0 0, but rotates weirdly + rotation might be wrong)
 
         /// Example of editing the scenes content. The reflectivity varies from 0 to 1
-        //scene->materials_[1]->glossy_ = (float) (1 + sin(progress * 2.0f * MATH_PI))/2;
+        //scene->materials_[1]->glossy = (float) (1 + sin(progress * 2.0f * MATH_PI))/2;
 
 
         SdfWriter sdf_writer(animation_name + std::to_string(i) + ".sdf");

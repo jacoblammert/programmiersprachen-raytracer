@@ -1,6 +1,5 @@
 //#include <omp.h>
 #include "scene.hpp"
-
 #include <utility>
 
 Scene::Scene(std::vector<std::shared_ptr<Material>> materials,
@@ -106,7 +105,7 @@ void Scene::draw_frame(int camera, const std::string &name_image) const {
 
 
     cameras_[camera]->set_width_height((int) (x_res_ * sqrt(antialiasing_samples_)),
-                                       (int) (y_res_ * sqrt(antialiasing_samples_))); // * 2 for antialiasing
+                                       (int) (y_res_ * sqrt(antialiasing_samples_)));
 
 
     Render render;

@@ -1,7 +1,6 @@
 #ifndef RAYTRACER_SDFWRITER_HPP
 #define RAYTRACER_SDFWRITER_HPP
 
-//#include <omp.h>
 #include <string>
 #include <vector>
 #include <iostream>

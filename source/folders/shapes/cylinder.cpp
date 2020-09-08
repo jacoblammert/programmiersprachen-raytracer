@@ -1,6 +1,8 @@
 
 #include "cylinder.hpp"
 
+#include <cmath>
+
 Cylinder::Cylinder(std::string const &name, const glm::vec3 &position, const glm::vec3 &axis, float width, float height)
         :
         width_{width},
@@ -14,20 +16,20 @@ Cylinder::Cylinder(std::string const &name, const glm::vec3 &position, const glm
 bool Cylinder::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const {
 
 
-    float distance_0 = glm::dot(position_ - ray.position_, axis_) / glm::dot(ray.direction_, axis_);
-    float length_0 = glm::length(ray.position_ - position_ + ray.direction_ * distance_0);
+    float distance_0 = glm::dot(position_ - ray.position, axis_) / glm::dot(ray.direction, axis_);
+    float length_0 = glm::length(ray.position - position_ + ray.direction * distance_0);
 
     bool hit_0 = length_0 < width_ / 2 && distance_0 < distance && 0 < distance_0;
 
 
-    float distance_1 = glm::dot(position_ - ray.position_ + axis_ * height_, axis_) / glm::dot(ray.direction_, axis_);
-    float length_1 = glm::length(ray.position_ - position_ - axis_ * height_ + ray.direction_ * distance_1);
+    float distance_1 = glm::dot(position_ - ray.position + axis_ * height_, axis_) / glm::dot(ray.direction, axis_);
+    float length_1 = glm::length(ray.position - position_ - axis_ * height_ + ray.direction * distance_1);
 
     bool hit_1 = length_1 < width_ / 2 && distance_1 < distance && 0 < distance_1;
 
 
-    glm::vec3 ray_position = ray.position_;
-    glm::vec3 ray_direction = ray.direction_;
+    glm::vec3 ray_position = ray.position;
+    glm::vec3 ray_direction = ray.direction;
 
 
     /// Translation
@@ -97,27 +99,25 @@ bool Cylinder::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3
     } else {
 
         hit_point_1 = ray_position + ray_direction * distance_2;
-        hit_normal_1 = get_normal(
-                hit_point_1);//{hit_point[0],0,hit_point[2]};//glm::normalize(glm::vec3{hit_point[0],0,hit_point[2]});//get_normal(hit_point);
+        hit_normal_1 = get_normal(hit_point_1);
+
+        hit_point_1 = get_scaled_vec3(hit_point_1, width_, width_, height_);/// first scaling
+        hit_point_1 = rotation_matrix_inverse * hit_point_1;                /// second rotation
+        hit_point_1 = hit_point_1 + position_;                              /// third translation
 
 
-        hit_point_1 = get_scaled_vec3(hit_point_1, width_, width_, height_);   /// first scaling
-        hit_point_1 = rotation_matrix_inverse * hit_point_1;/// second rotation
-        hit_point_1 = hit_point_1 + position_;                                 /// third translation
-
-
-        distance_2 = glm::length(ray.position_ - hit_point_1);
+        distance_2 = glm::length(ray.position - hit_point_1);
     }
 
 
     if (hit_0 || hit_1 || hit_2) {
 
         if (hit_0 && distance_0 < distance_1 && distance_0 < distance_2 && distance_0 < distance) {
-            hit_point = ray.position_ + ray.direction_ * distance_0;
+            hit_point = ray.position + ray.direction * distance_0;
             distance = distance_0;
             hit_normal = glm::vec3{0, 0, -1};
         } else if (hit_1 && distance_1 < distance_0 && distance_1 < distance_2 && distance_1 < distance) {
-            hit_point = ray.position_ + ray.direction_ * distance_1;
+            hit_point = ray.position + ray.direction * distance_1;
             distance = distance_1;
             hit_normal = glm::vec3{0, 0, 1};
         } else if (distance_2 < distance) {
@@ -142,11 +142,11 @@ glm::vec3 Cylinder::get_normal(const glm::vec3 &pos) const {
 }
 
 glm::vec3 Cylinder::get_min() const {
-    return position_ - (glm::vec3{1, 1, 1} * (float) sqrt(height_ * height_ + width_ * width_));
+    return position_ - (glm::vec3{1, 1, 1} * std::sqrt(height_ * height_ + width_ * width_));
 }
 
 glm::vec3 Cylinder::get_max() const {
-    return position_ + (glm::vec3{1, 1, 1} * (float) sqrt(height_ * height_ + width_ * width_));
+    return position_ + (glm::vec3{1, 1, 1} * std::sqrt(height_ * height_ + width_ * width_));
 }
 
 glm::vec3 Cylinder::get_median() const {
@@ -174,6 +174,6 @@ std::string Cylinder::get_information() const {
                               std::to_string(position_[2]) + " "
                               + std::to_string(axis_[0]) + " " + std::to_string(axis_[1]) + " " +
                               std::to_string(axis_[2]) + " "
-                              + std::to_string(width_) + " " + std::to_string(height_) + " " + material_->name_;
+                              + std::to_string(width_) + " " + std::to_string(height_) + " " + material_->name;
     return information;
 }

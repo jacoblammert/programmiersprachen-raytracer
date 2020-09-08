@@ -1,8 +1,6 @@
 #include "camera.hpp"
 #include <math.h>
 
-#include <utility>
-
 
 Camera::Camera(std::string  name, float fov_x) :
     name_ {std::move(name)},
@@ -128,10 +126,6 @@ void Camera::print() const {
     << this->position_[2] << std::endl;
     std::cout << "Camera direction: x: " << this->direction_[0] << " y: " << this->direction_[1] << " z: "
     << this->direction_[2] << std::endl;
-    //direction.print();
-    
-    //std::cout << "Width: " << width << std::endl;
-    //std::cout << "Height: " << height << std::endl;
 }
 
 /**

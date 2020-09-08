@@ -1,6 +1,3 @@
-//
-// Created by Jacob Lammert on 01.09.2020.
-//
 
 #ifndef RAYTRACER_PPM_HPP
 #define RAYTRACER_PPM_HPP
@@ -17,10 +14,10 @@ struct Ppm {
 
     glm::vec3 get_pixel(glm::vec2 position) const;
 
-    int width_ = 0;
-    int height_ = 0;
+    int width = 0;
+    int height = 0;
 
-    std::vector<std::vector<glm::vec3 >> image_;
+    std::vector<std::vector<glm::vec3 >> image;
 
 };
 
