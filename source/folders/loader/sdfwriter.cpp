@@ -20,18 +20,11 @@ void SdfWriter::create_sdf(const std::shared_ptr<Scene> &scene) {
     file.clear();
 
     std::vector<std::shared_ptr<Shape>> shapes = composite->get_shapes();
-    //std::vector<std::shared_ptr<Material>> materials;
 
     file
             << "# materials car cag cab cdr cdg cdb csr csg csb reflective_exponent opacity reflectivity refractive_index roughness\n";
 
     for (auto const &material : materials) {
-        //auto material = i->get_material();
-        //look if material is already in vector materials - if false add material
-        //if (std::find(materials.begin(), materials.end(), material) == materials.end()) {
-        //materials.push_back(material);
-        //put material in file as definition
-
         file << "define material " << material->name << " "
              << material->color_ambient[0] << " " << material->color_ambient[1] << " " << material->color_ambient[2]
              << " "
@@ -45,7 +38,6 @@ void SdfWriter::create_sdf(const std::shared_ptr<Scene> &scene) {
              << material->refractive_index << " "
              << material->roughness
              << "\n";
-        //}
     }
     file << "# geometry\n";
 
@@ -83,8 +75,6 @@ void SdfWriter::create_sdf(const std::shared_ptr<Scene> &scene) {
 
     file << "define shape composite " << composite->get_information();
     file << "\n";
-
-    //file <<"define light sun 500 800 0 1.0 1.0 1.0 100 100 100\nambient 0.1 0.1 0.1\ndefine camera eye 60.0\ntransform eye rotate -45 0 1 0\ntransform eye translate 100 0 100\nrender eye image.ppm 480 320";
 
     for (auto const &light : lights_) {
         file << "define light " << light->name << " " << light->position[0] << " " << light->position[1] << " "

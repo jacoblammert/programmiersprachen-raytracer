@@ -10,7 +10,7 @@
 int main(int argc, char *argv[]) {
 
 
-    int frames = 10;//24 * 10; // 24 frames per second -> 10s long Animation
+    int frames = 100;//24 * 10; // 24 frames per second -> 10s long Animation
 
     std::string animation_name = "test";
 
@@ -37,10 +37,8 @@ int main(int argc, char *argv[]) {
         scene->cameras_[0]->look_at(glm::vec3{0,0,0}); /// The Camera looks at the origin
 
 
-        //TODO fix Camera information saved to sdf file (Weird copy saved below the actual information) + Direction of Camera does not appear to be computed correctly (should look at 0 0 0, but rotates weirdly + rotation might be wrong)
-
         /// Example of editing the scenes content. The reflectivity varies from 0 to 1
-        //scene->materials_[1]->glossy = (float) (1 + sin(progress * 2.0f * MATH_PI))/2;
+        scene->materials_[1]->glossy = (float) (1 + sin(progress * 2.0f * MATH_PI))/2;
 
 
         SdfWriter sdf_writer(animation_name + std::to_string(i) + ".sdf");
@@ -57,7 +55,7 @@ int main(int argc, char *argv[]) {
         loader.load_file();
 
         scene = loader.get_Scene();
-
+        scene->antialiasing_samples_ = 1;
 
         //scene->draw_scene(0, "image.ppm"); // opens window, we dont want that here
         scene->draw_frame(0,"../../source/folders/images/"+animation_name + std::to_string(i) + ".ppm"); /// Renders the loaded sdf file and saves it as ppm
