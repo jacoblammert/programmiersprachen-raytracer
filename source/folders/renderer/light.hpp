@@ -7,7 +7,7 @@
 
 struct Light {
 
-    Light (std::string  name, glm::vec3 const& position, glm::vec3 const& color, glm::vec3 const& brightness, float hardness = 1.0);
+    Light (std::string const& name, glm::vec3 const& position, glm::vec3 const& color, glm::vec3 const& brightness, float hardness = 1.0);
 
     std::string name;
     glm::vec3 position;

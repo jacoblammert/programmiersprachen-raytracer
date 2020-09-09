@@ -153,6 +153,7 @@ int main(int argc, char *argv[]) {
  - zeichnen auch ohne composite ermöglichen (Arbeitsblatt Beipspiel SDF)
  - composite mit nur einem Element nicht möglich
  - transformationen die eingelesen werden umsetzen
+ - draw_scene einfach nutzen für draw_frame und ein Flag setzen, wenn window beschrieben werden soll oder nicht - redundanz verhindern
 
  
  Anmerkungen:
