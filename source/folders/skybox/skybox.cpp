@@ -21,7 +21,6 @@ glm::vec3 Skybox::get_color(glm::vec3 direction) const {
 
     Box box{{-1,-1,-1},{1,1,1}};
     glm::vec3 hit_normal;
-    glm::vec3 hit_point;
 
     box.get_intersect_vec(direction,hit_normal);
 
@@ -82,9 +81,6 @@ glm::vec3 Skybox::get_pixel_interpolated(float x, float y,Ppm const & image) con
         x = x * (float) image.width;
         y = y * (float) image.height;
 
-        float percentageX = x-floor(x);
-        float percentageY = y-floor(y);
-
 
         x = ((int) floor(x)) % (int) image.width;
         y = ((int) floor(y)) % (int) image.height;
@@ -99,10 +95,10 @@ glm::vec3 Skybox::get_pixel_interpolated(float x, float y,Ppm const & image) con
         glm::vec3 bottomright = image.get_pixel({xMax,yMax});
 
 
-        return interpolate(interpolate(interpolate(middle,right,percentageX),interpolate(bottom,bottomright,percentageX),percentageY),
-                           interpolate(interpolate(middle,bottom,percentageY),interpolate(right,bottomright,percentageY),percentageX),0.5f);
+        return interpolate(interpolate(interpolate(middle,right,x-floor(x)),interpolate(bottom,bottomright,x-floor(x)),y-floor(y)),
+                           interpolate(interpolate(middle,bottom,y-floor(y)),interpolate(right,bottomright,y-floor(y)),x-floor(x)),0.5f);
     } else {
-        return {};
+        return {0,0,0};
     }
 }
 

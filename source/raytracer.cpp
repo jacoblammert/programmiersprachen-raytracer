@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
 // Loading objs
     // The following lines load an obj file (without comments)
-/*
+/**/
     objLoader obj_loader;
     // "Deletes all the shapes from the scene and only uses the new obj shapes
     std::vector<std::shared_ptr<Shape>> all_shapes;// = scene->composite_->get_shapes();
@@ -41,11 +41,12 @@ int main(int argc, char *argv[]) {
     // or "../../source/folders/objFiles/car.obj"
     // or "../../source/folders/objFiles/dragon_large.obj" -> unstable, crashes when moving the camera
 
-    std::vector<std::shared_ptr<Shape>> loaded_shapes = obj_loader.load_obj("../../source/folders/objFiles/cube.obj");
+    std::vector<std::shared_ptr<Shape>> loaded_shapes = obj_loader.load_obj("../../source/folders/objFiles/box.obj");
 
     std::shared_ptr<Material> obj_material = std::make_shared<Material>(Material("obj_material",{1,1,1},{1,1,1},{1,1,1},10));
 
-    obj_material->glossy = 1;
+    //obj_material->opacity = 0;
+    //obj_material->refractive_index = 1.36;
 
     for (int i = 0; i < loaded_shapes.size(); ++i) {
         loaded_shapes[i]->set_material(obj_material);
@@ -56,6 +57,7 @@ int main(int argc, char *argv[]) {
     all_shapes.insert(all_shapes.end(),loaded_shapes.begin(),loaded_shapes.end());
     scene->composite_ = std::make_shared<Composite>(Composite(scene->composite_->get_name(),all_shapes));
     scene->materials_.push_back(obj_material);
+    scene->antialiasing_samples_ = 1;
 //*/
 
 
