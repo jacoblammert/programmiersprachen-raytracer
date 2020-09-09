@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <utility>
+#include <algorithm>
 #include "../renderer/scene.hpp"
 #include "../camera/camera.hpp"
 #include "../renderer/light.hpp"
@@ -17,9 +19,8 @@
 class SdfWriter {
     
 public:
-    SdfWriter (std::string  file);
-    
-    void create_sdf (const std::shared_ptr<Scene>& scene);
+    SdfWriter (std::string const& file);
+    void create_sdf (std::shared_ptr<Scene> const& scene);
     
 private:
     std::string filename_;

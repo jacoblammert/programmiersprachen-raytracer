@@ -126,4 +126,6 @@ int main(int argc, char *argv[]) {
  - reihenfolge methoden in hpp = cpp
  - Konsistenz: light hpp Konstruktorliste in cpp
  - alle includes notwendig?
+ - variablen in scene als public etwas unschön - anders lösen in sdfwriter? (z.B: const getter in scene)
+ - TODOs / Unklarheiten bearbeiten
  */

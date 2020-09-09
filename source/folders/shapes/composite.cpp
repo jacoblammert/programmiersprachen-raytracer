@@ -307,7 +307,7 @@ std::string Composite::get_information() const {
     for (int i = 0; i < boxes_.size(); ++i) {
         information += boxes_[i].get_information();
     }
-    return information;
+    return (information + "\n");
 }
 
 void Composite::set_name(std::string name) {
