@@ -216,7 +216,7 @@ std::string Camera::get_name() const {
 */
 
 std::string Camera::get_information() const {
-    std::string information = " " + name_ + " " + std::to_string(fov_x_) + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " " + std::to_string(direction_[0]) + " " + std::to_string(direction_[1]) + " " + std::to_string(direction_[2]) + " " + std::to_string(up_vector_[0]) + " " + std::to_string(up_vector_[1]) + " " + std::to_string(up_vector_[2]);
+    std::string information = " " + name_ + " " + std::to_string(fov_x_) + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " " + std::to_string(direction_[0]) + " " + std::to_string(direction_[1]) + " " + std::to_string(direction_[2]) + " " + std::to_string(up_vector_[0]) + " " + std::to_string(up_vector_[1]) + " " + std::to_string(up_vector_[2]) + "\n";
     return information;
 }
 
