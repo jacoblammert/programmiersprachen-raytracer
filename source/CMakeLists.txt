@@ -1,12 +1,5 @@
 
 
-add_executable(example example.cpp  folders/camera/ray.cpp folders/camera/ray.hpp folders/shapes/shape.cpp folders/shapes/shape.hpp folders/shapes/sphere.cpp folders/shapes/sphere.hpp folders/camera/camera.cpp folders/camera/camera.hpp folders/shapes/plane.cpp folders/shapes/plane.hpp folders/shapes/box.cpp folders/shapes/box.hpp folders/shapes/triangle.cpp folders/shapes/triangle.hpp folders/camera/ray.cpp folders/shapes/composite.cpp folders/shapes/composite.hpp folders/renderer/render.cpp folders/renderer/render.hpp folders/renderer/light.cpp folders/renderer/light.hpp folders/skybox/skybox.cpp folders/skybox/ppm.cpp)
-
-target_link_libraries(example ${FRAMEWORK_NAME} ${LIBRARIES})
-add_dependencies(example glfw ${FRAMEWORK_NAME} ${COPY_BINARY})
-
-install(TARGETS example DESTINATION .)
-
 add_executable(raytracer 
 
 raytracer.cpp

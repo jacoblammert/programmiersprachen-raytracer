@@ -6,27 +6,26 @@
 #include <renderer.hpp>
 #include <ppmwriter.hpp>
 #include <window.hpp>
-#include "../camera/camera.hpp"
 #include "light.hpp"
 #include "render.hpp"
+#include "../camera/camera.hpp"
 #include "../shapes/sphere.hpp"
 #include "../shapes/composite.hpp"
 #include "../shapes/shape.hpp"
 #include "../shapes/material.hpp"
 
-class Scene { // Vielleicht als struct/ DTO?
+class Scene { // TODO Vielleicht als struct/ DTO?
     
 public:
-    Scene();
-    Scene(std::vector<std::shared_ptr<Material>> materials,
-            std::shared_ptr<Composite> composite,
-          std::vector<std::shared_ptr<Light>> lights,
-          std::vector<std::shared_ptr<Camera>> cameras,
-          const glm::vec3& ambient,
+    Scene (std::vector<std::shared_ptr<Material>> const& materials,
+            std::shared_ptr<Composite> const& composite,
+          std::vector<std::shared_ptr<Light>> const& lights,
+          std::vector<std::shared_ptr<Camera>> const& cameras,
+          glm::vec3 const& ambient,
           int x_res, int y_res);
 
-    void draw_scene(int camera, const std::string& filename) const;
-    void draw_frame(int camera, const std::string& filename) const;
+    void draw_scene(int camera, std::string const& filename) const;
+    void draw_frame(int camera, std::string const& filename) const;
     
 //private:
 
