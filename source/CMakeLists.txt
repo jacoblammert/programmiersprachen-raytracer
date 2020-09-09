@@ -9,11 +9,12 @@ install(TARGETS example DESTINATION .)
 
 add_executable(raytracer 
 
-raytracer.cpp 
+raytracer.cpp
 
-folders/loader/sdfLoader.cpp 
+folders/loader/sdfLoader.cpp
+folders/loader/objLoader.cpp
 
-folders/shapes/shape.cpp 
+folders/shapes/shape.cpp
 folders/shapes/sphere.cpp 
 folders/shapes/material.cpp
 folders/shapes/plane.cpp 

@@ -1,10 +1,8 @@
 
 #include <memory>
-//#include <omp.h>
 #include "folders/loader/sdfLoader.hpp"
 #include "folders/loader/sdfwriter.hpp"
-
-//TODO add folders for saving,...
+#include "folders/loader/objLoader.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -17,7 +15,9 @@ int main(int argc, char *argv[]) {
 
     /// Creates all the sdf files needed
     /// If we want to change anything in the animation (add a material/ Shape/ Change the resolution) we can do it in the original (start.sdf) file
+    //SdfLoader loader{"../../source/folders/sdfFiles/" + animation_name + std::to_string(999) + ".sdf"};
     SdfLoader loader{"../../source/folders/sdfFiles/start.sdf"};
+
     loader.load_file();
 
 
@@ -25,6 +25,42 @@ int main(int argc, char *argv[]) {
 
 
     std::shared_ptr<Scene> scene = loader.get_scene();
+
+
+
+
+
+// Loading objs
+    // The following lines load an obj file (without comments)
+/*
+    objLoader obj_loader;
+    // "Deletes all the shapes from the scene and only uses the new obj shapes
+    std::vector<std::shared_ptr<Shape>> all_shapes;// = scene->composite_->get_shapes();
+
+    // or "../../source/folders/objFiles/cube.obj"
+    // or "../../source/folders/objFiles/car.obj"
+    // or "../../source/folders/objFiles/dragon_large.obj" -> unstable, crashes when moving the camera
+
+    std::vector<std::shared_ptr<Shape>> loaded_shapes = obj_loader.load_obj("../../source/folders/objFiles/cube.obj");
+
+    std::shared_ptr<Material> obj_material = std::make_shared<Material>(Material("obj_material",{1,1,1},{1,1,1},{1,1,1},10));
+
+    obj_material->glossy = 1;
+
+    for (int i = 0; i < loaded_shapes.size(); ++i) {
+        loaded_shapes[i]->set_material(obj_material);
+    }
+
+    std::cout<<"Obj Loaded size: "<<loaded_shapes.size()<<std::endl;
+
+    all_shapes.insert(all_shapes.end(),loaded_shapes.begin(),loaded_shapes.end());
+    scene->composite_ = std::make_shared<Composite>(Composite(scene->composite_->get_name(),all_shapes));
+    scene->materials_.push_back(obj_material);
+//*/
+
+
+
+// Animation:
 /*
     float progress = 0;
 
@@ -63,6 +99,9 @@ int main(int argc, char *argv[]) {
     }
 
 */
+
+
+
     scene->draw_scene(0, "image.ppm"); // Maybe open a window after it rendered? With the information of the last .sdf file
 
 

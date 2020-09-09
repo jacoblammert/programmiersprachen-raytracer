@@ -183,10 +183,7 @@ bool Box::get_intersect(const Ray &ray) const {
     if (t_z_max < t_max)
         t_max = t_z_max;
 
-    if(t_min < 0 && 0 < t_max || 0 < t_min){
-        return true;
-    }
-    return false;
+    return (t_min < 0 && 0 < t_max) || 0 < t_min;
 }
 
 /**

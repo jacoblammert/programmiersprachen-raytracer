@@ -27,6 +27,7 @@ Composite::Composite(std::string const& name, std::vector<std::shared_ptr<Shape>
     shapes_{std::move(shapes)}
 
 {
+    depth_ = 0;
     name_ = name;
     shape_type_ = COMPOSITE;
     set_min_max_mid();
@@ -283,9 +284,9 @@ void Composite::get_max(glm::vec3 const &shape_max) {
 }
 
 std::vector<std::shared_ptr<Shape>> Composite::get_shapes () const {
-    std::vector<std::shared_ptr<Shape>> shapes;
+    std::vector<std::shared_ptr<Shape>> shapes = shapes_;
 
-    shapes.insert(shapes.end(),shapes_.begin(),shapes_.end());
+    //shapes.insert(shapes.end(),shapes_.begin(),shapes_.end());
 
     for (int i = 0; i < boxes_.size(); ++i) {
         std::vector<std::shared_ptr<Shape>> shapes_of_boxes = boxes_[i].get_shapes();
