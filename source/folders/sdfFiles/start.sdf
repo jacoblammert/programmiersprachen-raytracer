@@ -1,42 +1,22 @@
-# materials aus main.pdf
-define material red 1 0 0 1 0 0 1 0 0 10
-define material blue 0 0 1 0 0 1 0 0 1 10
-define material water 0 1 0 0 1 0 0 1 0 10 0 0 1.36 0
+# materials car cag cab cdr cdg cdb csr csg csb reflective_exponent opacity reflectivity refractive_index roughness
+define material mirror 0 1 0 0 1 0 0 1 0 10 1 1 1 0
+define material water  0 1 0 0 1 0 0 1 0 10 1 1 1.36 0
+define material grey   0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 10 1 0 1.36 0
+
 # geometry
-# define shape box rbottom -2 -2 -2 0 0 0 0 1 0 red
-# define shape box rbottom1 -20 -20 -20 20 20 20 0 1 0 blue
-# define shape box rbottom2 -2 -2 12 0 0 10 0 1 0 red
-# define shape sphere bsphere 0 0 -10 5 blue
+define shape plane plane11 0 0 0 0 1 0 grey
+define shape triangle triangle11 0 0 -20 0 0 20 0 20 -20 mirror
+define shape box box11 10 1 -10 30 21 10 0 1 0 water
+define shape sphere sphere11 -10 11 0 10 water
+define shape cone cone11 -40 1 0 0 1 0 20 20 water
+define shape cylinder cylinder11 50 1 0 0 1 0 20 20 water
 
-
- define shape sphere bsphere1 0 0 0 2 blue
- define shape sphere bsphere2 0 0 20 2 blue
-# define shape sphere bsphere3 20 0 0 2 blue
-
-
-
-# define shape sphere csphere 0 0 -8 5 red
-# define shape plane bplane 0 0 -8 0 1 0 blue
-# define shape triangle btriangle 100 10 100 -100 10 100 -100 10 -100 red
-# define shape cone bcone 2 0 -2 0 -1 0 5 10 water
-# define shape cylinder bcylinder 2 0 -2 1 0 0 5 5 blue
 # composite
-define shape composite composite_name bsphere1 bsphere2
-# rbottom rbottom1 rbottom2 bsphere csphere bplane btriangle bcone bcylinderss
-# bsphere3 rbottom rbottom1 btriangle
-
-# rbottom rbottom1 rbottom2
-# bsphere1 bsphere2 bsphere3
-# bsphere csphere
-# scene xform
-# transform rbottom rotate 45 0 0 1
-# transform rbottom translate 0 0 -10
-# transform bsphere rotate 45 0 0 1
-# transform bsphere translate 0 0 -10
+define shape composite composite_name box11 sphere11 plane11 cone11 cylinder11
 # lights
-define light sun 500 800 0 1.0 1.0 1.0 100 100 100
-define light spot1 -0 8 -3 0.8 0.8 0.8 100 100 100
-define light spot2 0 40 0 1 1 1 200 200 200
+# define light sun 500 800 0 1.0 1.0 1.0 10000 10000 1000
+define light spot1 -50 20 -3 0.8 0.8 0.8 1000 1000 100
+define light spot2 65 30 -3 1 1 1 2000 200 200
 ambient 0.1 0.1 0.1
 # camera
 define camera eye 60.0 0.0 4.0 0.0 0.0 0.0 -1.0 0.0 1.0 0.0
@@ -44,4 +24,4 @@ define camera eye 60.0 0.0 4.0 0.0 0.0 0.0 -1.0 0.0 1.0 0.0
 transform eye rotate -45 0 1 0
 transform eye translate 100 100 100
 # ... and go
-render eye image.ppm 480 320
+render eye image.ppm 1920 1080

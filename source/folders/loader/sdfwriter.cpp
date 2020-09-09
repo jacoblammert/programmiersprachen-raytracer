@@ -88,7 +88,7 @@ void SdfWriter::create_sdf (std::shared_ptr<Scene> const& scene) {
     
     // write information of composite (which elements are within composite)
     file << "# composite\n";
-    file << "define shape composite " << composite->get_information();
+    file << "define shape composite " << composite->get_information() << "\n";
     
     // write/ define lights in sdf file
     file << "# lights\n";

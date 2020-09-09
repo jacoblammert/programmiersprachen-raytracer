@@ -62,7 +62,19 @@ void Scene::draw_scene(int camera, std::string const& name_image) const {
                 glm::vec3 color_vec;
                 
                 for (int k = 0; k < antialiasing_samples_; ++k) {
-                    // TODO kommentar über berechnung - was für ein Strahl von der kamera aus wird generiert?
+                    // We calculate as many rays as there are samples per pixel
+                    // The positions must be x and y coordinates
+                    // Since the resolution the camera has is sqrt(antialiasing_samples_) * the actual resolution
+                    // we know that we can generate our extra rays next (a slight shift) at the calculated position
+
+                    // 4 Samples:
+                    //        x pos
+                    // y pos  [ray    ] [new Ray]
+                    // y pos  [new ray] [new Ray]
+
+                    // This can be scaled with the calculation below
+
+
                     glm::vec3 color_vec_1 = render.get_color(cameras_[camera]->generate_ray(
                             (int) (sqrt(antialiasing_samples_) * i + k % (int) sqrt(antialiasing_samples_)),
                             (int) (sqrt(antialiasing_samples_) * j + (int) (floor(k / sqrt(antialiasing_samples_))))),
@@ -86,7 +98,7 @@ void Scene::draw_scene(int camera, std::string const& name_image) const {
     ppm_writer.save(name_image);
 }
 
-// TODO draw_scene einfach nutzen und ein Flag setzen, wenn window beschrieben werden soll doer nicht - redundanz verhindern
+// TODO draw_scene einfach nutzen und ein Flag setzen, wenn window beschrieben werden soll doer nicht - redundanz verhindern - wäre schon sinnvoller
 
 /**
  * Renders only a single image and saves it as a ppm file with the given string

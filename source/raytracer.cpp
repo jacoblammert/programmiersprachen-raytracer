@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
 // Loading objs
     // The following lines load an obj file (without comments)
-/**/
+/*/
     objLoader obj_loader;
     // "Deletes all the shapes from the scene and only uses the new obj shapes
     std::vector<std::shared_ptr<Shape>> all_shapes;// = scene->composite_->get_shapes();
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     // or "../../source/folders/objFiles/car.obj"
     // or "../../source/folders/objFiles/dragon_large.obj" -> unstable, crashes when moving the camera
 
-    std::vector<std::shared_ptr<Shape>> loaded_shapes = obj_loader.load_obj("../../source/folders/objFiles/box.obj");
+    std::vector<std::shared_ptr<Shape>> loaded_shapes = obj_loader.load_obj("../../source/folders/objFiles/dragon_large.obj");
 
     std::shared_ptr<Material> obj_material = std::make_shared<Material>(Material("obj_material",{1,1,1},{1,1,1},{1,1,1},10));
 
@@ -63,16 +63,16 @@ int main(int argc, char *argv[]) {
 
 
 // Animation:
-/*
-    float progress = 0;
 
+
+/*/
     for (int i = 0; i < frames; ++i) {
 
-        progress = (float)i/(float)frames;
+        float progress = (float)i/(float)frames;
 
-        float camera_distance = 4;
-        scene->cameras_[0]->set_position(glm::vec3{camera_distance * sin(progress * 2 * MATH_PI),3,camera_distance * cos(progress * 2 * MATH_PI)}); // The Camera rotates around the origin with a height of 4
-        scene->cameras_[0]->look_at(glm::vec3{0,0,0}); /// The Camera looks at the origin
+        float camera_distance = 80;
+        scene->cameras_[0]->set_position(glm::vec3{camera_distance * sin(progress * 2 * MATH_PI),22,camera_distance * cos(progress * 2 * MATH_PI)}); // The Camera rotates around the origin with a height of 4
+        scene->cameras_[0]->look_at(glm::vec3{0,10,0}); /// The Camera looks at the origin
 
 
 
@@ -82,10 +82,10 @@ int main(int argc, char *argv[]) {
 
         SdfWriter sdf_writer(animation_name + std::to_string(i) + ".sdf");
         sdf_writer.create_sdf(scene);
-    }
+    }/**/
 
 
-
+/*/
     /// loads all the written sdf files and renders the images
     for (int i = 0; i < frames; ++i) {
 
@@ -94,13 +94,15 @@ int main(int argc, char *argv[]) {
         loader.load_file();
 
         scene = loader.get_scene();
+        std::vector<std::shared_ptr<Shape>> all_shapes = scene->composite_->get_shapes();
 
-        scene->antialiasing_samples_ = 1;
+        scene->antialiasing_samples_ = 4;
 
         scene->draw_frame(0,"../../source/folders/images/"+animation_name + std::to_string(i) + ".ppm"); /// Renders the loaded sdf file and saves it as ppm
-    }
+        std::cout<<"Saved image: " + std::to_string(i)<<std::endl;
+    }/**/
 
-*/
+
 
 
 

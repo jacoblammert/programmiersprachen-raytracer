@@ -26,11 +26,9 @@ glm::vec3 Render::get_color (Ray const& ray, int depth) const {
     float glossy = shape->get_material()->glossy;
     float opacity = 1-shape->get_material()->opacity;
     float roughness = shape->get_material()->roughness;
-    
-    glm::vec3 color_final;
-    
+
     // The color gets calculated according to the lecture
-    color_final = get_brightness_color (ray, hit_point, hit_normal, depth, shape);
+    glm::vec3 color_final = get_brightness_color (ray, hit_point, hit_normal, depth, shape);
     
     
     // Now we can calculate the reflective and refractive color of the material
