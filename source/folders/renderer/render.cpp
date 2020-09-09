@@ -41,14 +41,12 @@ glm::vec3 Render::get_color (Ray const& ray, int depth) const {
     if (depth < 10) {
         
         // Color calculations reflection
-        //TODO clean up in different function
         if (glossy > 0) {
             // max number of rays is 4, if the depth (iteration) is greater than 1, we do only have one new ray
-            // TODO ist nicht anzahl der strahlen 2 wenn depth /= 0 ist?
             // roughness = 0 -> number of rays = 1, else number of rays = 1 if depth = 0 else number of rays = 2
             int reflection_samples = (roughness == 0.0f ? 1 : 1 * (depth == 0) + 1);
-            
-            // 4 rays in the first iteration, only 1 in each following iteration. If the roughness is 0.0f, we do always have one new ray only
+            // (depth == 0) if true, its a 1, 1*1 + 1 = 2, only if the depth is 0 otherwise its 1
+            // n + 1 rays in the first iteration, only 1 in each following iteration. If the roughness is 0.0f, we do always have one new ray only
             for (int i = 0; i < reflection_samples; ++i) {
                 reflection_color += get_reflected_color (ray, hit_point, hit_normal, depth, shape); // increasing the depth is not really necessary
             }
@@ -57,13 +55,12 @@ glm::vec3 Render::get_color (Ray const& ray, int depth) const {
         
         
         // Color calculations refractions
-        //TODO clean up in different function
         if (opacity > 0) {
             // max number of rays is 4, if the depth (iteration) is greater than 1, we do only have one new ray
-            // TODO diesselbe frage wie oben
             // roughness = 0 -> number of rays = 1, else number of rays = 1 if depth = 0 else number of rays = 2
             int refraction_samples = (roughness == 0.0f ? 1 : 1 * (depth == 0) + 1);
-            // 4 rays in the first iteration, only 1 in each following iteration. If the roughness is 0.0f, we do always have one new ray only
+            // (depth == 0) if true, its a 1, 1*1 + 1 = 2, only if the depth is 0 otherwise its 1
+            // n + 1 rays in the first iteration, only 1 in each following iteration. If the roughness is 0.0f, we do always have one new ray only
             
             for (int i = 0; i < refraction_samples; ++i) {
                 refraction_color += get_refracted_color(ray, hit_point, hit_normal, depth,

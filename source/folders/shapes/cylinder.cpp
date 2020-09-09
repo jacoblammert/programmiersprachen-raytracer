@@ -53,8 +53,6 @@ bool Cylinder::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3
     ray_direction = glm::normalize(ray_direction);
 
 
-    float distance_2;
-    bool hit_2 = false;
 
 
     double a = ray_direction[0] * ray_direction[0] + ray_direction[1] * ray_direction[1];
@@ -63,24 +61,27 @@ bool Cylinder::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec3
 
     double delta = b * b - a * c;
 
-    //use epsilon because of computation errors between doubles
-    double epsilon = 0.00000001;
+
 
     // nearest intersection
-    distance_2 = (float) ((-b - sqrt(delta)) / a);
-    float dist_3 = (float) ((-b + sqrt(delta)) / a);
+    bool hit_2 = false;
+    float distance_2 = (float) ((-b - sqrt(delta)) / a);
+    b = (float) ((-b + sqrt(delta)) / a);
 
-    distance_2 = 0 < dist_3 && (dist_3 < distance_2 || distance_2 < 0) ? dist_3 : distance_2;
+    distance_2 = 0 < b && (b < distance_2 || distance_2 < 0) ? (float)b : distance_2;
+
+    // c is now epsilon  Variables are reused to reuse the space and not create to many variables
+    c = 0.00000001;
 
     // t<0 means the intersection is behind the ray origin
     // which we don't want
-    if (distance_2 >= epsilon) {
+    if (distance_2 >= c) {
 
 
-        float y = ray_position[2] + distance_2 * ray_direction[2];
+        a = ray_position[2] + distance_2 * ray_direction[2];
 
         // check if we intersect one of the bases
-        if (!(y > 1 + epsilon || y < -epsilon)) {
+        if (!(a > 1 + c || a < -c)) {
             hit_2 = true;
         }
     }
