@@ -21,7 +21,7 @@ public:
 
     explicit Composite(int depth);
 
-    Composite(std::string const& name, std::vector<std::shared_ptr<Shape>>  shapes);
+    Composite(std::string const& name, std::vector<std::shared_ptr<Shape>> const& shapes);
 
     bool get_intersect_vec(Ray const& ray, glm::vec3 &hit_point, glm::vec3 &hit_normal, float &distance) const override;
 
@@ -37,11 +37,9 @@ public:
 
     void translate(glm::vec3 const &position) override;
 
-    std::shared_ptr<Material> get_material() override; //muss drin sein aber nicht sinnvoll? Ja
+    std::shared_ptr<Material> get_material() override; 
 
     void set_material (std::shared_ptr<Material> const& material) override;
-    
-    void print(std::fstream & file) const override;
 
     void build();
 
@@ -49,9 +47,11 @@ public:
 
     void add_shapes(std::vector<std::shared_ptr<Shape>> const& shapes);
 
-    void set_name(std::string name);
-
     std::vector<std::shared_ptr<Shape>> get_shapes () const;
+    
+    void set_name(std::string const& name);
+    
+    void print(std::fstream & file) const override;
 
     std::string get_information() const override;
 

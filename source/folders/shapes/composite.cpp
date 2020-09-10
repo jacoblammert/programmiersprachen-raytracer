@@ -1,7 +1,5 @@
 #include "composite.hpp"
 
-#include <utility>
-
 /**
  * default constructor
  */
@@ -23,8 +21,8 @@ Composite::Composite(int depth) :
  * @param shapes
  * @param depth
  */
-Composite::Composite(std::string const& name, std::vector<std::shared_ptr<Shape>> shapes) :
-    shapes_{std::move(shapes)}
+Composite::Composite(std::string const& name, std::vector<std::shared_ptr<Shape>> const& shapes) :
+    shapes_ {shapes}
 
 {
     depth_ = 0;
@@ -60,8 +58,7 @@ bool Composite::get_intersect_vec(const Ray &ray, glm::vec3 &hit_point, glm::vec
  * @param distance as float
  * @param hit boolean, false, if no shape has been intersected
  */
-void
-Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> &shape, glm::vec3 &hit_point,
+void Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> &shape, glm::vec3 &hit_point,
                                  glm::vec3 &hit_normal, float &distance) {
 
     for (auto &box : boxes_) {
@@ -138,20 +135,6 @@ void Composite::set_material(std::shared_ptr<Material> const &material) {
     //
 }
 
-
-/**
- * Only really usefull, if there are not to many shapes in total, or the console will be filled with exponentially many
- * comments
- */
-void Composite::print(std::fstream & file) const {
-    std::cout << std::endl << "Depth: " << depth_ << std::endl;
-    std::cout << "Size: " << shapes_.size() << std::endl;
-
-    for (auto &boxe : boxes_) {
-        //boxe.print();
-    }
-}
-
 /**
  * The box is now filled with shapes which can be sorted into smaller ones
  * This function gets the new largest  & smallest values of the shapes inside the vector
@@ -182,6 +165,61 @@ void Composite::add_shapes(std::vector<std::shared_ptr<Shape>> const &new_shapes
 }
 
 /**
+*Gives all shapes (inside all composites)
+* @returns vector with all shapes of the scene
+*/
+std::vector<std::shared_ptr<Shape>> Composite::get_shapes () const {
+    std::vector<std::shared_ptr<Shape>> shapes = shapes_;
+
+    for (int i = 0; i < boxes_.size(); ++i) {
+        std::vector<std::shared_ptr<Shape>> shapes_of_boxes = boxes_[i].get_shapes();
+        shapes.insert(shapes.end(),shapes_of_boxes.begin(),shapes_of_boxes.end());
+    }
+    return shapes;
+}
+
+/**
+*Sets name of composite
+* @param name of composite
+*/
+void Composite::set_name(std::string const& name) {
+    name_ = name;
+}
+
+/**
+ * Only really usefull, if there are not to many shapes in total, or the console will be filled with exponentially many
+ * comments
+ */
+void Composite::print(std::fstream & file) const {
+    std::cout << std::endl << "Depth: " << depth_ << std::endl;
+    std::cout << "Size: " << shapes_.size() << std::endl;
+
+    for (auto &boxe : boxes_) {
+        //boxe.print();
+    }
+}
+
+/**
+*Gives information of all the shapes
+* @returns string with all shape names and information
+*/
+std::string Composite::get_information() const {
+    std::string information;
+
+    if (depth_ == 1){ /// minimum depth of all the composite objects
+        information = name_ + " ";
+    }
+
+    for (int i = 0; i < shapes_.size(); ++i) {
+        information += shapes_[i]->get_name() + " ";
+    }
+    for (int i = 0; i < boxes_.size(); ++i) {
+        information += boxes_[i].get_information();
+    }
+    return information;
+}
+
+/**
  * This function sets the minimum, the maximum and medium vector for the box
  */
 void Composite::set_min_max_mid() {
@@ -194,7 +232,7 @@ void Composite::set_min_max_mid() {
 
     glm::vec3 median_shape;
 
-    for (auto &shape : shapes_) {
+    for (auto const& shape : shapes_) {
         get_min(shape->get_min());
         get_max(shape->get_max());
 
@@ -241,7 +279,7 @@ void Composite::split() {
             if (shapes_[i]->get_median()[axis] > position_[axis]) { // right
                 boxes_[0].add_shape(shapes_[i]); // right
             } else {
-                boxes_[1].add_shape(shapes_[i]);
+                boxes_[1].add_shape(shapes_[i]); // left
             }
             shapes_.erase(shapes_.begin() + i);
         }
@@ -254,7 +292,7 @@ void Composite::split() {
 
 
 /**
- * Changes the minXminYminZ vector, if either x, y or z of the vector shapemax is smaller
+ * Changes the minXminYminZ vector, if either x, y or z of the vector shapemin is smaller
  * and sets the corresponding value to the newer, smaller one
  * @param shapemin vec3
  */
@@ -278,38 +316,6 @@ void Composite::get_max(glm::vec3 const &shape_max) {
         }
     }
 }
-
-std::vector<std::shared_ptr<Shape>> Composite::get_shapes () const {
-    std::vector<std::shared_ptr<Shape>> shapes = shapes_;
-
-    for (int i = 0; i < boxes_.size(); ++i) {
-        std::vector<std::shared_ptr<Shape>> shapes_of_boxes = boxes_[i].get_shapes();
-        shapes.insert(shapes.end(),shapes_of_boxes.begin(),shapes_of_boxes.end());
-    }
-    return shapes;
-}
-
-std::string Composite::get_information() const {
-    std::string information;
-
-    if (depth_ == 1){ /// minimum depth of all the composite objects
-        information = name_ + " ";
-    }
-
-    for (int i = 0; i < shapes_.size(); ++i) {
-        information += shapes_[i]->get_name() + " ";
-    }
-    for (int i = 0; i < boxes_.size(); ++i) {
-        information += boxes_[i].get_information();
-    }
-    return information;
-}
-
-void Composite::set_name(std::string name) {
-    name_ = std::move(name);
-}
-
-
 
 
 

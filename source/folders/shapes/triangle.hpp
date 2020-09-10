@@ -6,6 +6,7 @@
 #include "shape.hpp"
 
 class Triangle : public Shape {
+    
 public:
     Triangle (std::string const& name, const glm::vec3 &a, const glm::vec3 &b, const glm::vec3 &c);
 
