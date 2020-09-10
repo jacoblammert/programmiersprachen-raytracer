@@ -26,7 +26,6 @@ glm::vec3 Render::get_color (Ray const& ray, int depth) const {
     // get attributes from material
     float glossy = shape->get_material()->glossy;
     float opacity = 1-shape->get_material()->opacity;
-    float roughness = shape->get_material()->roughness;
 
     // The color gets calculated according to the lecture
     glm::vec3 color_final = get_brightness_color (ray, hit_point, hit_normal, depth, shape);
@@ -37,13 +36,13 @@ glm::vec3 Render::get_color (Ray const& ray, int depth) const {
     glm::vec3 refraction_color;
     
     // calculates a maximum of n reflections because depth < n
-    if (depth < 10) {
+    if (depth < 2) {
         
         // Color calculations reflection
         if (glossy > 0) {
             // max number of rays is 4, if the depth (iteration) is greater than 1, we do only have one new ray
             // roughness = 0 -> number of rays = 1, else number of rays = 1 if depth = 0 else number of rays = 2
-            int reflection_samples = (roughness == 0.0f ? 1 : 1 * (depth == 0) + 1);
+            int reflection_samples = 1;//(roughness == 0.0f ? 1 : 1 * (depth == 0) + 1);
             // (depth == 0) if true, its a 1, 1*1 + 1 = 2, only if the depth is 0 otherwise its 1
             // n + 1 rays in the first iteration, only 1 in each following iteration. If the roughness is 0.0f, we do always have one new ray only
             for (int i = 0; i < reflection_samples; ++i) {
@@ -57,7 +56,7 @@ glm::vec3 Render::get_color (Ray const& ray, int depth) const {
         if (opacity > 0) {
             // max number of rays is 4, if the depth (iteration) is greater than 1, we do only have one new ray
             // roughness = 0 -> number of rays = 1, else number of rays = 1 if depth = 0 else number of rays = 2
-            int refraction_samples = (roughness == 0.0f ? 1 : 1 * (depth == 0) + 1);
+            int refraction_samples = 1;//(roughness == 0.0f ? 1 : 1 * (depth == 0) + 1);
             // (depth == 0) if true, its a 1, 1*1 + 1 = 2, only if the depth is 0 otherwise its 1
             // n + 1 rays in the first iteration, only 1 in each following iteration. If the roughness is 0.0f, we do always have one new ray only
             
@@ -211,7 +210,7 @@ glm::vec3 Render::get_refracted_color (Ray const& ray, glm::vec3 const& hit_poin
         min = 1; // only one color value will be calculated
         max = 2; // only one color value will be calculated
     }
-    
+
     for (int i = min; i < max; ++i) {
         
         float aberration = (float) i - 1;
@@ -242,7 +241,7 @@ glm::vec3 Render::get_refracted_color (Ray const& ray, glm::vec3 const& hit_poin
         glm::vec3 color = get_color({position, refracted_vector}, depth + 1);
         total_color[i] = color[i];
         
-        if (depth > 1 || shape->get_material()->aberration_strength == 0.0f) {
+        if (depth > 1 || shape->get_material()->aberration_strength <= 0.0f) {
             // no chromatic aberation at all
             total_color = color;
         }

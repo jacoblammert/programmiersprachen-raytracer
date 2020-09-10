@@ -74,11 +74,12 @@ void Scene::draw_scene(int camera, std::string const& name_image) const {
 
                     // This can be scaled with the calculation below
 
+                    int x = (int) (sqrt(antialiasing_samples_) * i + k % (int) sqrt(antialiasing_samples_));
+                    int y = (int) (sqrt(antialiasing_samples_) * j + (int) (floor(k / sqrt(antialiasing_samples_))));
 
-                    glm::vec3 color_vec_1 = render.get_color(cameras_[camera]->generate_ray(
-                            (int) (sqrt(antialiasing_samples_) * i + k % (int) sqrt(antialiasing_samples_)),
-                            (int) (sqrt(antialiasing_samples_) * j + (int) (floor(k / sqrt(antialiasing_samples_))))),
-                            0);
+                    Ray ray = cameras_[camera]->generate_ray(x,y);
+
+                    glm::vec3 color_vec_1 = render.get_color(ray,0);
 
                     color_vec += color_vec_1 / (color_vec_1 + glm::vec3{1, 1, 1});
                 }
@@ -134,13 +135,14 @@ void Scene::draw_frame (int camera, std::string const& name_image) const {
                         (int) (sqrt(antialiasing_samples_) * i + k % (int) sqrt(antialiasing_samples_)),
                         (int) (sqrt(antialiasing_samples_) * j + (int) (floor(k / sqrt(antialiasing_samples_))))), 0);
                 
-                color_vec += color_vec_1 / (color_vec_1 + glm::vec3{1, 1, 1});
+                color_vec += color_vec_1;// / (color_vec_1 + glm::vec3{1, 1, 1});
             }
             
             color_vec /= antialiasing_samples_;
+            color_vec = color_vec/(color_vec + glm::vec3{1,1,1});
             color.color = {color_vec[0], color_vec[1], color_vec[2]};
 
-            renderer.write(color);
+            //renderer.write(color);
             ppm_writer.write(color);
         }
     }

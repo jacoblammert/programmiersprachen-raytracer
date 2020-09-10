@@ -8,7 +8,7 @@
 int main(int argc, char *argv[]) {
 
 
-    int frames = 0;//24 * 10; // 24 frames per second -> 10s long Animation
+    int frames = 200;//24 * 10; // 24 frames per second -> 10s long Animation
 
     std::string animation_name = "final animation";
 
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     /// Creates all the sdf files needed
     /// If we want to change anything in the animation (add a material/ Shape/ Change the resolution) we can do it in the original (start.sdf) file
     //SdfLoader loader{"../../source/folders/sdfFiles/" + animation_name + std::to_string(999) + ".sdf"};
-    SdfLoader loader{"../../source/folders/sdfFiles/start2.sdf"};
+    SdfLoader loader{"../../source/folders/sdfFiles/Animation_1.sdf"};
 
     loader.load_file();
 
@@ -32,18 +32,18 @@ int main(int argc, char *argv[]) {
 
 // Loading objs
     // The following lines load an obj file (without comments)
-/*/
+/**/
     objLoader obj_loader;
     // "Deletes all the shapes from the scene and only uses the new obj shapes
-    std::vector<std::shared_ptr<Shape>> all_shapes;// = scene->composite_->get_shapes();
+    std::vector<std::shared_ptr<Shape>> all_shapes = scene->composite_->get_shapes();
 
     // or "../../source/folders/objFiles/cube.obj"
     // or "../../source/folders/objFiles/car.obj"
     // or "../../source/folders/objFiles/dragon_large.obj" -> unstable, crashes when moving the camera
 
-    std::vector<std::shared_ptr<Shape>> loaded_shapes = obj_loader.load_obj("../../source/folders/objFiles/dragon_large.obj");
+    std::vector<std::shared_ptr<Shape>> loaded_shapes = obj_loader.load_obj("../../source/folders/objFiles/statue_cpp_raytracer.obj");
 
-    std::shared_ptr<Material> obj_material = std::make_shared<Material>(Material("obj_material",{1,1,1},{1,1,1},{1,1,1},10));
+    std::shared_ptr<Material> obj_material = std::make_shared<Material>(Material("obj_material",{0.3,1,0.3},{0.7,1,0.7},{1,1,1},10));
 
     //obj_material->opacity = 0;
     //obj_material->refractive_index = 1.36;
@@ -70,14 +70,17 @@ int main(int argc, char *argv[]) {
 
         float progress = (float)i/(float)frames;
 
-        float camera_distance = 80;
-        scene->cameras_[0]->set_position(glm::vec3{camera_distance * sin(progress * 2 * MATH_PI),22,camera_distance * cos(progress * 2 * MATH_PI)}); // The Camera rotates around the origin with a height of 4
-        scene->cameras_[0]->look_at(glm::vec3{0,10,0}); /// The Camera looks at the origin
+        //progress = 0.30f;
 
+        float camera_distance = 10;
+        scene->cameras_[0]->set_position(glm::vec3{camera_distance * sin(progress * 2 * MATH_PI),6,camera_distance * cos(progress * 2 * MATH_PI)}); // The Camera rotates around the origin with a height of 4
+        scene->cameras_[0]->look_at(glm::vec3{0,4,0}); /// The Camera looks at the origin
 
+        std::cout<<"Rendering\n";
 
         /// Example of editing the scenes content. The reflectivity varies from 0 to 1
-        //scene->materials_[1]->glossy = (float) (1 + sin(progress * 2.0f * MATH_PI))/2;
+        //obj_material->glossy = sin(progress * 2 * MATH_PI);
+        //obj_material->roughness = 0.05;
 
 
         SdfWriter sdf_writer(animation_name + std::to_string(i) + ".sdf");
@@ -94,9 +97,9 @@ int main(int argc, char *argv[]) {
         loader.load_file();
 
         scene = loader.get_scene();
-        std::vector<std::shared_ptr<Shape>> all_shapes = scene->composite_->get_shapes();
+        //std::vector<std::shared_ptr<Shape>> all_shapes = scene->composite_->get_shapes();
 
-        scene->antialiasing_samples_ = 4;
+        scene->antialiasing_samples_ = 1;
 
         scene->draw_frame(0,"../../source/folders/images/"+animation_name + std::to_string(i) + ".ppm"); /// Renders the loaded sdf file and saves it as ppm
         std::cout<<"Saved image: " + std::to_string(i)<<std::endl;

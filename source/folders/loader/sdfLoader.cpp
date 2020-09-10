@@ -39,7 +39,7 @@ void SdfLoader::load_file() { //TODO const correctness valid?
     while (std::getline(in_file, line_buffer)) {
         
         // prints lines which are read
-        std::cout << line_buffer << std::endl;
+        //std::cout << line_buffer << std::endl;
 
         //construct stringstream using line_buffer string
         std::istringstream in_sstream (line_buffer);
