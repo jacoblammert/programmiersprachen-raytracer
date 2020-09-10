@@ -30,10 +30,7 @@ Composite::Composite(std::string const& name, std::vector<std::shared_ptr<Shape>
     depth_ = 0;
     name_ = name;
     shape_type_ = COMPOSITE;
-    set_min_max_mid();
-    if (!this->shapes_.empty()) {
-        split(); // it is not an endless loop
-    }
+    build();
 }
 
 
@@ -69,7 +66,6 @@ Composite::get_intersected_shape(const Ray &ray, std::shared_ptr<Shape> &shape, 
 
     for (auto &box : boxes_) {
         if (box.box_.get_intersect(ray)) {
-            //distance = 1001;
             box.get_intersected_shape(ray, shape, hit_point, hit_normal, distance);
         }
     }
@@ -205,7 +201,7 @@ void Composite::set_min_max_mid() {
         median_shape = shape->get_median();
         position_ = position_ + median_shape;
     }
-    position_ *= (1.0f / (float) shapes_.size());
+    position_ /= shapes_.size();
 
     box_ = Box{min_x_y_z_, max_x_y_z_};
 }
@@ -285,8 +281,6 @@ void Composite::get_max(glm::vec3 const &shape_max) {
 
 std::vector<std::shared_ptr<Shape>> Composite::get_shapes () const {
     std::vector<std::shared_ptr<Shape>> shapes = shapes_;
-
-    //shapes.insert(shapes.end(),shapes_.begin(),shapes_.end());
 
     for (int i = 0; i < boxes_.size(); ++i) {
         std::vector<std::shared_ptr<Shape>> shapes_of_boxes = boxes_[i].get_shapes();

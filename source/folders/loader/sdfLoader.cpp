@@ -24,7 +24,7 @@ void SdfLoader::load_file() { //TODO const correctness valid?
     std::string line_buffer;
     std::string identifier;
 
-    // all possiblt compositepointer  TODO turn to smartpointer ?
+    // all possiblt compositepointer
     std::shared_ptr<Composite> composite = std::make_shared<Composite>(Composite{0});
     std::vector<std::shared_ptr<Shape>> shapes;
     std::vector<std::shared_ptr<Material>> materials;
@@ -33,6 +33,7 @@ void SdfLoader::load_file() { //TODO const correctness valid?
     glm::vec3 ambient;
     std::string name_camera_render, filename;
     unsigned int x_res, y_res;
+    bool composite_bool = false;
 
     
     while (std::getline(in_file, line_buffer)) {
@@ -329,6 +330,7 @@ void SdfLoader::load_file() { //TODO const correctness valid?
                     }
                     
                 } else if (shape_type == "composite") {
+                    composite_bool = true;
                     //parse composite attributes
                     std::string composite_name, param;
 
@@ -631,6 +633,12 @@ void SdfLoader::load_file() { //TODO const correctness valid?
         } else {
             std::cout << "Line was not valid!" << std::endl;
         }
+    }
+
+    if(!composite_bool){
+        composite->set_name("no_composite_defined");
+        composite->add_shapes(shapes);
+        composite->build();
     }
 
 
