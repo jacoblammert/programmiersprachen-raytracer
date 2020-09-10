@@ -2,21 +2,40 @@
 define material mirror 0 1 0 0 1 0 0 1 0 10 1 1 1 0
 define material water  0 1 0 0 1 0 0 1 0 10 1 1 1.36 0
 define material grey   0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 10 1 0 1.36 0
+define material white   1 1 1 1 1 1 1 1 1 10 1 0 1.36 0
+define material red   1 0 0 1 0.5 0.5 1 1 1 10 1 0 1.36 0
+define material green   0 1 0 0.5 1 0.5 1 1 1 10 1 0 1.36 0
+define material blue   0 0 1 0.5 0.5 1 1 1 1 10 1 0 1.36 0
 
 # geometry
-define shape plane plane11 0 0 0 0 1 0 grey
-define shape triangle triangle11 0 0 -20 0 0 20 0 20 -20 mirror
-define shape box box11 10 1 -10 30 21 10 0 1 0 water
-define shape sphere sphere11 -10 11 0 10 water
-define shape cone cone11 -40 1 0 0 1 0 20 20 water
-define shape cylinder cylinder11 50 1 0 0 1 0 20 20 water
+# define shape plane plane11 0 0 0 0 1 0 grey
+# define shape triangle triangle11 0 0 -20 0 0 20 0 20 -20 mirror
+# define shape box box11 10 1 -10 30 21 10 0 1 0 water
+# define shape sphere sphere11 -10 11 0 10 water
+# define shape cone cone11 -40 1 0 0 1 0 20 20 water
+# define shape cylinder cylinder11 50 1 0 0 1 0 20 20 water
 
+
+define shape cone cone0          0  6 30       0 1 0 10 20 green
+define shape cone cone1         -30 6  0       0.5 1 0 20 10 blue
+define shape cylinder cylinder0  0  6 -30      0 1 0 10 20 blue
+define shape cylinder cylinder1  30 6  0       1 1 1 20 10 green
+
+
+
+define shape box box00  -5 1 10    5 11  20    1 1 1 white
+define shape box box01 -20 1  -5  -10 11  5    0 1 0 white
+define shape box box10  -5 1 -20   5 11 -10    1 1 1 white
+define shape box box11  10 1  -5   20 11   5    0 1 0 white
+define shape plane plane11 0 -3 0 0 1 0 red
 # composite
-define shape composite composite_name box11 sphere11 plane11 cone11 cylinder11
+define shape composite composite_name box00 box01 box10 box11
+# plane11 cone0 cone1 cylinder0 cylinder1
+# box11 sphere11 plane11 cone11 cylinder11
 # lights
 # define light sun 500 800 0 1.0 1.0 1.0 10000 10000 1000
-define light spot1 -50 20 -3 0.8 0.8 0.8 1000 1000 100
-define light spot2 65 30 -3 1 1 1 2000 200 200
+define light spot1 -50 20 -3 0.8 0.8 0.8 1000 1000 1000
+define light spot2 65 30  -3 1   1   1   2000 2000 2000
 ambient 0.1 0.1 0.1
 # camera
 define camera eye 60.0 0.0 4.0 0.0 0.0 0.0 -1.0 0.0 1.0 0.0
