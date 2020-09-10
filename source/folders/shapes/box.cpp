@@ -63,9 +63,7 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit
     ray_position = rotation_matrix_ * ray_position;
     ray_position = ray_position + position_;
 
-    ray_direction = rotation_matrix_ * ray_direction;
-
-    ray_direction = glm::normalize(ray_direction);
+    ray_direction = glm::normalize(rotation_matrix_ * ray_direction);
 
     glm::vec3 ray_direction_rotated = ray_direction;
 
@@ -102,34 +100,40 @@ bool Box::get_intersect_vec(Ray const &ray, glm::vec3 &hit_point, glm::vec3 &hit
         t_max = t_z_max;
 
 
-    if (0 < t_min && t_min < distance) {
-        ray_direction_rotated *= t_min;
+    float dist_1 = INFINITY;
+    glm::vec3 hit_point_1;
+    glm::vec3 hit_normal_1 = {0,1,0};
 
-        distance = t_min;
-        hit_point = ray_position + ray_direction_rotated;
-        hit_normal = get_normal(hit_point - position_);
-        hit_point -= position_;
-        hit_point = rotation_matrix_inverse * hit_point;
-        hit_point += position_;
+    if (0 < t_min) {
 
-        hit_normal = rotation_matrix_inverse * hit_normal;
+        hit_point_1 = ray_position + ray_direction_rotated * t_min;
+        hit_normal_1 = glm::normalize(rotation_matrix_inverse * get_normal(hit_point_1 - position_));
+        hit_point_1 -= position_;
+        hit_point_1 = rotation_matrix_inverse * hit_point_1;
+        hit_point_1 += position_;
 
+
+        dist_1 = glm::length(ray.position - hit_point_1);
+    }
+    if (t_min < 0 && 0 < t_max) {
+
+        hit_point_1 = ray_position + ray_direction_rotated * t_max;
+        hit_normal_1 = glm::normalize(rotation_matrix_inverse * get_normal(hit_point_1 - position_));
+        hit_point_1 -= position_;
+        hit_point_1 = rotation_matrix_inverse * hit_point_1;
+        hit_point_1 += position_;
+
+        dist_1 = glm::length(ray.position - hit_point_1);
+    }
+
+
+    if (0 < dist_1 && dist_1 < distance){
+        distance = dist_1;
+        hit_point = hit_point_1;
+        hit_normal = hit_normal_1;
         return true;
     }
-    if (t_min < 0 && 0 < t_max && t_max < distance) {
-        ray_direction_rotated *= t_max;
 
-        hit_point = ray_position + ray_direction_rotated;
-        hit_normal = get_normal(hit_point - position_);
-        hit_point -= position_;
-        hit_point = rotation_matrix_inverse * hit_point;
-        hit_point += position_;
-
-        distance = glm::length(ray.position - hit_point);
-
-        hit_normal = rotation_matrix_inverse * hit_normal;
-        return true;
-    }
 
     return false;
 }
@@ -193,9 +197,8 @@ bool Box::get_intersect(const Ray &ray) const {
  */
 glm::vec3 Box::get_normal(glm::vec3 const &pos) const {
 
-    glm::vec3 size = get_max() - get_min();
+    glm::vec3 size = pos/(bounds_[1] - bounds_[0]);
 
-    size = pos / size;
 
     if (fabs(size[0]) > fabs(size[1]) && fabs(size[0]) > fabs(size[2])) { // X is largest;
         return glm::vec3{1, 0, 0} * glm::sign(size[0]);

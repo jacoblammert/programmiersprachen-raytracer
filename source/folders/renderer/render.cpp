@@ -21,6 +21,7 @@ glm::vec3 Render::get_color (Ray const& ray, int depth) const {
     if (dist == INFINITY) {
         return skybox_.get_color (ray.direction);
     }
+
     
     // get attributes from material
     float glossy = shape->get_material()->glossy;

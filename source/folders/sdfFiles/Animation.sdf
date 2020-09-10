@@ -6,7 +6,7 @@ define material water 0 1 0 0 1 0 0 1 0 10 0 0 1.36 0
 define shape sphere bsphere1 0.000000 0.000000 0.000000 2.000000 blue
 define shape sphere bsphere2 0.000000 0.000000 20.000000 2.000000 blue
 # composite
-define shape composite composite_name bsphere1 bsphere2 
+define shape composite composite_name bsphere1 bsphere2
 define light sun 500 800 0 1 1 1 100 100 100
 define light spot1 -0 8 -3 0.8 0.8 0.8 100 100 100
 define light spot2 0 40 0 1 1 1 200 200 200

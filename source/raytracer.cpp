@@ -8,9 +8,9 @@
 int main(int argc, char *argv[]) {
 
 
-    int frames = 10;//24 * 10; // 24 frames per second -> 10s long Animation
+    int frames = 0;//24 * 10; // 24 frames per second -> 10s long Animation
 
-    std::string animation_name = "test";
+    std::string animation_name = "final animation";
 
 
     /// Creates all the sdf files needed
