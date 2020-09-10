@@ -105,10 +105,10 @@ void SdfLoader::load_file() { //TODO const correctness valid?
                         
                         if (!material_found) {
                             std::cout << "Please only use defined materials!" << std::endl;
+                        } else  {
+                            // add the box to shapes vector
+                            shapes.push_back(box);
                         }
-                        
-                        // add the box to shapes vector
-                        shapes.push_back(box);
                     }
 
                 } else if (shape_type == "sphere") {
@@ -150,10 +150,10 @@ void SdfLoader::load_file() { //TODO const correctness valid?
                         
                         if (!material_found) {
                             std::cout << "Please only use defined materials!" << std::endl;
+                        } else {
+                            // add the sphere to shapes vector
+                            shapes.push_back(sphere);
                         }
-
-                        // add the sphere to shapes vector
-                        shapes.push_back(sphere);
                     }
 
                 } else if (shape_type == "triangle") {
@@ -206,10 +206,10 @@ void SdfLoader::load_file() { //TODO const correctness valid?
                         }
                         if (!material_found) {
                             std::cout << "Please only use defined materials!" << std::endl;
+                        } else {
+                            // add the triangle to shapes vector
+                            shapes.push_back(triangle);
                         }
-
-                        // add the triangle to shapes vector
-                        shapes.push_back(triangle);
                     }
 
                 } else if (shape_type == "cone" || shape_type == "cylinder") {
@@ -258,10 +258,11 @@ void SdfLoader::load_file() { //TODO const correctness valid?
                             }
                             if (!material_found) {
                                 std::cout << "Please only use defined materials!" << std::endl;
+                            } else {
+                                // add the cone to shapes vector
+                                shapes.push_back(cone);
                             }
-                            
-                            // add the cone to shapes vector
-                            shapes.push_back(cone);
+                    
 
                         } else {
                             // set material to cylinder (if its defined)
@@ -276,10 +277,10 @@ void SdfLoader::load_file() { //TODO const correctness valid?
                             }
                             if (!material_found) {
                                 std::cout << "Please only use defined materials!" << std::endl;
+                            } else {
+                                // add the cylinder to shapes vector
+                                shapes.push_back(cylinder);
                             }
-
-                            // add the cylinder to shapes vector
-                            shapes.push_back(cylinder);
                         }
                     }
 
@@ -325,8 +326,10 @@ void SdfLoader::load_file() { //TODO const correctness valid?
                         }
                         if (!material_found) {
                             std::cout << "Please only use defined materials!" << std::endl;
+                        } else {
+                            // add the plane to shapes vector
+                            shapes.push_back(plane);
                         }
-                        shapes.push_back(plane);
                     }
                     
                 } else if (shape_type == "composite") {

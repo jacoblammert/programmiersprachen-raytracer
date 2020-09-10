@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     /// Creates all the sdf files needed
     /// If we want to change anything in the animation (add a material/ Shape/ Change the resolution) we can do it in the original (start.sdf) file
     //SdfLoader loader{"../../source/folders/sdfFiles/" + animation_name + std::to_string(999) + ".sdf"};
-    SdfLoader loader{"../../source/folders/sdfFiles/start.sdf"};
+    SdfLoader loader{"../../source/folders/sdfFiles/start2.sdf"};
 
     loader.load_file();
 
