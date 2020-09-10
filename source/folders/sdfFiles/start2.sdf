@@ -1,5 +1,5 @@
 # materials car cag cab cdr cdg cdb csr csg csb reflective_exponent opacity reflectivity refractive_index roughness
-define material grey  0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 10 0.5 0.5 1.0 0.5
+define material grey  0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 10 1.0 1.0 0.0 0.0
 # geometry
 define shape box box11 30 30 30 60 60 60 0 1 0 grey
 # define shape sphere sphere11 -10 11 0 10 water
@@ -13,7 +13,7 @@ ambient 0.1 0.1 0.1
 # camera
 define camera eye 60.0 0.0 0.0 0.0 0.0 0.0 -1.0 0.0 1.0 0.0
 # camera xform
-transform eye rotate -45 0 1 0
-transform eye translate 100 100 100
+# transform eye rotate -45 0 1 0
+# transform eye translate 100 100 100
 # ... and go
 render eye image.ppm 400 400
