@@ -22,8 +22,6 @@ public:
 
     void set_material (std::shared_ptr<Material> const& material) override;
     
-    void print(std::fstream & file) const override;
-    
     void translate(glm::vec3 const& position) override;
 
     std::string get_information()const override;

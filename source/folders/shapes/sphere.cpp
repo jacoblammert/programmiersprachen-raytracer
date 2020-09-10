@@ -97,14 +97,6 @@ void Sphere::set_material(std::shared_ptr<Material> const& material) {
 }
 
 /**
- * //TODO implement a good print function
- * outputs important information in the console
- */
-void Sphere::print(std::fstream & file) const {
-    std::cout << "Sphere" << std::endl;
-}
-
-/**
  * Changes the position of the sphere with a given glm::vec3
  * @param position
  */
@@ -112,6 +104,10 @@ void Sphere::translate(glm::vec3 const& position) {
     position_ += position;
 }
 
+/**
+*Gives information of the spere
+* @returns string with name and data
+*/
 std::string Sphere::get_information() const {
     std::string information = name_ + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " " + std::to_string(radius_) + " " + material_->name;
     return information;

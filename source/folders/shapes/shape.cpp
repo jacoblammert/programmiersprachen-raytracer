@@ -1,7 +1,4 @@
 
-#include <glm-0.9.5.3/glm/detail/type_mat3x3.hpp>
-#include <glm-0.9.5.3/glm/detail/func_matrix.inl>
-#include <iostream>
 #include "shape.hpp"
 
 
@@ -13,7 +10,7 @@ glm::vec3 Shape::get_scaled_vec3(const glm::vec3 &vec3, float scale_x, float sca
     return glm::vec3 {scale_x,scale_y, scale_z} * vec3;
 }
 
-glm::vec3 Shape::get_rotated_vec3(const glm::vec3 &vec3, glm::vec3 axis, float angle)const {
+glm::vec3 Shape::get_rotated_vec3(const glm::vec3 &vec3, glm::vec3 & axis, float angle)const {
 
     float sin_angle = std::sin(angle);
     float cos_angle = std::cos(angle);
@@ -36,7 +33,8 @@ void Shape::set_angle(float angle) {
 void Shape::set_rotation_axis(const glm::vec3& axis) {
     axis_ = glm::normalize(axis);
 
-    glm::vec3 up_vec = glm::normalize(glm::vec3{0, 0, 1}); // vector used for rotation
+    // vector used for rotation
+    glm::vec3 up_vec = glm::normalize(glm::vec3{0, 0, 1});
     glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, axis_));
     float angle = (float)acos(glm::dot(up_vec,axis_));
 

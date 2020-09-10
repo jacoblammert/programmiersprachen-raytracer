@@ -50,8 +50,6 @@ public:
     std::vector<std::shared_ptr<Shape>> get_shapes () const;
     
     void set_name(std::string const& name);
-    
-    void print(std::fstream & file) const override;
 
     std::string get_information() const override;
 

@@ -123,30 +123,17 @@ glm::vec3 Triangle::get_median() const {
 }
 
 /**
-* @return material of the sphere
+* @return material of the triangle
 */
 std::shared_ptr<Material> Triangle::get_material() {
     return material_;
 }
 
 /**
-* @param material is given to sphere
+* @param material is given to triangle
 */
 void Triangle::set_material(std::shared_ptr<Material> const& material) {
     this->material_ = material;
-}
-
-/**
- * outputs important information in the console
- */
-void Triangle::print(std::fstream & file) const {
-    //std::cout << "Triangle" << std::endl;
-    //std::cout << "A: ";
-    //a.print();
-    //std::cout << "B: ";
-    //b.print();
-    //std::cout << "C: ";
-    //c.print();
 }
 
 /**
@@ -159,6 +146,10 @@ void Triangle::translate(glm::vec3 const& position) {
     c_ += position;
 }
 
+/**
+*Gives information of the triangle
+* @returns string with name and data
+*/
 std::string Triangle::get_information() const {
     std::string information = name_+ " "
             + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
@@ -189,11 +180,6 @@ void Triangle::set_rotation_axis(const glm::vec3 &axis) {
     ab = glm::normalize(ab);
     ac = glm::normalize(ac);
 
-
-    //ab = rotation_matrix_ * ab;
-    //ac = rotation_matrix_ * ac;
-
-
     glm::vec3 up_vec = glm::normalize(glm::vec3{0, 0, 1}); // vector used for rotation
     glm::vec3 rotation_axis = glm::normalize(glm::cross(up_vec, axis_));
     float angle = (float)acos(glm::dot(up_vec,axis_));
@@ -202,16 +188,6 @@ void Triangle::set_rotation_axis(const glm::vec3 &axis) {
     ab = glm::normalize(get_rotated_vec3(ab,rotation_axis,angle));
     ac = glm::normalize(get_rotated_vec3(ac,rotation_axis,angle));
 
-    //std::cout<<"Gleichheit: " << glm::dot(glm::normalize(glm::cross(ab,ac)),glm::normalize(axis))<< std::endl;
-/*/
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            std::cout<<rotation_matrix_[j][i]<<" ";
-        }
-        std::cout<<std::endl;
-    }
-
-    std::cout<<std::endl;/**/
     ab *= length_b;
     ac *= length_c;
 

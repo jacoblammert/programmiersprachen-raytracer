@@ -10,7 +10,8 @@ struct Material {
     float glossy = 0.0f;
     float opacity = 1.0f;
     float refractive_index = 1.0f;
-    float aberration_strength = 0; // chromatic aberration on lenses (red, green, blue are refracted differently) (transparency > 0)
+    // chromatic aberration on lenses (red, green, blue are refracted differently) (transparency > 0)
+    float aberration_strength = 0;
     glm::vec3 color_ambient = glm::vec3 {0, 0, 0};
     glm::vec3 color_diffuse = glm::vec3 {0, 0, 0};
     glm::vec3 color_specular = glm::vec3 {0, 0, 0};
@@ -18,9 +19,8 @@ struct Material {
     std::string name;
 
     Material(std::string const& name, glm::vec3 const& color_ambient, glm::vec3 const& color_diffuse, glm::vec3 const& color_specular, float reflective_exponent);
-    Material (glm::vec3 const& color_ambient,glm::vec3 const& color_diffuse,glm::vec3 const& color_specular,float reflective_exponent);
-    Material (glm::vec3 const& color_ambient,glm::vec3 const& color_diffuse,glm::vec3 const& color_specular,float reflective_exponent,float opacity, float refractive_index);
-
+    Material (glm::vec3 const& color_ambient, glm::vec3 const& color_diffuse, glm::vec3 const& color_specular, float reflective_exponent);
+    Material (glm::vec3 const& color_ambient, glm::vec3 const& color_diffuse, glm::vec3 const& color_specular, float reflective_exponent, float opacity, float refractive_index);
     Material (float roughness, float glossy, float opacity, float refractiveIndex, glm::vec3 const& color);
     Material (float roughness, float glossy, float opacity, float refractiveIndex, float abberationStrength, glm::vec3 const& color);
 };

@@ -5,13 +5,12 @@
  * @param position for the new plane
  * @param normal of the pane (will be normalized automatically)
  */
-Plane::Plane(std::string const& name, glm::vec3 const &position, glm::vec3 const &normal){
+Plane::Plane(std::string const& name, glm::vec3 const &position, glm::vec3 const &normal) {
     axis_ = glm::normalize(normal);
     shape_type_ = PLANE;
     name_ = name;
     position_ = position;
 }
-
 
 /**
  * returns true, if this plane has been intersected in front of the ray, no intersections with negative scalar for ray direction allowed
@@ -79,14 +78,6 @@ void Plane::set_material(std::shared_ptr<Material> const& material) {
 }
 
 /**
- * should print "interesting" information about our plane (position, normal, material,...)
- */
-void Plane::print(std::fstream & file) const {
-    std::cout << "Plane" << std::endl;
-    //print();
-}
-
-/**
  * Changes the position of the Sphere with a given glm::vec3
  * @param position
  */
@@ -94,6 +85,10 @@ void Plane::translate(glm::vec3 const& position) {
     position_ += position;
 }
 
+/**
+*Gives information of the plane
+* @returns string with name and data
+*/
 std::string Plane::get_information() const {
     std::string information = name_ + " " + std::to_string(position_[0]) + " " + std::to_string(position_[1]) + " " + std::to_string(position_[2]) + " "
             + std::to_string(axis_[0]) + " " + std::to_string(axis_[1]) + " " + std::to_string(axis_[2]) + " "

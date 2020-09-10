@@ -10,8 +10,17 @@
 #include "../camera/ray.hpp"
 #include "material.hpp"
 
+/**
+ enum for all shape types
+ */
 enum ShapeType {
-    BOX, CONE, CYLINDER, PLANE, SPHERE, TRIANGLE, COMPOSITE
+    BOX,
+    CONE,
+    CYLINDER,
+    PLANE,
+    SPHERE,
+    TRIANGLE,
+    COMPOSITE
 };
 
 
@@ -33,15 +42,13 @@ public:
 
     virtual void set_material (std::shared_ptr<Material> const& material) = 0; // needs override for composite object
 
-    virtual void print(std::fstream & file) const = 0;
-
     virtual void translate(glm::vec3 const& position) = 0;
 
     glm::vec3 get_translated_vec3(glm::vec3 const& vec3, glm::vec3 const& translation) const;
 
     glm::vec3 get_scaled_vec3(glm::vec3 const& vec3, float scale_x,float scale_y,float scale_z) const;
 
-    glm::vec3 get_rotated_vec3(glm::vec3 const& vec3,glm::vec3 axis, float angle) const;
+    glm::vec3 get_rotated_vec3(glm::vec3 const& vec3,glm::vec3 & axis, float angle) const;
 
     void set_angle(float angle);
 

@@ -1,7 +1,5 @@
 #include "material.hpp"
 
-
-
 /**
  *
  * @param roughness of the surface
@@ -17,7 +15,8 @@ Material::Material(float roughness, float glossy, float transparency, float refr
         glossy{glossy},
         opacity{transparency},
         refractive_index{refractiveIndex},
-        color_ambient{color_ambient} {};
+        color_ambient{color_ambient}
+{}
 
 /**
  *
@@ -35,7 +34,8 @@ Material::Material(float roughness, float glossy, float opacity, float refractiv
         opacity{opacity},
         refractive_index{refractiveIndex},
         aberration_strength{abberationStrength},
-        color_ambient{color} {}
+        color_ambient{color}
+{}
 
 /**
  * Material definition from sdf format
@@ -51,9 +51,8 @@ Material::Material (std::string const& name, const glm::vec3 &color_ambient, con
         color_ambient{color_ambient},
         color_diffuse{color_diffuse},
         color_specular{color_specular},
-        reflective_exponent{reflective_exponent} {
-    
-}
+        reflective_exponent{reflective_exponent}
+{}
 
 /**
  * Material definition from sdf format
@@ -64,10 +63,11 @@ Material::Material (std::string const& name, const glm::vec3 &color_ambient, con
  */
 Material::Material(const glm::vec3 &color_ambient, const glm::vec3 &color_diffuse, const glm::vec3 &color_specular,
                    float reflective_exponent) :
-        color_ambient{color_ambient}, color_diffuse{color_diffuse}, color_specular{color_specular},
-        reflective_exponent{reflective_exponent} {
-
-}
+        color_ambient{color_ambient},
+        color_diffuse{color_diffuse},
+        color_specular{color_specular},
+        reflective_exponent{reflective_exponent}
+{}
 
 /**
  * Material definition from sdf format with transparency and a refractive index
@@ -80,7 +80,10 @@ Material::Material(const glm::vec3 &color_ambient, const glm::vec3 &color_diffus
  */
 Material::Material(const glm::vec3 &color_ambient, const glm::vec3 &color_diffuse, const glm::vec3 &color_specular,
                    float reflective_exponent, float opacity, float refractive_index) :
-        color_ambient{color_ambient}, color_diffuse{color_diffuse}, color_specular{color_specular},
-        reflective_exponent{reflective_exponent}, opacity{opacity}, refractive_index{refractive_index} {
-
-}
+        color_ambient{color_ambient},
+        color_diffuse{color_diffuse},
+        color_specular{color_specular},
+        reflective_exponent{reflective_exponent},
+        opacity{opacity},
+        refractive_index{refractive_index}
+{}

@@ -6,6 +6,7 @@
 #include <cmath>
 
 class Cylinder: public Shape {
+    
 public:
     Cylinder (std::string const& name, const glm::vec3& position,const glm::vec3& axis,float width, float height);
 
@@ -22,8 +23,6 @@ public:
     std::shared_ptr<Material> get_material() override;
 
     void set_material(std::shared_ptr<Material> const &material) override;
-
-    void print(std::fstream & file) const override;
 
     void translate(glm::vec3 const &position) override;
 

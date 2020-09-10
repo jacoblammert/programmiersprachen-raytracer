@@ -187,19 +187,6 @@ void Composite::set_name(std::string const& name) {
 }
 
 /**
- * Only really usefull, if there are not to many shapes in total, or the console will be filled with exponentially many
- * comments
- */
-void Composite::print(std::fstream & file) const {
-    std::cout << std::endl << "Depth: " << depth_ << std::endl;
-    std::cout << "Size: " << shapes_.size() << std::endl;
-
-    for (auto &boxe : boxes_) {
-        //boxe.print();
-    }
-}
-
-/**
 *Gives information of all the shapes
 * @returns string with all shape names and information
 */

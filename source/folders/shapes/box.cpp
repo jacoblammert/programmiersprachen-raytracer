@@ -335,17 +335,6 @@ void Box::translate(glm::vec3 const &position) {
     this->position_ += position;
 }
 
-// TODO noch nötig?
-
-/**
- * outputs important information in the console
- */
-void Box::print(std::fstream &file) const {
-    //std::string information = std::to_string(bounds_[0][0]) + " " + std::to_string(bounds_[0][1]) + " " + std::to_string(bounds_[0][2]) + " " + std::to_string(bounds_[1][0]) + " " + std::to_string(bounds_[1][1]) + " " + std::to_string(bounds_[1][2]);
-    //file << information;
-}
-
-
 /**
 * Gives information about the box in a string
 * @return string with information
