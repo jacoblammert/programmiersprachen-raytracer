@@ -19,15 +19,8 @@ int main(int argc, char *argv[]) {
     SdfLoader loader{"../../source/folders/sdfFiles/Animation_1.sdf"};
 
     loader.load_file();
-
-
-
-
-
+    
     std::shared_ptr<Scene> scene = loader.get_scene();
-
-
-
 
 
 // Loading objs
@@ -115,64 +108,3 @@ int main(int argc, char *argv[]) {
  
     return 0;
 }
-/* checkerboard pattern: // könnte man vielleicht auch für ein Material nutzen
-                    int x = positionvec[0] < 0 ? positionvec[0] - 1 : positionvec[0];
-                    int y = positionvec[1] < 0 ? positionvec[1] - 1 : positionvec[1];
-                    x /=5;
-                    y /=5;
-                    if ((x + y) % 2) {
-                        color.color = {1, 1, 1};
-                    } else {
-                        color.color = {};
-                    }
-*/
-
-/*
- TODO:
- fertig:
- - Szene kann aus bliebig vielen Objekten bestehen - eine Szene kommt in ein composite objekt (mit shapes und Lichtern & kleineren Comosite objekten)
- - mindestens achsenparalleler Quader, Kugeln
- - objekt kann ein Material haben
- - Objekte werfen Schatten
- - Spiegelung hinzufügen (optional)
- - Refraktion hinzufügen (optional)
- - Composite Pattern hinzufügen, Parser erweitern
- - Kameramodell aus der Vorlesung mit fov
- - Dreieck
- - Kegel und Zylinder hinzufügen (optional) /// funktionieren zwar, können aber nicht gedreht werden (Transparenz/ Reflektion für Kegel ist sehr langsam & nicht korrekt)
- - Beobachter ist im Ursprung und blickt entlang negativer z-Achse - nur mit Kameraconstruktor No. 2 mit fov
- - Material Werte/Typen anpassen auf Vorgaben
- - Szene hat beliebig viele Punktlichtquellen -> ja (in der Vorlesung vorgestelltes Beleuchtungsmodell) - phong shading-> fehlt noch
- - finaler Farbwert wird berechnet und im Window angezeigt/ in der Ausgabedatei gespeichert -> framework sollte das schon können. Falls nicht, habe ich auch noch eine alte Klasse um .ppm Dateien zu speichern
- - Ambiente der Szene einlesen
- - Beobachter ist im Ursprung und blickt entlang negativer z-Achse
- - Kegel und Zylinder hinzufügen (optional) // nur die Standart Kegel/ Zylinder in Ursprung mit Größe 1 funktionieren -> Zylinder + Kegel (inverted translations/ rotations)
- - einlesen einer Szene im SDF-Format und rendern der Szene
- - (etwas schwerer) andere Objekte (Triangle, Plane, Cone, Cylinder) einlesen (wichtig!)
- - (machbar) Kameramodell im Parser erweitern nur fov - brauchen wir noch mehr?
- - (machbar) Anti-Aliasing, Interpolation (optional) 4 mal so großes Bild berechnen + kleiner machen und Durchschnitt der 4 Farbwerte pro Pixel berechnen
- - (machbar) .ppm Dateien in Ordner speichern -> zu Animation verarbeiten
- - (etwas schwerer) Translation, Rotation, Skalierung hinzufügen (updated min_max_mid functions) (So gut wie möglich/ teilweise)
-
- nicht fertig:
- - (machbar) Animation aus gerenderten Einzelbildern erstellen (Programm das für jeden Frame eine SDF-Datei generiert)  (Mit der Animation kann nun begonnen werden) - fertig?
- 
- - zeichnen auch ohne composite ermöglichen (Arbeitsblatt Beipspiel SDF)
- - composite mit nur einem Element nicht möglich
- - transformationen die eingelesen werden umsetzen
- - draw_scene einfach nutzen für draw_frame und ein Flag setzen, wenn window beschrieben werden soll oder nicht - redundanz verhindern
-
- 
- Anmerkungen:
- - eventuell shared pointer als const möglich? z.B. std::shared_ptr <Shape const>
- - const correctness der Methoden + Parameter
- - default initialisierung structs
- - floats, ... initialisieren
- - Kommentare
- - Formatierung, Namensgebung (struct variablen ohne _)
- - reihenfolge methoden in hpp = cpp
- - Konsistenz: light hpp Konstruktorliste in cpp
- - alle includes notwendig?
- - variablen in scene als public etwas unschön - anders lösen in sdfwriter? (z.B: const getter in scene)
- - TODOs / Unklarheiten bearbeiten
- */

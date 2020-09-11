@@ -164,7 +164,6 @@ std::string Triangle::get_information() const {
  * The position_ stays the same, therefore a and b must change and rotate around the position
  * in a way that the new rotated vector form a triangle with the axis_ standing perpendicular on its plane
  *
- * Not yet working correctly! Dont use!
  * @param axis
  */
 void Triangle::set_rotation_axis(const glm::vec3 &axis) {
